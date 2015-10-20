@@ -1,0 +1,31 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Phil Hachey",
+        "email": "phil.hachey@bluespurs.com"
+      },
+      "libraryName": {
+        "original": "liveops-config-panel-shared",
+        "camelized": "liveopsConfigPanel.shared",
+        "dasherized": "liveops-config-panel-shared",
+        "slugified": "liveops-config-panel-shared",
+        "parts": [
+          "liveops",
+          "config",
+          "panel",
+          "shared"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeAngularModuleResource": true,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/liveops-config-panel-shared",
+      "libraryUnitTestDirectory": "test/unit/liveops-config-panel-shared",
+      "libraryUnitE2eDirectory": "test/e2e/liveops-config-panel-shared"
+    }
+  }
+}

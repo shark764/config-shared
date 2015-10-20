@@ -1,0 +1,25 @@
+{
+  "name": "liveops-config-panel-shared",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Phil Hachey",
+      "email": "phil.hachey@bluespurs.com"
+    }
+  ],
+  "main": ["dist/liveops-config-panel-shared.js"],
+  "ignore": [
+    "src",
+    "test",
+    "gulpfile.js",
+    "karma-*.conf.js",
+    "**/.*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "angular-mocks": ">=1.2.0",
+    "angular-scenario": ">=1.2.0",
+    "angular": ">=1.2.0",
+    "angular-resource": ">=1.2.0"
+  }
+}
