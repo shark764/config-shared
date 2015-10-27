@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'apiHostname', 'Session', 'queryCache', 'lodash',
-    function($http, $resource, $q, apiHostname, Session, queryCache, _) {
+  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash',
+    function($http, $resource, $q, queryCache, _) {
       function parseResponseResultTransformer(value) {
         if (value.result) {
           return value.result;
@@ -120,7 +120,7 @@ angular.module('liveopsConfigPanel.shared.services')
             'Content-Type': 'application/json'
           };
           
-          var Resource = $resource(apiHostname + params.endpoint, params.requestUrlFields, {
+          var Resource = $resource(params.endpoint, params.requestUrlFields, {
             query: {
               method: 'GET',
               isArray: true,

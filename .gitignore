@@ -5,6 +5,7 @@
 .idea
 .project
 .settings
+coverage
 
 # Ignore node stuff
 node_modules/
@@ -15,4 +16,4 @@ libpeerconnection.log
 .DS_Store
 
 # Bower components
-bower
+bower_components

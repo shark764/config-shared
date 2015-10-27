@@ -44,27 +44,24 @@ describe('LiveopsResourceFactory', function () {
   });
   
   describe('queryCache function', function () {
-    var apiHostname,
-      Resource,
+    var Resource,
       $httpBackend;
 
     beforeEach(module('gulpAngular'));
     beforeEach(module('liveopsConfigPanel.shared.services'));
-    beforeEach(module('liveopsConfigPanel.shared.services.mock.content.management.skills'));
 
-    beforeEach(inject(['LiveopsResourceFactory', '$httpBackend', 'apiHostname',
-      function (LiveopsResourceFactory, _$httpBackend_, _apiHostname_) {
+    beforeEach(inject(['LiveopsResourceFactory', '$httpBackend',
+      function (LiveopsResourceFactory, _$httpBackend_) {
         Resource = LiveopsResourceFactory.create({
           endpoint: '/endpoint'
         });
         $httpBackend = _$httpBackend_;
-        apiHostname = _apiHostname_;
       }]));
 
     describe('$original copy', function () {
       it('should store a pristine copy of all objects returned on query', function () {
 
-        $httpBackend.whenGET(apiHostname + '/endpoint').respond(200, [
+        $httpBackend.whenGET('/endpoint').respond(200, [
           {id: '1'}, {id: '2'}
         ]);
 
@@ -78,7 +75,7 @@ describe('LiveopsResourceFactory', function () {
 
       it('should store a pristine copy of the object returned on get', function () {
 
-          $httpBackend.expectGET(apiHostname + '/endpoint').respond(200, {id: '1'});
+          $httpBackend.expectGET('/endpoint').respond(200, {id: '1'});
 
           var resource = Resource.get();
 
@@ -89,7 +86,7 @@ describe('LiveopsResourceFactory', function () {
 
       it('should have a function to reset an object back to its original state', function () {
 
-          $httpBackend.expectGET(apiHostname + '/endpoint').respond(200, {id: '1'});
+          $httpBackend.expectGET('/endpoint').respond(200, {id: '1'});
 
           var resource = Resource.get();
 
@@ -157,7 +154,6 @@ describe('LiveopsResourceFactory', function () {
   describe('USING mock $resource', function () {
     var Resource,
       resourceSpy,
-      apiHostname,
       LiveopsResourceFactory,
       protoUpdateSpy,
       protoSaveSpy,
@@ -181,9 +177,8 @@ describe('LiveopsResourceFactory', function () {
       $provide.value('$resource', resourceSpy);
     }));
 
-    beforeEach(inject(['apiHostname', 'LiveopsResourceFactory',
-      function (_apiHostname_, _LiveopsResourceFactory_) {
-        apiHostname = _apiHostname_;
+    beforeEach(inject(['LiveopsResourceFactory',
+      function (_LiveopsResourceFactory_) {
         LiveopsResourceFactory = _LiveopsResourceFactory_;
       }
     ]));
@@ -193,7 +188,7 @@ describe('LiveopsResourceFactory', function () {
         endpoint: '/endpoint'
       });
 
-      expect(resourceSpy).toHaveBeenCalledWith(apiHostname + '/endpoint', jasmine.any(Object), {
+      expect(resourceSpy).toHaveBeenCalledWith('/endpoint', jasmine.any(Object), {
         query: jasmine.any(Object),
         get: jasmine.any(Object),
         update: jasmine.any(Object),
@@ -210,7 +205,7 @@ describe('LiveopsResourceFactory', function () {
         }
       });
 
-      expect(resourceSpy).toHaveBeenCalledWith(apiHostname + '/endpoint', {
+      expect(resourceSpy).toHaveBeenCalledWith('/endpoint', {
         title: '@title'
       }, {
         query: jasmine.any(Object),

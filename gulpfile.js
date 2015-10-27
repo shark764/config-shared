@@ -1,12 +1,20 @@
+'use strict';
+
 var gulp = require('gulp');
 var karma = require('karma').server;
-var concat = require('gulp-concat');
+var concat = require('concat-stream');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var path = require('path');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
+var wiredep = require('wiredep');
+var _ = require('lodash');
+
+var $ = require('gulp-load-plugins')({
+  pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
+});
 
 /**
  * File patterns
@@ -33,7 +41,7 @@ var lintFiles = [
   'karma-*.conf.js'
 ].concat(sourceFiles);
 
-gulp.task('build', function() {
+gulp.task('build', function () {
   gulp.src(sourceFiles)
     .pipe(plumber())
     .pipe(concat('liveops-config-panel-shared.js'))
@@ -43,11 +51,24 @@ gulp.task('build', function() {
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('styles', function () {
+  var sassOptions = {
+    style: 'expanded'
+  };
+
+  return gulp.src(['./src/**/*.scss'])
+    .pipe($.sourcemaps.init())
+    .pipe($.sass(sassOptions)).on('error', options.errorHandler('Sass'))
+    .pipe($.autoprefixer()).on('error', options.errorHandler('Autoprefixer'))
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest('./dist/'));
+});
+
 /**
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('jshint', 'test-src', 'build', done);
+  runSequence('jshint', 'test', 'build', done);
 });
 
 /**
@@ -66,18 +87,54 @@ gulp.task('jshint', function () {
   return gulp.src(lintFiles)
     .pipe(plumber())
     .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
+    .pipe(jshint.reporter('jshint-stylish'));
 });
+
+
+function listFiles(callback) {
+  var wiredepOptions = {
+    directory: 'bower_components',
+    dependencies: true,
+    devDependencies: true
+  };
+  var bowerDeps = wiredep(wiredepOptions);
+
+  var htmlFiles = [
+    'src/**/*.html'
+  ];
+
+  var allSpecFiles = [
+    'src/**/*.spec.js',
+    'src/**/*.mock.js'
+  ];
+
+  var srcFiles = [
+    'src/**/*.js'
+  ].concat(allSpecFiles.map(function (file) {
+    return '!' + file;
+  }));
+
+
+  gulp.src(srcFiles)
+    .pipe(concat(function (files) {
+      callback(bowerDeps.js
+        .concat(_.pluck(files, 'path'))
+        .concat(htmlFiles)
+        .concat(allSpecFiles));
+    }));
+}
 
 /**
  * Run test once and exit
  */
-gulp.task('test-src', function (done) {
-  karma.start({
-    configFile: __dirname + '/karma-src.conf.js',
-    singleRun: true
-  }, done);
+gulp.task('test', function (done) {
+  listFiles(function (files) {
+    karma.start({
+      configFile: __dirname + '/karma.conf.js',
+      files: files,
+      singleRun: true
+    }, done);
+  });
 });
 
 /**

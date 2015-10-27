@@ -1,3 +1,5 @@
+'use strict';
+
 (function (angular) {
 
   // Create all modules and define dependencies to make sure they exist
@@ -6,21 +8,24 @@
 
   // Config
   angular.module('liveopsConfigPanel.shared.config', [])
-      .value('liveopsConfigPanel.shared.config', {
-          debug: true
-      });
+    .value('liveopsConfigPanel.shared.config', {
+      debug: true
+    });
 
   // Modules
   angular.module('liveopsConfigPanel.shared.directives', []);
   angular.module('liveopsConfigPanel.shared.filters', []);
-  angular.module('liveopsConfigPanel.shared.services', []);
-  angular.module('liveopsConfigPanel.shared',
-      [
-          'liveopsConfigPanel.shared.config',
-          'liveopsConfigPanel.shared.directives',
-          'liveopsConfigPanel.shared.filters',
-          'liveopsConfigPanel.shared.services',
-          'ngResource'
-      ]);
+  angular.module('liveopsConfigPanel.shared.services', [
+    'toastr',
+    'ngLodash',
+    'ngResource',
+    'pascalprecht.translate'
+  ]);
+  angular.module('liveopsConfigPanel.shared', [
+    'liveopsConfigPanel.shared.config',
+    'liveopsConfigPanel.shared.directives',
+    'liveopsConfigPanel.shared.filters',
+    'liveopsConfigPanel.shared.services'
+  ]);
 
 })(angular);
