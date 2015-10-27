@@ -2,7 +2,8 @@
 
 var gulp = require('gulp');
 var karma = require('karma').server;
-var concat = require('concat-stream');
+var concat = require('gulp-concat');
+var concatStream = require('concat-stream');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var path = require('path');
@@ -32,7 +33,11 @@ var sourceFiles = [
   path.join(sourceDirectory, '/**/*.module.js'),
 
   // Then add all JavaScript files
-  path.join(sourceDirectory, '/**/*.js')
+  path.join(sourceDirectory, '/**/*.js'),
+  
+  path.join('!', sourceDirectory, '/**/*.mock.js'),
+  
+  path.join('!', sourceDirectory, '/**/*.spec.js'),
 ];
 
 var lintFiles = [
@@ -114,9 +119,8 @@ function listFiles(callback) {
     return '!' + file;
   }));
 
-
   gulp.src(srcFiles)
-    .pipe(concat(function (files) {
+    .pipe(concatStream(function (files) {
       callback(bowerDeps.js
         .concat(_.pluck(files, 'path'))
         .concat(htmlFiles)
