@@ -34,9 +34,7 @@ var sourceFiles = [
 
   // Then add all JavaScript files
   path.join(sourceDirectory, '/**/*.js'),
-  
-  path.join('!', sourceDirectory, '/**/*.mock.js'),
-  
+
   path.join('!', sourceDirectory, '/**/*.spec.js'),
 ];
 
