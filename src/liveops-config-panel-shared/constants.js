@@ -2,7 +2,7 @@
 
 /*global window: false */
 
-angular.module('liveopsConfigPanel.config', [])
+angular.module('liveopsConfigPanel.shared.config')
 
 .constant('jsedn', window.jsedn)
 

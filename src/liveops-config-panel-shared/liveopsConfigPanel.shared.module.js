@@ -11,15 +11,19 @@
     .value('liveopsConfigPanel.shared.config', {
       debug: true
     });
-
+  
   // Modules
-  angular.module('liveopsConfigPanel.shared.directives', []);
+  angular.module('liveopsConfigPanel.shared.directives', [
+    'liveopsConfigPanel.shared.services',
+    'liveopsConfigPanel.shared.filters'
+  ]);
   angular.module('liveopsConfigPanel.shared.filters', []);
   angular.module('liveopsConfigPanel.shared.services', [
     'toastr',
     'ngLodash',
     'ngResource',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'liveopsConfigPanel.shared.config'
   ]);
   angular.module('liveopsConfigPanel.shared', [
     'liveopsConfigPanel.shared.config',

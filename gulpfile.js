@@ -114,6 +114,7 @@ function listFiles(callback) {
   ];
 
   var srcFiles = [
+    'src/liveops-config-panel-shared/liveopsConfigPanel.shared.module.js',
     'src/**/*.js'
   ].concat(allSpecFiles.map(function (file) {
     return '!' + file;
