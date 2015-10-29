@@ -12,6 +12,7 @@ var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
 var wiredep = require('wiredep');
 var _ = require('lodash');
+var gutil = require('gulp-util');
 
 var templateCache = require('gulp-angular-templatecache');
 var eventStream = require('event-stream');
@@ -47,7 +48,7 @@ var lintFiles = [
   'karma-*.conf.js'
 ].concat(sourceFiles);
 
-gulp.task('build', function () {
+gulp.task('build', ['styles'], function () {
   eventStream.merge(gulp.src(sourceFiles), gulp.src('src/**/*.html')
       .pipe(templateCache({
         module: 'liveopsConfigPanel.shared.directives'
@@ -64,11 +65,36 @@ gulp.task('styles', function () {
     style: 'expanded'
   };
 
-  return gulp.src(['./src/**/*.scss'])
+  function errorHandler(title) {
+    return function(err) {
+      gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
+      this.emit('end');
+    };
+  };
+
+  var injectOptions = {
+    transform: function (filePath) {
+      return '@import \'' + filePath + '\';';
+    },
+    starttag: '// injector',
+    endtag: '// endinjector',
+    addRootSlash: false
+  };
+
+  var injectFiles = gulp.src([
+    'src/**/*.scss',
+    '!src/liveops-config-panel-shared/index.scss'
+  ], {
+    read: false
+  });
+
+  return gulp.src(['src/liveops-config-panel-shared/index.scss'])
+    .pipe($.inject(injectFiles, injectOptions))
     .pipe($.sourcemaps.init())
-    .pipe($.sass(sassOptions)).on('error', options.errorHandler('Sass'))
-    .pipe($.autoprefixer()).on('error', options.errorHandler('Autoprefixer'))
+    .pipe($.sass(sassOptions)).on('error', errorHandler('Sass'))
+    .pipe($.autoprefixer()).on('error', errorHandler('Autoprefixer'))
     .pipe($.sourcemaps.write())
+    .pipe(rename('styles.css'))
     .pipe(gulp.dest('./dist/'));
 });
 
