@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.user.mock',
+angular.module('liveopsConfigPanel.tenant.user.mock', 
   ['liveopsConfigPanel.mock', 'liveopsConfigPanel.tenant.role.mock'])
   .service('mockTenantUsers', function (TenantUser) {
     return [new TenantUser({
