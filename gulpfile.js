@@ -13,6 +13,9 @@ var jshint = require('gulp-jshint');
 var wiredep = require('wiredep');
 var _ = require('lodash');
 
+var templateCache = require('gulp-angular-templatecache');
+var eventStream = require('event-stream');
+
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
 });
@@ -45,13 +48,15 @@ var lintFiles = [
 ].concat(sourceFiles);
 
 gulp.task('build', function () {
-  gulp.src(sourceFiles)
-    .pipe(plumber())
+  eventStream.merge(gulp.src(sourceFiles), gulp.src('src/**/*.html')
+      .pipe(templateCache({
+        module: 'liveopsConfigPanel.shared.directives'
+      })))
     .pipe(concat('liveops-config-panel-shared.js'))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename('liveops-config-panel-shared.min.js'))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('styles', function () {
