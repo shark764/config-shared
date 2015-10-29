@@ -1,0 +1,11 @@
+.edit-field-drop-down {
+  select {
+    width: 100%;
+    background-color: white;
+  }
+  ng-transclude {
+    label, i {
+      font-size: 22px;
+    }
+  }
+}

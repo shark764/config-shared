@@ -967,12 +967,1179 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+/**
+  Taken from a stackoverflow.com post reply
+
+  http://stackoverflow.com/a/25822878
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('disableContents', [function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        var inputNames = 'input, button, select, textarea, label';
+        
+        var inputs = tElem.find(inputNames);
+        angular.forEach(inputs, function(el){
+          el = angular.element(el);
+          var prevVal = el.attr('ng-disabled');
+          prevVal = prevVal ? prevVal +  ' || ': '';
+          prevVal += tAttrs.disableContents;
+          el.attr('ng-disabled', prevVal);
+        });
+      }
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .controller('DropdownController', ['$scope', '$document', '$element', function ($scope, $document, $element) {
+    var self= this;
+    $scope.showDrop = false;
+    this.setShowDrop = function(val){ //Used by the dropdownDirective
+      $scope.showDrop = val;
+    };
+
+    //Only bother listening for the click event when a dropdown is open
+    $scope.$watch('showDrop',
+      function (newValue, oldValue) {
+        $document.off('click', self.onClick);
+
+        if (newValue && !oldValue) {
+          $document.on('click', self.onClick);
+        }
+    });
+
+    this.onClick = function(event) {
+      //Hide the dropdown when user clicks outside of it
+      var clickedInDropdown = $element.find(event.target).length > 0;
+      if (clickedInDropdown) {
+        return;
+      }
+
+      $scope.$apply(function () {
+        $scope.showDrop = false;
+        $scope.hovering = false;
+      });
+
+      $document.off('click', self.onClick);
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('dropdown', [function() {
+    return {
+      scope : {
+        items : '=',
+        label : '@',
+        valuePath: '@',
+        displayPath: '@',
+        collapseIcon: '@',
+        expandIcon: '@',
+        orderBy: '@',
+        hovering: '=?',
+        hoverTracker: '=?',
+        showOnHover: '='
+      },
+      templateUrl : 'liveops-config-panel-shared/directives/dropdown/dropdown.html',
+      controller : 'DropdownController',
+      link : function(scope, element, attrs, controller) {
+        scope.valuePath = scope.valuePath ? scope.valuePath : 'value';
+        scope.displayPath = scope.displayPath ? scope.displayPath : 'label';
+        
+        if (typeof scope.hovering !== 'undefined' && scope.hoverTracker){
+          scope.hoverTracker.push(controller);
+        }
+
+        scope.clearOtherHovers = function(){
+          angular.forEach(scope.hoverTracker, function(hoverCtrl){
+            if (hoverCtrl !== controller){
+              hoverCtrl.setShowDrop(false);
+            }
+          });
+        };
+
+        if (!scope.orderBy){
+          scope.orderBy = 'label';
+        }
+
+        scope.optionClick = function(func){
+          scope.showDrop = false;
+          scope.hovering = false;
+          func();
+        };
+
+        if(! scope.collapseIcon){
+          scope.collapseIcon = 'fa fa-caret-up';
+        }
+
+        if (! scope.expandIcon){
+          scope.expandIcon = 'fa fa-caret-down';
+        }
+
+        scope.mouseIn = function(){
+          if (scope.hovering || scope.showOnHover){
+            scope.showDrop = true;
+            scope.clearOtherHovers();
+          }
+        };
+
+        scope.dropClick = function(){
+          scope.showDrop = ! scope.showDrop;
+          scope.hovering = ! scope.hovering;
+        };
+      }
+    };
+   }])
+;
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('filterDropdown', [function () {
+    return {
+      scope: {
+        id: '@',
+        options: '=',
+        valuePath: '@',
+        displayPath: '@',
+        label: '@',
+        showAll: '@',
+        orderBy: '@'
+      },
+      templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
+      controller: 'DropdownController',
+      link: function ($scope, element) {
+        element.parent().css('overflow', 'visible');
+
+        $scope.valuePath = $scope.valuePath ? $scope.valuePath : 'value';
+        $scope.displayPath = $scope.displayPath ? $scope.displayPath : 'display';
+        
+        $scope.checkItem = function (option) {
+          option.checked = !option.checked;
+
+          $scope.$emit('dropdown:item:checked', option);
+        };
+
+        // not ideal; we are adding a property to an object that will be used
+        // in multiple places; however I cannot find a better way to do this.
+        if ($scope.showAll) {
+
+          // if an option has been selected; if any option was checked, set
+          // all to false. if no options are checked, set all to true
+          $scope.$watch('options', function () {
+            var anyChecked = false;
+
+            angular.forEach($scope.options, function (option) {
+              if (option.checked) {
+                anyChecked = true;
+                $scope.all.checked = false;
+              }
+            });
+
+            if (!anyChecked) {
+              $scope.all.checked = true;
+            }
+          }, true);
+
+          var checkAllByDefault = true;
+          angular.forEach($scope.options, function (option) {
+            checkAllByDefault = checkAllByDefault && option.checked;
+          });
+          $scope.all = {
+            checked: checkAllByDefault
+          };
+
+          // if all is checked; then set the rest of the options to false
+          $scope.$watch('all.checked', function () {
+            if ($scope.all.checked) {
+              angular.forEach($scope.options, function (option) {
+                option.checked = false;
+              });
+            }
+          });
+        } else {
+          $scope.$watch('options', function () {
+            angular.forEach($scope.options, function (option) {
+              option.checked = (typeof option.checked === 'undefined' ? true : option.checked);
+            });
+          });
+        }
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+
+  .controller('EditFieldController', function ($scope) {
+
+    $scope.saveHandler = function($event) {
+      if ($event){
+        $event.target.blur();
+      }
+      
+      $scope.$emit('editField:save', {
+        objectId: $scope.objectId,
+        fieldName: $scope.name,
+        fieldValue: $scope.ngModel
+      });
+    };
+
+    $scope.$on($scope.name + ':save', function() {
+      $scope.edit = false;
+    });
+
+  });
+
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('formError', function() {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/formError/formError.html',
+      scope : {
+        field : '='
+      },
+      link : function($scope, $elem, $attrs){
+        $scope.errorTypes = {};
+        angular.forEach($attrs.$attr, function(value, key){
+          if(key.match(/errorType+/)){
+            var errorName = key.replace(/errorType/, '');
+            var firstChar = errorName.charAt(0);
+            errorName = errorName.replace(/^\w/, firstChar.toLowerCase());
+            $scope.errorTypes[errorName] = $attrs[key];
+            
+            $attrs.$observe(key, function(attrValue){
+              $scope.errorTypes[errorName] = attrValue;
+            });
+          }
+        });
+        
+        $scope.isString = function(value) {
+          return angular.isString(value);
+        };
+      }
+    };
+   });
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
+      scope : {
+        text : '@',
+        translateValue: '@'
+      },
+      link: function($scope, element){
+        $scope.target = element;
+        var tooltipElement;
+
+        $scope.showTooltip = function(){
+          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
+          $document.find('body').append(tooltipElement);
+        };
+
+        $scope.destroyTooltip = function(){
+          tooltipElement.remove();
+        };
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+.directive('highlightOnClick', ['$window', function ($window) {
+  return {
+    restrict: 'A',
+    link: function (scope, element) {
+      element.on('click', function () {
+        if (!$window.getSelection().toString()) {
+          this.setSelectionRange(0, this.value.length);
+        }
+      });
+    }
+  };
+}]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loMultibox', ['$timeout', function($timeout){
+    return {
+      restrict: 'E',
+      scope: {
+        items: '=',
+        selectedItem: '=',
+        resourceName: '@',
+        name: '@',
+        onItemSelect: '='
+      },
+      templateUrl: 'liveops-config-panel-shared/directives/loMultibox/loMultibox.html',
+      controller: 'DropdownController', //To handle auto collapsing on click!
+      link: function($scope, ele, $attrs, dropCtrl) {
+        
+        $scope.onSelect = function(selectedItem){
+          if (angular.isString(selectedItem)){
+            return;
+          }
+          
+          $scope.display = selectedItem.getDisplay();
+          
+          if(angular.isFunction($scope.onItemSelect)) {
+            $scope.onItemSelect(selectedItem);
+          }
+
+          dropCtrl.setShowDrop(false);
+          $scope.createMode = false;
+        };
+
+        $scope.createItem = function(){
+          $scope.$emit('resource:details:create:' + $scope.resourceName, $scope.selectedItem);
+          $scope.createMode = true;
+        };
+
+        $scope.labelClick = function(){
+          dropCtrl.setShowDrop(!$scope.showDrop);
+          
+          $scope.selectedItem = null;
+
+          if ($scope.showDrop){
+            $timeout(function(){
+              var input = ele.find('type-ahead input');
+              input.focus();
+            });
+          }
+        };
+
+        $scope.$watch('selectedItem', function(item) {
+          if (angular.isString(item)){
+            return;
+          } else if(item && angular.isFunction(item.getDisplay)) {
+            $scope.display = item.getDisplay();
+          }
+        }, true);
+
+        $scope.$on('resource:details:' + $scope.resourceName + ':canceled', function () {
+          $scope.createMode = false;
+        });
+
+        $scope.$on('created:resource:' + $scope.resourceName,
+          function (event, resource) {
+            if ($scope.createMode){
+              $scope.onSelect(resource);
+            }
+        });
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loSubmitSpinner', [function() {
+    return {
+      scope : {
+        loSubmitSpinnerStatus: '&'
+      },
+      link: function($scope, ele) {
+        $scope.spinnerElement = angular.element('<a disabled="true"><i class="fa fa-refresh fa-spin"></i></a>');
+        $scope.spinnerElement.addClass(ele[0].className);
+        $scope.spinnerElement.addClass('ng-hide');
+        ele.after($scope.spinnerElement);
+
+        $scope.$watch('loSubmitSpinnerStatus()', function (val) {
+          if (angular.isDefined(val)) {
+            ele.toggleClass('ng-hide', val);
+            $scope.spinnerElement.toggleClass('ng-hide', !val);
+          }
+        });
+      }
+    };
+   }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loValidate', [function() {
+    return {
+      require: 'ngModel',
+      link: function($scope, element, attrs, controller) {
+        
+        controller.$disabledValidators = {};
+        controller.$disabledFormatters = {};
+        
+        $scope.$watch(attrs.loValidate, function(newValidate) {
+          if (newValidate){
+            enable();
+          } else {
+            disable();
+          }
+        }, true);
+        
+        function disable() {
+          angular.extend(controller.$disabledValidators, controller.$validators);
+          controller.$validators = {};
+          
+          angular.extend(controller.$disabledFormatters, controller.$formatters);
+          controller.$formatters = {};
+          
+          for(var validator in controller.$disabledValidators) {
+            controller.$setValidity(validator, true);
+          }
+        }
+        
+        function enable() {
+          angular.extend(controller.$validators, controller.$disabledValidators);
+          controller.$disabledValidators = {};
+          
+          angular.extend(controller.$formatters, controller.$disabledFormatters);
+          controller.$disabledFormatters = {};
+        }
+      }
+    };
+   }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loading', [function() {
+    return {
+      restrict : 'E',
+      templateUrl : 'liveops-config-panel-shared/directives/loading/loading.html'
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+.directive('modal', [function () {
+  return {
+    restrict: 'E',
+    templateUrl : 'liveops-config-panel-shared/directives/modal/modal.html'
+  };
+}]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('ngResource', [function () {
     return {
       restrict: 'A',
       controller: function() {
         //TODO: validate resource object
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('numberSlider', ['$timeout', function($timeout){
+    return {
+      restrict: 'E',
+      scope: {
+        value: '=',
+        minValue: '@',
+        maxValue: '@',
+        hasHandles: '=',
+        placeholder: '@',
+        ngChanged: '&'
+      },
+      templateUrl: 'liveops-config-panel-shared/directives/numberSlider/numberSlider.html',
+      link: function($scope, element) {
+
+        $scope.minValue = $scope.minValue ? Number($scope.minValue) : null;
+        $scope.maxValue = $scope.maxValue ? Number($scope.maxValue) : null;
+
+        $scope.$watch('value', function () {
+          if($scope.value){
+            if(typeof($scope.value) === 'string'){
+              $scope.value = Number($scope.value.replace(/[^0-9\\.\\-]/g, ''));
+            }
+
+            if ($scope.maxValue !== null && $scope.value > $scope.maxValue) {
+              $scope.value = $scope.maxValue;
+            }
+
+            if ($scope.minValue !== null && $scope.value < $scope.minValue) {
+              $scope.value = $scope.minValue;
+            }
+
+            $scope.ngChanged($scope.value);
+          }
+        });
+
+        $scope.increment = function () {
+          if(! $scope.value){
+            $scope.value = $scope.minValue ? $scope.minValue : 0;
+            $scope.ngChanged();
+            return;
+          }
+
+          if($scope.maxValue === null || $scope.value < $scope.maxValue){
+            $scope.value = Number($scope.value) + 1;
+            $scope.ngChanged();
+          }
+        };
+
+        $scope.decrement = function () {
+          if(!$scope.value){
+            $scope.value = $scope.minValue ? $scope.minValue : 0;
+            $scope.ngChanged();
+            return;
+          }
+
+          if($scope.minValue === null || $scope.value > $scope.minValue){
+            $scope.value = Number($scope.value) - 1;
+            $scope.ngChanged();
+          }
+        };
+
+        element.find('input').bind('keydown keypress', function(event){
+          if(event.which === 40){ //Down arrow key
+            $timeout($scope.decrement);
+            event.preventDefault();
+          } else if(event.which === 38){ //Up arrow key
+            $timeout($scope.increment);
+            event.preventDefault();
+          }
+        });
+      }
+    };
+  }]);
+
+'use strict';
+/*jslint browser:true */
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('resizeHandle', ['$window', '$document', '$rootScope', 'lodash',
+    function($window, $document, $rootScope, _) {
+    return {
+      restrict : 'E',
+      scope : {
+        leftElementId : '@',
+        rightElementId : '@'
+      },
+
+      templateUrl : 'liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html',
+      link : function(scope, element) {
+        element.addClass('resize-pane');
+
+        scope.leftTargetElement = angular.element($('#'+scope.leftElementId));
+        scope.rightTargetElement = angular.element($('#'+scope.rightElementId));
+
+        element.on('mousedown', function(event) {
+          //Don't initiate resize on right click, because it's annoying
+          if (event.button !== 2) {
+            event.preventDefault();
+
+            $document.on('mousemove', mousemove);
+            $document.on('mouseup', scope.mouseup);
+          }
+        });
+
+        function mousemove(event) {
+          var leftWidth = scope.leftTargetElement[0].offsetWidth;
+          var rightWidth = scope.rightTargetElement[0].offsetWidth;
+
+          var leftBox = scope.leftTargetElement[0].getBoundingClientRect();
+          var leftLeft = leftBox.left;
+
+          var x = event.pageX;
+          x = x - leftLeft; //Correct for any offset that the panel container(s) have on the screen
+
+          scope.resizeElements(leftWidth, rightWidth, x);
+        }
+
+        scope.resizeElements = function(currLeftWidth, currRightWidth, mouseX){
+          var delta = currLeftWidth - mouseX,
+              newLeftWidth = currLeftWidth - delta,
+              newRightWidth = currRightWidth + delta,
+              leftMinWidth = parseInt(scope.leftTargetElement.css('min-width')),
+              rightMinWidth = parseInt(scope.rightTargetElement.css('min-width'));
+
+          if(newRightWidth < rightMinWidth || newLeftWidth < leftMinWidth){
+            return;
+          }
+
+          scope.leftTargetElement.css('width', newLeftWidth + 'px');
+          scope.rightTargetElement.css('width', newRightWidth + 'px');
+
+          var eventInfo = {
+            leftWidth: newLeftWidth,
+            rightWidth: newRightWidth
+          };
+
+          scope.sendResizeEvent(eventInfo);
+          scope.applyClasses(eventInfo, scope.leftTargetElement, 'leftWidth');
+          scope.applyClasses(eventInfo, scope.rightTargetElement, 'rightWidth');
+        };
+
+        scope.sendResizeEvent = _.throttle(function(eventInfo){
+          $rootScope.$broadcast('resizehandle:resize', eventInfo);
+        }, 500);
+
+        scope.applyClasses = function(info, element, fieldName){
+          if (info[fieldName] > 700){
+            element.addClass('two-col');
+          } else {
+            element.removeClass('two-col');
+          }
+
+          if (info[fieldName] < 450){
+            element.addClass('compact-view');
+          } else {
+            element.removeClass('compact-view');
+          }
+        };
+
+        scope.mouseup = function() {
+          $document.unbind('mousemove', mousemove);
+          $document.unbind('mouseup', scope.mouseup);
+        };
+      }
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('scrollTable', [function() {
+    return {
+      restrict: 'A',
+      replace: 'true',
+      compile: function CompilingFunction($templateElement) {
+        $templateElement.removeAttr('scroll-table'); //Prevent infinite recursion
+
+        var headerHeight = $templateElement.find('thead').height();
+        if (headerHeight === 0){
+          headerHeight = 35;
+        }
+
+        var headerCopy = $templateElement.find('thead').clone(true, true);
+        headerCopy.find('th').css('height', headerHeight + 'px');
+
+        var cloneHeaderTable = angular.element('<table class="clone-header">' + headerCopy[0].outerHTML + '</table>');
+        var origClasses = $templateElement[0].className;
+        cloneHeaderTable.addClass(origClasses);
+
+        //Remove duplicated header inputs for cleaner HTML
+        //Note: if a cell contains only an input and has no width explicitly set,
+        //removing the input will cause misalignment between the table cells and the header cells.
+        $templateElement.find('thead').find('input').remove();
+
+        $templateElement.replaceWith('<div class="scrollable-table-container" style="padding-top:' + headerHeight + 'px;">' +
+            cloneHeaderTable[0].outerHTML +
+            '<div class="table-wrapper"><div>' + $templateElement[0].outerHTML + '</div></div>' +
+            '</div>');
+
+        return function($scope, element, attrs){
+          if (attrs.maxHeight){
+            $scope.$watch(function(){return element.find('tbody').find('tr').length;}, function(count){
+              if (count > 0){
+                var approxHeight = headerHeight * count;
+                if (approxHeight < attrs.maxHeight){
+                  element.css('height', approxHeight + headerHeight + 5 + 'px');
+                } else {
+                  element.css('height', attrs.maxHeight + 'px');
+                }
+              }
+            });
+          }
+        };
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('separateValidation', [function () {
+    return {
+      restrict: 'A',
+      require: '?form',
+      link: function link($scope, element, iAttrs, formController) {
+
+        if (! formController) {
+          return;
+        }
+
+        // Remove this form from parent controller
+        var parentFormController = element.parent().controller('form');
+
+        if(parentFormController){
+          parentFormController.$removeControl(formController);
+        }
+        
+        // Replace form controller with a "null-controller"
+        var nullFormCtrl = {
+
+          $setValidity: function () {
+            formController.$invalid = false;
+            angular.forEach(element.find('input'), function (ele){
+              if(formController[ele.name] && formController[ele.name].$error) {
+                for (var prop in formController[ele.name].$error){
+                  if(prop && formController[ele.name].$error[prop]) {
+                    formController.$invalid = true;
+                    break;
+                  }
+                }
+              }
+
+            });
+
+          },
+          $setDirty: function () {
+            formController.$dirty = true;
+          },
+          $setPristine: function (value) {
+            formController.$pristine = value;
+          }
+        };
+
+        angular.extend(formController, nullFormCtrl);
+      }
+    };
+  }]);
+
+'use strict';
+/*jslint browser:true */
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('singleElementResizeHandle', ['$window', '$document', '$rootScope', 'lodash', function($window, $document, $rootScope, _) {
+    return {
+      restrict : 'E',
+      scope : {
+        elementId : '@',
+        minWidth: '@',
+        maxWidth: '@'
+      },
+      templateUrl : 'liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html',
+      link : function($scope, $element) {
+        $scope.targetElement = angular.element(document.getElementById($scope.elementId));
+
+        $element.on('mousedown', function() {
+          if (event.button !== 2) {
+            event.preventDefault();
+            $document.on('mousemove', mousemove);
+            $document.on('mouseup', $scope.mouseup);
+          }
+        });
+
+        function mousemove(event) {
+          var elementWidth = $scope.targetElement[0].offsetWidth;
+          var pageX = event.pageX;
+          var windowWidth = $window.innerWidth;
+
+          $scope.resizeElement(elementWidth, windowWidth, pageX);
+        }
+
+        $scope.applyClasses = function(width, element){
+          if (width > 700){
+            element.addClass('two-col');
+          } else {
+            element.removeClass('two-col');
+          }
+
+          if (width < 450){
+            element.addClass('compact-view');
+          } else {
+            element.removeClass('compact-view');
+          }
+        };
+
+        $scope.mouseup = function() {
+          $document.unbind('mousemove', mousemove);
+          $document.unbind('mouseup', $scope.mouseup);
+        };
+
+        $scope.sendResizeEvent = _.throttle(function(eventInfo) {
+          $rootScope.$broadcast('resizehandle:resize', eventInfo);
+        }, 500);
+
+        $scope.resizeElement = function(elementWidth, windowWidth, pageX) {
+          var newElementWidth = windowWidth - pageX;
+
+          if (newElementWidth < $scope.minWidth || newElementWidth > $scope.maxWidth) {
+            return;
+          }
+
+          $scope.targetElement.css('width', newElementWidth + 'px');
+          $scope.sendResizeEvent(newElementWidth);
+          $scope.applyClasses(newElementWidth, $scope.targetElement);
+        };
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('confirmToggle', ['Modal', '$timeout', function(Modal, $timeout) {
+    return {
+      require: ['ngModel', '^toggle'],
+      link: function ($scope, $element, $attrs, controllers) {
+        controllers[0].$parsers.push(function (newValue) {
+          return $scope.onToggle(newValue);
+        });
+        
+        $scope.onToggle = function(newValue){
+          $timeout(function(){ //For display until confirm dialog value is resolved
+            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
+          });
+          
+          return Modal.showConfirm({
+            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
+          }).then(function(){
+            $scope.$parent.ngModel = newValue;
+          });
+        };
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('toggle', [function() {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
+      scope : {
+        ngModel : '=',
+        ngDisabled : '=',
+        name: '@',
+        trueValue: '@',
+        falseValue: '@',
+        confirmEnableMessage: '@',
+        confirmDisableMessage: '@'
+      },
+      controller: function ($scope) {
+        if (angular.isUndefined($scope.trueValue)){
+          $scope.trueValue = true;
+        }
+
+        if(angular.isUndefined($scope.falseValue)) {
+          $scope.falseValue = false;
+        }
+
+        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
+          $scope.confirmOnToggle = true;
+        }
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('tooltip', ['$document', '$timeout', function ($document, $timeout) {
+    return {
+      templateUrl: 'liveops-config-panel-shared/directives/tooltip/tooltip.html',
+      scope: {
+        text: '@',
+        target: '=',
+        translateValue: '@'
+      },
+      link: function ($scope, element) {
+        $scope.targetPosition = $scope.target.offset();
+        $scope.tooltipWidth = 0;
+        $scope.tooltipHeight = 0;
+
+        $scope.setPosition = function () {
+          element.find('div').removeClass('top left right bottom');
+          $scope.tooltipWidth = element.outerWidth();
+          $scope.tooltipHeight = element.outerHeight();
+
+          var tooltipPos = $scope.getPositionClass();
+          var absolutePosition = $scope.getAbsolutePosition(tooltipPos);
+
+          element.find('div').addClass(tooltipPos);
+
+          element.css('left', absolutePosition.left);
+          element.css('top', absolutePosition.top);
+        };
+
+        $scope.getPositionClass = function () {
+          var tooltipPos;
+
+          var documentWidth = $document.width();
+          var documentHeight = $document.height();
+
+          var top = $scope.targetPosition.top;
+          var left = $scope.targetPosition.left;
+
+          if (top - $scope.tooltipHeight < 0) {
+            if (left - $scope.tooltipWidth < 0) {
+              tooltipPos = 'bottom right';
+            } else if (left + $scope.tooltipWidth > documentWidth) {
+              tooltipPos = 'bottom left';
+            } else {
+              tooltipPos = 'bottom center';
+            }
+          } else if (top + $scope.tooltipHeight > documentHeight) {
+            if (left - $scope.tooltipWidth < 0) {
+              tooltipPos = 'top right';
+            } else if (left + $scope.tooltipWidth > documentWidth) {
+              tooltipPos = 'top left';
+            } else {
+              tooltipPos = 'top center';
+            }
+          } else {
+            if (left - $scope.tooltipWidth < 0) {
+              tooltipPos = 'center right';
+            } else if (left + $scope.tooltipWidth > documentWidth) {
+              tooltipPos = 'center left';
+            } else {
+              tooltipPos = 'top center';
+            }
+          }
+
+          return tooltipPos;
+        };
+
+        $scope.getAbsolutePosition = function (tooltipPos) {
+          var arrowHeight = 15;
+          var arrowWidth = 13;
+          var arrowBase = 25;
+
+          var targetHeight = $scope.target.outerHeight();
+          var targetWidth = $scope.target.outerWidth();
+
+          var offsetLeft = $scope.targetPosition.left;
+          var offsetTop = $scope.targetPosition.top;
+
+          if (tooltipPos.indexOf('left') > -1) {
+            offsetLeft += -$scope.tooltipWidth - arrowWidth;
+          }
+
+          if (tooltipPos.indexOf('right') > -1) {
+            offsetLeft += targetWidth + arrowWidth;
+          }
+
+          if (tooltipPos === 'bottom center') {
+            offsetTop += targetHeight + arrowHeight;
+            offsetLeft += -(($scope.tooltipWidth - targetWidth) / 2);
+          } else if (tooltipPos === 'top center') {
+            offsetTop += -($scope.tooltipHeight + arrowHeight);
+            offsetLeft += -(($scope.tooltipWidth - targetWidth) / 2);
+          } else if (tooltipPos === 'top right' || tooltipPos === 'top left') {
+            offsetTop += -$scope.tooltipHeight + arrowBase;
+          } else if (tooltipPos === 'center right' || tooltipPos === 'center left') {
+            offsetTop += -($scope.tooltipHeight / 2) + (targetHeight / 2);
+          }
+
+          return {
+            top: offsetTop,
+            left: offsetLeft
+          };
+        };
+
+        $timeout($scope.setPosition, 1);
+      }
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('typeAhead', ['$filter', '$timeout', function($filter, $timeout) {
+    return {
+      restrict: 'E',
+      scope : {
+        items: '=',
+        nameField: '@',
+        onSelect: '&',
+        placeholder: '@',
+        prefill: '=',
+        keepExpanded: '=',
+        onEnter: '&',
+        filters: '=?',
+        selectedItem: '=?'
+      },
+
+      templateUrl: 'liveops-config-panel-shared/directives/typeAhead/typeAhead.html',
+
+      controller: function($scope) {
+        var self = this;
+
+        $scope.currentText = $scope.prefill || '';
+
+        this.defaultTextFilter = function defaultTextFilter(item, text) {
+          return item.getDisplay().toLowerCase().contains(text.toLowerCase());
+        };
+
+        $scope.filterCriteria = function(item) {
+          if (!$scope.filterArray) {
+            return;
+          }
+
+          var include = true;
+          for (var filterIndex = 0; filterIndex < $scope.filterArray.length; filterIndex++) {
+            var filter = $scope.filterArray[filterIndex];
+            include = include && filter.call(filter, item, $scope.currentText, $scope.items);
+          }
+          return include;
+        };
+
+        $scope.$watch('filters', function(newCriteria) {
+          $scope.filterArray = [];
+
+          if (newCriteria && angular.isArray(newCriteria)) {
+            $scope.filterArray = angular.copy(newCriteria);
+          } else if(newCriteria && !angular.isArray(newCriteria)) {
+            $scope.filterArray = [newCriteria];
+          }
+
+          $scope.filterArray.push(self.defaultTextFilter);
+        }, true);
+
+        $scope.updateHighlight = function(){
+          var filteredItems = $filter('filter')($scope.items, $scope.filterCriteria, true);
+
+          if ($scope.currentText === ''){
+            $scope.highlightedItem = null;
+            $scope.selectedItem = null;
+          } else if (filteredItems && filteredItems.length > 0){
+            //If previously highlighted item is filtered out, reset the highlight
+            var highlightedIndex = filteredItems.indexOf($scope.highlightedItem);
+            if (highlightedIndex < 0){
+              $scope.highlightedItem = null;
+              $scope.selectedItem = $scope.currentText;
+            }
+
+            if (angular.isDefined(filteredItems[0].getDisplay) && filteredItems[0].getDisplay() === $scope.currentText){
+              //If the input exactly matches a result
+              $scope.highlightedItem = filteredItems[0];
+              $scope.selectedItem = filteredItems[0];
+            } else {
+              $scope.highlightedItem = filteredItems[0];
+              $scope.selectedItem = $scope.currentText;
+            }
+          } else {
+            $scope.highlightedItem = null;
+            $scope.selectedItem = $scope.currentText;
+          }
+        };
+
+        $scope.$watch('currentText', function() {
+          $scope.updateHighlight();
+        });
+
+        $scope.$watch('selectedItem', function(newVal) {
+          if (newVal === null){
+            $scope.currentText = '';
+          }
+        });
+
+        $scope.$watch('items', function(items) {
+          if (angular.isDefined(items)){
+            $scope.updateHighlight();
+          }
+        }, true);
+
+        $scope.select = function(item) {
+          if (! angular.isString(item)){
+            $scope.currentText = angular.isDefined(item.getDisplay) ? item.getDisplay() : item[$scope.nameField];
+          }
+
+          $scope.selectedItem = item;
+          $scope.onSelect({selectedItem: item});
+
+          if (!$scope.keepExpanded) {
+            $scope.hovering = false;
+            $scope.showSuggestions = false;
+          }
+        };
+
+        $scope.onBlur = function() {
+          if (!$scope.keepExpanded) { //Prevents the button in multibox from jumping around
+            $scope.showSuggestions = false;
+          }
+        };
+
+        $scope.orderByFunction = function(item){
+          var displayString = item.getDisplay();
+
+          return displayString? displayString : item[$scope.nameField];
+        };
+      },
+      link: function($scope, element) {
+        element.find('input').bind('keydown keypress', function(event){
+          var highlightedIndex;
+
+          if (event.which === 13) { //Enter key
+            $timeout(function(){
+              var selected = $scope.highlightedItem ? $scope.highlightedItem : $scope.currentText;
+              $scope.select(selected);
+              $scope.onEnter({item: selected});
+            });
+
+            event.preventDefault();
+          } else if(event.which === 40){ //Down arrow key
+           highlightedIndex = $scope.filtered.indexOf($scope.highlightedItem);
+
+            if (highlightedIndex + 1 < $scope.filtered.length){
+              $timeout(function(){
+                $scope.highlightedItem = $scope.filtered[highlightedIndex + 1];
+
+                var li = element.find('li:nth-child(' + (highlightedIndex + 2) + ')');
+                $scope.showListElement(li);
+              });
+            }
+          } else if(event.which === 38){ //Up arrow key
+            highlightedIndex = $scope.filtered.indexOf($scope.highlightedItem);
+
+            if (highlightedIndex - 1 >= 0){
+              $timeout(function(){
+                $scope.highlightedItem = $scope.filtered[highlightedIndex - 1];
+
+                //Scroll to this element in the dropdown
+                var li = element.find('li:nth-child(' + highlightedIndex + ')');
+                $scope.showListElement(li);
+              });
+            }
+          }
+        });
+
+        $scope.showListElement = function(li){
+          var elementTop = li.get(0).offsetTop;
+          var elementHeight = li.get(0).offsetHeight;
+          var elementBottom = elementTop + elementHeight;
+          var containerHeight = element.find('ul').get(0).offsetHeight;
+          var scrollTop = element.find('ul').get(0).scrollTop;
+
+          if (elementBottom > (scrollTop + containerHeight)){
+            element.find('ul').get(0).scrollTop = elementBottom - containerHeight;
+          } else if (elementTop < scrollTop){
+            element.find('ul').get(0).scrollTop = elementTop;
+          }
+        };
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('uuid', [function () {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function link($scope, element, attrs, ctrl) {
+        ctrl.$validators.uuid = function(modelValue, viewValue) {
+          if (ctrl.$isEmpty(modelValue)) {
+            // consider empty models to be valid - required will catch it if its not
+            return true;
+          }
+          
+          //regex from http://stackoverflow.com/a/13653180
+          if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(viewValue)) {
+            return true;
+          }
+
+          return false;
+        };
       }
     };
   }]);
@@ -997,33 +2164,6 @@ angular.module('liveopsConfigPanel.shared.filters')
       return Object.keys(obj).length;
     };
   }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-.filter('objectNegation', function() {
-    return function (items, field, otherItems, otherField) {
-      var filtered = [];
-
-      angular.forEach(items, function(item){
-        var include = true;
-
-        for(var i = 0; i < otherItems.length; i++){
-          var otherItem = otherItems[i];
-
-          if(item[field] === otherItem[otherField]){
-            include = false;
-            break;
-          }
-        }
-
-        if(include){
-          filtered.push(item);
-        }
-      });
-
-      return filtered;
-    };
-  });
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
@@ -1062,6 +2202,33 @@ angular.module('liveopsConfigPanel.shared.filters')
       return findFields(item, fieldPath, value);
     };
   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+.filter('objectNegation', function() {
+    return function (items, field, otherItems, otherField) {
+      var filtered = [];
+
+      angular.forEach(items, function(item){
+        var include = true;
+
+        for(var i = 0; i < otherItems.length; i++){
+          var otherItem = otherItems[i];
+
+          if(item[field] === otherItem[otherField]){
+            include = false;
+            break;
+          }
+        }
+
+        if(include){
+          filtered.push(item);
+        }
+      });
+
+      return filtered;
+    };
+  });
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
@@ -1850,6 +3017,46 @@ angular.module('liveopsConfigPanel.shared.services')
       $document.find('modal').remove();
     };
   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('editFieldDropDown', function () {
+    return {
+      restrict: 'E',
+      transclude: true,
+      templateUrl: 'liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html',
+      scope: {
+        ngModel: '=',
+        save: '=',
+        objectId: '=',
+        defaultText: '@',
+        name: '@',
+        label: '@',
+        placeholder: '@'
+      },
+      controller: 'EditFieldController'
+    };
+  });
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('editField', function () {
+    return {
+      restrict: 'E',
+      templateUrl: 'liveops-config-panel-shared/directives/editField/input/editField_input.html',
+      scope: {
+        ngModel: '=',
+        save: '=',
+        objectId: '=',
+        name: '@',
+        label: '@',
+        type: '@',
+        placeholder: '@'
+      },
+      controller: 'EditFieldController'
+    };
+  });
+
 'use strict';
 
 angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock'])
