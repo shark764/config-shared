@@ -18,7 +18,7 @@ angular.module('liveopsConfigPanel.shared.services')
       var newScope = $rootScope.$new();
       
       //Set scope properties for the template to use
-      newScope.modalBody = 'app/shared/services/modal/confirmModal.html';
+      newScope.modalBody = 'liveops-config-panel-shared/services/modal/confirmModal.html';
       newScope.title = options.title;
       newScope.message = options.message;
       newScope.okCallback = function(){
