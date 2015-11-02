@@ -13,6 +13,7 @@ var jshint = require('gulp-jshint');
 var wiredep = require('wiredep');
 var _ = require('lodash');
 var gutil = require('gulp-util');
+var debug = require('gulp-debug');
 
 var templateCache = require('gulp-angular-templatecache');
 var eventStream = require('event-stream');
@@ -87,9 +88,24 @@ gulp.task('styles', function () {
   ], {
     read: false
   });
+  
+  var styleFiles = gulp.src([
+    'src/liveops-config-panel-shared/sass/_constants.scss',
+    'src/liveops-config-panel-shared/sass/_mixins.scss',
+    'src/liveops-config-panel-shared/sass/_fonts.scss',
+    'src/liveops-config-panel-shared/sass/_components.scss',
+    'src/liveops-config-panel-shared/sass/_inputs.scss',
+    'src/liveops-config-panel-shared/sass/_layout.scss',
+    'src/liveops-config-panel-shared/index.scss',
+    'src/liveops-config-panel-shared/directives/**/*.scss',
+    'src/liveops-config-panel-shared/filters/**/*.scss',
+    'src/liveops-config-panel-shared/services/**/*.scss',
+    'src/liveops-config-panel-shared/util/**/*.scss'
+  ]);
 
-  return gulp.src(['src/liveops-config-panel-shared/index.scss'])
-    .pipe($.inject(injectFiles, injectOptions))
+  return styleFiles
+    .pipe(concat('styles.scss'))
+    .pipe(gulp.dest('./dist/'))
     .pipe($.sourcemaps.init())
     .pipe($.sass(sassOptions)).on('error', errorHandler('Sass'))
     .pipe($.autoprefixer()).on('error', errorHandler('Autoprefixer'))
