@@ -2,8 +2,7 @@
   "name": "liveops-config-panel-shared",
   "version": "0.1.0",
   "main": [
-    "dist/liveops-config-panel-shared.js",
-    "dist/styles.css"
+    "dist/liveops-config-panel-shared.js"
   ],
   "dependencies": {
     "jquery": "~2.1.1",
