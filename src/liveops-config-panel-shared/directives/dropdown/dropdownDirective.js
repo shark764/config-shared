@@ -40,7 +40,10 @@ angular.module('liveopsConfigPanel.shared.directives')
         scope.optionClick = function(func){
           scope.showDrop = false;
           scope.hovering = false;
-          func();
+          
+          if (angular.isFunction(func)){
+            func();
+          }
         };
 
         if(! scope.collapseIcon){
