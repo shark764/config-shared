@@ -21,7 +21,21 @@ angular.module('liveopsConfigPanel.shared.directives')
       };
       
       this.getAffected = function getAffected() {
-
+        var checkedItems = self.getCheckedItems($scope.items);
+        var checkedBulkActions = self.getCheckedItems(self.bulkActions);
+        
+        var affectedItems = [];
+        
+        angular.forEach(checkedItems, function(item) {
+          angular.forEach(checkedBulkActions, function(bulkAction) {
+            if(bulkAction.doesQualify(item)) {
+              affectedItems.push(item);
+            }
+          })
+          
+        });
+        
+        return affectedItems;
       };
       
       this.execute = function execute() {
@@ -50,15 +64,14 @@ angular.module('liveopsConfigPanel.shared.directives')
       
       this.canExecute = function canExecute () {
         var selectedBulkActions = self.getCheckedItems(self.bulkActions);
+        
         var canExecute = !!selectedBulkActions.length;
         
-        if( $scope.selectedItems().length === 0 ){
-          return false;
+        if(canExecute = canExecute && !!self.getAffected().length){
+          angular.forEach(selectedBulkActions, function (bulkAction) {
+            canExecute = canExecute && bulkAction.canExecute();
+          });
         }
-        
-        angular.forEach(selectedBulkActions, function (bulkAction) {
-          canExecute = canExecute && bulkAction.canExecute();
-        });
         
         return canExecute;
       };

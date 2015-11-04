@@ -20,7 +20,7 @@ angular.module('liveopsConfigPanel.shared.directives')
             Modal.showConfirm({
               title: $translate.instant('bulkActions.confirm.title'),
               message: $translate.instant($scope.confirmMessageKey, {
-                numItems: $scope.selectedItems().length
+                numItems: controller.getAffected().length
               }),
               okCallback: $scope.execute
             });
