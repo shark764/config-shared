@@ -1,7 +1,9 @@
 {
   "name": "liveops-config-panel-shared",
   "version": "0.1.0",
-  "main": ["dist/liveops-config-panel-shared.js"],
+  "main": [
+    "dist/liveops-config-panel-shared.js"
+  ],
   "dependencies": {
     "jquery": "~2.1.1",
     "angular-resource": "~1.3.4",
@@ -18,16 +20,7 @@
     "angular-messages": "~1.4.0",
     "angular-sanitize": "~1.4.0",
     "angular-ui-router": "~0.2.15",
-    "angular-toastr": "~1.4.1",
-    "rappid": "git@github.com:liveops/rappid.git",
-    "flow-library": "git@github.com:liveops/flow-library.git",
-    "MouseWheelJS": "*",
-    "KeyboardJS": "git@github.com:Latros/KeyboardJS.git#Testing-Package-JSON",
-    "teljs": "git@github.com:john-benson/tel.js.git#master",
-    "realtime-dashboards": "git@github.com:liveops/realtime-dashboards.git#master",
-    "jsedn": "git@github.com:liveops/jsedn#master",
-    "ng-file-upload": "~7.0.17",
-    "angular-drag-and-drop-lists": "~1.3.0"
+    "angular-toastr": "~1.4.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.3.4"
