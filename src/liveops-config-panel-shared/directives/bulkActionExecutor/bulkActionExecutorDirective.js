@@ -39,7 +39,7 @@ angular.module('liveopsConfigPanel.shared.directives')
                 $scope.checkedItems.push(item);
               }
             });
-            
+
             if ($scope.dropOrderBy) {
               //Reorder elements while preserving original object reference to avoid infinite digest loop
               var sorted = $filter('orderBy')($scope.checkedItems, $scope.dropOrderBy);
@@ -83,8 +83,19 @@ angular.module('liveopsConfigPanel.shared.directives')
               $scope.resetForm();
             }
           });
-          
-          $scope.execute = controller.execute;
+
+          $scope.execute = function execute() {
+            //Prevent unsaved changes warning from triggering if all items are
+            //filtered out of the table and the bulk actions panel auto-closes
+            $scope.bulkActionForm.$setUntouched();
+            $scope.bulkActionForm.$setPristine();
+
+            return controller.execute().then(function () {
+              Alert.success($translate.instant('bulkAction.success'));
+              $scope.resetForm();
+            });
+          }
+
           $scope.canExecute = controller.canExecute;
         }
       };
