@@ -17,7 +17,7 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
       'groups': []
     }), new TenantUser({
       'id': 'userId2',
-      'status': 'enabled',
+      'status': 'accepted',
       'externalId': 80232,
       'lastName': 'Oliver',
       'firstName': 'Michael',
