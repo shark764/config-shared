@@ -1,9 +1,15 @@
 'use strict';
 
+/*
+  formFieldValidationMessage is basically a clone of formError with a couple o
+  key differences:
+    - it "requires" a form up the DOM tree
+    - it resolves the field based fieldName
+*/
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('formErrorTwo', function() {
+  .directive('formFieldValidationMessage', function() {
     return {
-      templateUrl : 'liveops-config-panel-shared/directives/formError/formError.html',
+      templateUrl : 'liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html',
       require: '^form',
       scope : {
         fieldName : '@'
