@@ -14,7 +14,7 @@ angular.module('liveopsConfigPanel.shared.directives')
       link : function($scope, $element) {
         $scope.targetElement = angular.element(document.getElementById($scope.elementId));
 
-        $element.on('mousedown', function() {
+        $element.on('mousedown', function(event) {
           if (event.button !== 2) {
             event.preventDefault();
             $document.on('mousemove', mousemove);
