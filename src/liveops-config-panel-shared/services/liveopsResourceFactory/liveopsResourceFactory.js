@@ -241,7 +241,19 @@ angular.module('liveopsConfigPanel.shared.services')
 
             return promise;
           };
-
+          
+          Resource.hasItem = function(params, cacheKey) {
+            var key = cacheKey ? cacheKey : this.prototype.resourceName;
+            var cache = queryCache.get(key);
+            
+            if(!cache) {
+              return false;
+            }
+            
+            var item = _.find(cache, params);
+            return !!item;
+          };
+          
           Resource.cachedGet = function(params, cacheKey, invalidate) {
             var key = cacheKey ? cacheKey : this.prototype.resourceName;
 
@@ -262,6 +274,7 @@ angular.module('liveopsConfigPanel.shared.services')
               }
 
               cache.push(item);
+              cache.$promise = item.$promise;
             }
 
             return item;
