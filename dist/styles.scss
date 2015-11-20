@@ -771,7 +771,7 @@ a:hover {
 }
 
 .lo-main-bg, .btn-primary {
-  background-color: $main-color;
+  background-color: $main-color !important;
 }
 
 .lo-highlight {

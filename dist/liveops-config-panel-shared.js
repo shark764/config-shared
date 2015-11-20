@@ -3182,82 +3182,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
-  .service('mockTenants', function (Tenant) {
-    return [new Tenant({
-      'id': 'tenant-id'
-    }), new Tenant({
-      'id': 'tenant-id-2'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockTenants',
-    function ($httpBackend, apiHostname, mockTenants) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id').respond({
-        'result': mockTenants[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-2').respond({
-        'result': mockTenants[1]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants?regionId=regionId1').respond({
-        'result': mockTenants
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-0').respond(404);
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
-
-      var Tenant = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:id',
-        resourceName: 'Tenant',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'active'
-        }, {
-          name: 'adminUserId'
-        }],
-        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Tenant.prototype.getDisplay = function () {
-        return this.name;
-      };
-      
-      //This is an awkward workaround for tenant list functionality 
-      //in the case where list should only show current selected tenant due to having MANAGE_TENANT permission
-      var obj = Tenant;
-      Tenant.prototype.getAsArray = function(id){
-        var cached = queryCache.get(id + 'arr');
-
-        if (!cached) {
-          var item = obj.get({id: id});
-          var mockArray = [item];
-          mockArray.$promise = item.$promise;
-          mockArray.$resolved = true;
-          queryCache.put(id + 'arr', mockArray);
-          return mockArray;
-        }
-
-        return cached;
-      };
-
-      return Tenant;
-    }
-  ]);
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.services')
   .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'userUpdateTransformer',
     function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, userUpdateTransformer) {
@@ -3360,6 +3284,82 @@ angular.module('liveopsConfigPanel.user.mock', ['liveopsConfigPanel.mock'])
       $httpBackend.when('GET', apiHostname + '/v1/users/userId0?tenantId=tenant-id').respond(404);
       
       $httpBackend.when('POST', apiHostname + '/v1/users').respond(mockUsers[2]);
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTenants', function (Tenant) {
+    return [new Tenant({
+      'id': 'tenant-id'
+    }), new Tenant({
+      'id': 'tenant-id-2'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTenants',
+    function ($httpBackend, apiHostname, mockTenants) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id').respond({
+        'result': mockTenants[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-2').respond({
+        'result': mockTenants[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants?regionId=regionId1').respond({
+        'result': mockTenants
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-0').respond(404);
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
+
+      var Tenant = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:id',
+        resourceName: 'Tenant',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'active'
+        }, {
+          name: 'adminUserId'
+        }],
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Tenant.prototype.getDisplay = function () {
+        return this.name;
+      };
+      
+      //This is an awkward workaround for tenant list functionality 
+      //in the case where list should only show current selected tenant due to having MANAGE_TENANT permission
+      var obj = Tenant;
+      Tenant.prototype.getAsArray = function(id){
+        var cached = queryCache.get(id + 'arr');
+
+        if (!cached) {
+          var item = obj.get({id: id});
+          var mockArray = [item];
+          mockArray.$promise = item.$promise;
+          mockArray.$resolved = true;
+          queryCache.put(id + 'arr', mockArray);
+          return mockArray;
+        }
+
+        return cached;
+      };
+
+      return Tenant;
     }
   ]);
 'use strict';
@@ -4769,113 +4769,6 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
-      return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
-        resourceName: 'TenantGroupUser',
-        requestUrlFields: {
-          tenantId: '@tenantId',
-          groupId: '@groupId',
-          memberId: '@memberId'
-        }
-      });
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
-
-      return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
-        resourceName: 'TenantUserGroup',
-        requestUrlFields: {
-          tenantId: '@tenantId',
-          memberId: '@memberId'
-        }
-      });
-
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.user.group.mock', [
-  'liveopsConfigPanel.mock'])
-  .service('mockGroupUsers', function(TenantGroupUsers) {
-    return [new TenantGroupUsers({
-      'groupId': 'groupId1',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantGroupUsers({
-      'groupId': 'groupId2',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantGroupUsers({
-      'groupId': 'groupId1',
-      'memberId': 'userId2',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .service('mockUserGroups', function(TenantUserGroups) {
-    return [new TenantUserGroups({
-      'groupId': 'groupId1',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantUserGroups({
-      'groupId': 'groupId2',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantUserGroups({
-      'groupId': 'groupId1',
-      'memberId': 'userId2',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockGroups', 'mockGroupUsers', 'mockUserGroups', 'Session',
-    function($httpBackend, apiHostname, mockGroups, mockGroupUsers, mockUserGroups, Session) {
-      Session.tenant.tenantId = 'tenant-id';
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users', {
-        userId: 'userId1'
-      }).respond(200, mockUserGroups[1]);
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users', {
-        userId: 'userId1'
-      }).respond(200, mockUserGroups[1]);
-
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId1')
-        .respond(200);
-
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId2')
-        .respond(200);
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/groups').respond({
-        'result': [mockUserGroups[0], mockUserGroups[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/groups').respond({
-        'result': [mockUserGroups[2]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users').respond({
-        'result': [mockGroupUsers[0], mockGroupUsers[2]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users').respond({
-        'result': [mockGroupUsers[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3/users').respond({
-        'result': []
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
   .service('removeDefaultProficiencyInterceptor', ['queryCache', 'Skill', 'Session', 'filterFilter',
     function (queryCache, Skill, Session, filterFilter) {
       this.response = function (response) {
@@ -4987,5 +4880,112 @@ angular.module('liveopsConfigPanel.shared.services')
 
         return response.resource;
       };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname',
+    function (LiveopsResourceFactory, apiHostname) {
+      return LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
+        resourceName: 'TenantGroupUser',
+        requestUrlFields: {
+          tenantId: '@tenantId',
+          groupId: '@groupId',
+          memberId: '@memberId'
+        }
+      });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname',
+    function (LiveopsResourceFactory, apiHostname) {
+
+      return LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
+        resourceName: 'TenantUserGroup',
+        requestUrlFields: {
+          tenantId: '@tenantId',
+          memberId: '@memberId'
+        }
+      });
+
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.user.group.mock', [
+  'liveopsConfigPanel.mock'])
+  .service('mockGroupUsers', function(TenantGroupUsers) {
+    return [new TenantGroupUsers({
+      'groupId': 'groupId1',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantGroupUsers({
+      'groupId': 'groupId2',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantGroupUsers({
+      'groupId': 'groupId1',
+      'memberId': 'userId2',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .service('mockUserGroups', function(TenantUserGroups) {
+    return [new TenantUserGroups({
+      'groupId': 'groupId1',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantUserGroups({
+      'groupId': 'groupId2',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantUserGroups({
+      'groupId': 'groupId1',
+      'memberId': 'userId2',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockGroups', 'mockGroupUsers', 'mockUserGroups', 'Session',
+    function($httpBackend, apiHostname, mockGroups, mockGroupUsers, mockUserGroups, Session) {
+      Session.tenant.tenantId = 'tenant-id';
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users', {
+        userId: 'userId1'
+      }).respond(200, mockUserGroups[1]);
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users', {
+        userId: 'userId1'
+      }).respond(200, mockUserGroups[1]);
+
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId1')
+        .respond(200);
+
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId2')
+        .respond(200);
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/groups').respond({
+        'result': [mockUserGroups[0], mockUserGroups[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/groups').respond({
+        'result': [mockUserGroups[2]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users').respond({
+        'result': [mockGroupUsers[0], mockGroupUsers[2]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users').respond({
+        'result': [mockGroupUsers[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3/users').respond({
+        'result': []
+      });
     }
   ]);
