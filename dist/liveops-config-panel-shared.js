@@ -380,45 +380,6 @@ if (!String.prototype.contains) {
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('auditText', ['$filter', 'TenantUser', 'Session',
-    function ($filter, TenantUser, Session) {
-      return {
-        restrict: 'AE',
-        scope: {
-          translation: '@',
-          userId: '=',
-          date: '='
-        },
-        template: '{{get()}}',
-        link: function ($scope) {
-          $scope.get = function () {
-            if (!$scope.userId) {
-              return  $filter('translate')($scope.translation, {
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            var user = TenantUser.cachedGet({
-              id: $scope.userId,
-              tenantId: Session.tenant.tenantId
-            }, 'AuditTextUsers');
-
-            if(user.$resolved) {
-              $scope.text = $filter('translate')($scope.translation, {
-                displayName: user.getDisplay(),
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            return $scope.text;
-          };
-        }
-      };
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('autocomplete', ['filterFilter', '$timeout', function(filterFilter, $timeout) {
     return {
       restrict: 'E',
@@ -467,6 +428,45 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('auditText', ['$filter', 'TenantUser', 'Session',
+    function ($filter, TenantUser, Session) {
+      return {
+        restrict: 'AE',
+        scope: {
+          translation: '@',
+          userId: '=',
+          date: '='
+        },
+        template: '{{get()}}',
+        link: function ($scope) {
+          $scope.get = function () {
+            if (!$scope.userId) {
+              return  $filter('translate')($scope.translation, {
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            var user = TenantUser.cachedGet({
+              id: $scope.userId,
+              tenantId: Session.tenant.tenantId
+            }, 'AuditTextUsers');
+
+            if(user.$resolved) {
+              $scope.text = $filter('translate')($scope.translation, {
+                displayName: user.getDisplay(),
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            return $scope.text;
+          };
+        }
+      };
+    }
+  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -739,8 +739,8 @@ $templateCache.put("liveops-config-panel-shared/directives/loading/loading.html"
 $templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\n\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
+$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
 $templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item}\"  \n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
@@ -1729,6 +1729,61 @@ angular.module('liveopsConfigPanel.shared.directives')
   }]);
 
 'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('confirmToggle', ['Modal', '$timeout', function(Modal, $timeout) {
+    return {
+      require: ['ngModel', '^toggle'],
+      link: function ($scope, $element, $attrs, controllers) {
+        controllers[0].$parsers.push(function (newValue) {
+          return $scope.onToggle(newValue);
+        });
+        
+        $scope.onToggle = function(newValue){
+          $timeout(function(){ //For display until confirm dialog value is resolved
+            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
+          });
+          
+          return Modal.showConfirm({
+            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
+          }).then(function(){
+            $scope.$parent.ngModel = newValue;
+          });
+        };
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('toggle', [function() {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
+      scope : {
+        ngModel : '=',
+        ngDisabled : '=',
+        name: '@',
+        trueValue: '@',
+        falseValue: '@',
+        confirmEnableMessage: '@',
+        confirmDisableMessage: '@'
+      },
+      controller: function ($scope) {
+        if (angular.isUndefined($scope.trueValue)){
+          $scope.trueValue = true;
+        }
+
+        if(angular.isUndefined($scope.falseValue)) {
+          $scope.falseValue = false;
+        }
+
+        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
+          $scope.confirmOnToggle = true;
+        }
+      }
+    };
+   }]);
+'use strict';
 /*jslint browser:true */
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1798,61 +1853,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('confirmToggle', ['Modal', '$timeout', function(Modal, $timeout) {
-    return {
-      require: ['ngModel', '^toggle'],
-      link: function ($scope, $element, $attrs, controllers) {
-        controllers[0].$parsers.push(function (newValue) {
-          return $scope.onToggle(newValue);
-        });
-        
-        $scope.onToggle = function(newValue){
-          $timeout(function(){ //For display until confirm dialog value is resolved
-            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
-          });
-          
-          return Modal.showConfirm({
-            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
-          }).then(function(){
-            $scope.$parent.ngModel = newValue;
-          });
-        };
-      }
-    };
-   }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('toggle', [function() {
-    return {
-      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
-      scope : {
-        ngModel : '=',
-        ngDisabled : '=',
-        name: '@',
-        trueValue: '@',
-        falseValue: '@',
-        confirmEnableMessage: '@',
-        confirmDisableMessage: '@'
-      },
-      controller: function ($scope) {
-        if (angular.isUndefined($scope.trueValue)){
-          $scope.trueValue = true;
-        }
-
-        if(angular.isUndefined($scope.falseValue)) {
-          $scope.falseValue = false;
-        }
-
-        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
-          $scope.confirmOnToggle = true;
-        }
-      }
-    };
-   }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -3263,47 +3263,6 @@ angular.module('liveopsConfigPanel.user.mock', ['liveopsConfigPanel.mock'])
   ]);
 'use strict';
 
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('DispatchMapping', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
-
-      var DispatchMapping = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/dispatch-mappings/:id',
-        resourceName: 'DispatchMapping',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'value',
-          optional: true
-        }, {
-          name: 'flowId',
-          optional: true
-        }, {
-          name: 'channelType',
-          optional: true
-        }, {
-          name: 'interactionField',
-          optional: true
-        }, {
-          name: 'active',
-          optional: true
-        }],
-        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      DispatchMapping.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return DispatchMapping;
-    }
-  ]);
-'use strict';
-
 angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'])
   .service('mockFlows', function(Flow){
     return [new Flow({
@@ -3375,6 +3334,47 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       return Flow;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('DispatchMapping', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+
+      var DispatchMapping = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/dispatch-mappings/:id',
+        resourceName: 'DispatchMapping',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'value',
+          optional: true
+        }, {
+          name: 'flowId',
+          optional: true
+        }, {
+          name: 'channelType',
+          optional: true
+        }, {
+          name: 'interactionField',
+          optional: true
+        }, {
+          name: 'active',
+          optional: true
+        }],
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      DispatchMapping.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return DispatchMapping;
     }
   ]);
 'use strict';
@@ -3559,63 +3559,6 @@ angular.module('liveopsConfigPanel.shared.services')
 
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfigPanel.mock'])
-  .service('mockMediaCollections', function (MediaCollection) {
-    return [new MediaCollection({
-      id: 'mc1'
-    }), new MediaCollection({
-      id: 'mc2'
-    })];
-  })
-  .service('mockMedias', function (Media) {
-    return [new Media({
-      id: 'm1'
-    }), new Media({
-      id: 'm2'
-    })];
-  })
-  .run(function ($httpBackend, apiHostname, Session, mockMedias, mockMediaCollections) {
-    Session.tenant = {
-      tenantId: '1'
-    };
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media').respond(200, mockMedias);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media-collections').respond(200, mockMediaCollections);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media').respond(200, mockMedias);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media-collections').respond(200, mockMediaCollections);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media').respond(200, []);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media-collections').respond(200, []);
-  });
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('MediaCollection', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'mediaCollectionMapCleanTransformer',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, mediaCollectionMapCleanTransformer) {
-
-      var MediaCollection = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/media-collections/:id',
-        resourceName: 'MediaCollection',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'mediaMap',
-          optional: true
-        }, {
-          name: 'defaultMediaKey',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        putRequestTransformer: mediaCollectionMapCleanTransformer
-      });
-
-      return MediaCollection;
-    }
-  ]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.services')
   .factory('Queue', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
@@ -3685,6 +3628,63 @@ angular.module('liveopsConfigPanel.tenant.queue.mock', ['liveopsConfigPanel.mock
       });
     }
   ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfigPanel.mock'])
+  .service('mockMediaCollections', function (MediaCollection) {
+    return [new MediaCollection({
+      id: 'mc1'
+    }), new MediaCollection({
+      id: 'mc2'
+    })];
+  })
+  .service('mockMedias', function (Media) {
+    return [new Media({
+      id: 'm1'
+    }), new Media({
+      id: 'm2'
+    })];
+  })
+  .run(function ($httpBackend, apiHostname, Session, mockMedias, mockMediaCollections) {
+    Session.tenant = {
+      tenantId: '1'
+    };
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media').respond(200, mockMedias);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media-collections').respond(200, mockMediaCollections);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media').respond(200, mockMedias);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media-collections').respond(200, mockMediaCollections);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media').respond(200, []);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media-collections').respond(200, []);
+  });
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('MediaCollection', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'mediaCollectionMapCleanTransformer',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, mediaCollectionMapCleanTransformer) {
+
+      var MediaCollection = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/media-collections/:id',
+        resourceName: 'MediaCollection',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'mediaMap',
+          optional: true
+        }, {
+          name: 'defaultMediaKey',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        putRequestTransformer: mediaCollectionMapCleanTransformer
+      });
+
+      return MediaCollection;
+    }
+  ]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.tenant.permission.mock', ['liveopsConfigPanel.mock'])

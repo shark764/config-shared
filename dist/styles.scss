@@ -312,23 +312,30 @@ $fontRobotoCondensed: 'Roboto Condensed';
   text-align: center;
 }
 
-.tag {
-  border: 1px solid $light-grey;
-  @include border-radius();
-  display: inline-block;
-  float: left;
-  line-height: 2.5ex;
-  margin: 0 5px 0 5px;
-  background-color: $lightest-grey;
-  color: $darkest-grey;
-  padding: 3px 7px;
-
-  a {
-    color: $grey;
+.table {
+  border: $light-grey solid 1px;
+  border-spacing: 0;
+  @include border-radius(0px);
+  font-size: 0.9em;
+  width: 100%;
+  
+  &.clone-header {
+      @include border-radius-complex(4px, 0, 0, 4px);
+      border-bottom: 0;
   }
 
-  a:hover {
+  td, th {
+    padding: 10px;
+  }
+
+  th {
+    border-bottom: $light-grey solid 1px;
     color: $dark-grey;
+    font-weight: 600;
+  }
+
+  tbody tr:hover {
+    background-color: $accent-light;
   }
 }
 
@@ -593,31 +600,10 @@ header {
       padding: 15px;
 
       .table {
-        border: $light-grey solid 1px;
-        border-spacing: 0;
-        @include border-radius(0px);
-        font-size: 0.9em;
-        width: 100%;
         max-width: $max-control-width + 200px;
-        
-        &.clone-header {
-            @include border-radius-complex(4px, 0, 0, 4px);
-            border-bottom: 0;
-        }
-  
-        td, th {
-          padding: 10px;
-        }
   
         th {
-          border-bottom: $light-grey solid 1px;
-          color: $dark-grey;
           text-align: left;
-          font-weight: 600;
-        }
-  
-        tbody tr:hover {
-          background-color: $accent-light;
         }
         
         .control-col {
