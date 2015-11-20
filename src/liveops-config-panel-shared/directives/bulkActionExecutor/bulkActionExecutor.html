@@ -9,7 +9,8 @@
     </filter-dropdown>
   </div>
 
-  <div class="detail-body" ng-transclude>
+  <div class="detail-body">
+    <!-- bulkAction elements injected here -->
   </div>
 
   <div class="detail-controls">
@@ -19,7 +20,8 @@
       ng-click="cancel()"
       value="{{'value.cancel' | translate}}">
     </input>
-    <input id="submit-bulk-actions-btn" ng-disabled="!canExecute()"
+    <input id="submit-bulk-actions-btn"
+      ng-disabled="!canExecute()"
       type="button"
       class="btn btn-primary"
       ng-click="confirmExecute()"
