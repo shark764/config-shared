@@ -82,7 +82,7 @@ a {
   }
 }
 
-.btn.disabled:before, .btn[disabled]:before {
+.btn.disabled:before{
     content: '';
     position: absolute;
     top: 0;
@@ -90,6 +90,10 @@ a {
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.3);
+}
+
+input[disabled].btn { /* inputs can't use :before pseudo element" */
+  opacity: 0.8;
 }
 
 label[disabled], label.disabled {
