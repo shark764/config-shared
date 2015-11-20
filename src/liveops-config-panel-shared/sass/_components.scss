@@ -1,8 +1,5 @@
 .lo-alert {
-  background-color: $accent-light;
-  border: 2px solid darken($accent-light, 5);
   @include border-radius();
-  color: $main-color;
   margin: 10px 0;
   padding: 10px;
   width: 100%;
@@ -77,9 +74,5 @@
     border-bottom: $light-grey solid 1px;
     color: $dark-grey;
     font-weight: 600;
-  }
-
-  tbody tr:hover {
-    background-color: $accent-light;
   }
 }

@@ -13,7 +13,8 @@
       ng-mouseover="hovering=true" 
       ng-mouseout="hovering=false">
        <li ng-repeat="item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)"
-         ng-class="{'highlight' : highlightedItem == item}"  
+         ng-class="{'highlight' : highlightedItem == item, 'lo-highlight' : highlightedItem == item}"
+         class="lo-hover-highlight"
          ng-click="select(item)" >
            {{item.getDisplay() || item[nameField]}}
        </li>

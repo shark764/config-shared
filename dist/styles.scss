@@ -252,10 +252,7 @@ $fontRobotoCondensed: 'Roboto Condensed';
 @import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600);
 
 .lo-alert {
-  background-color: $accent-light;
-  border: 2px solid darken($accent-light, 5);
   @include border-radius();
-  color: $main-color;
   margin: 10px 0;
   padding: 10px;
   width: 100%;
@@ -331,10 +328,6 @@ $fontRobotoCondensed: 'Roboto Condensed';
     color: $dark-grey;
     font-weight: 600;
   }
-
-  tbody tr:hover {
-    background-color: $accent-light;
-  }
 }
 
 $input-height: 32px;
@@ -368,7 +361,6 @@ input[type=password], input[type=text], input[type=email], input[type=tel], inpu
   }
 
   &:not([readonly]):focus{
-    border-color: $accent1;
     outline: 0;
     @include box-shadow-2(inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px $input-border-shadow);
   }
@@ -793,12 +785,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 a {
-  color: $accent1;
   text-decoration: none;
-}
-
-a:hover {
-  color: $main-color;
 }
 
 [ng-click] {
@@ -809,7 +796,6 @@ a:hover {
   background-color: #F9F9F9;
   border: 1px solid $light-grey;
   border-radius: 4px;
-  color: $main-color;
   cursor: pointer;
   display: inline-block;
   font-size: 14px;
@@ -819,7 +805,6 @@ a:hover {
 }
 
 .btn-primary {
-  background-color: $main-color;
   color: #FFFFFF;
   margin: 0;
 }
@@ -954,10 +939,6 @@ fieldset {
     li {
       padding: 10px;
       cursor: pointer;
-
-      &:hover, &.highlight {
-        background-color: $accent-light;
-      }
     }
   }
 }
@@ -1125,8 +1106,6 @@ fieldset {
     
     li span:hover, li a:hover {
       color: $dark-grey;
-      background: $accent-light;
-      border-left: 5px solid $accent1
     }
   }
 }
@@ -1159,8 +1138,6 @@ fieldset {
   }
 
   div:hover {
-    background-color: $accent-light;
-    @include box-shadow(inset 4px 0px 0px 0px $accent1);
     cursor: pointer;
   }
 }
@@ -1228,7 +1205,6 @@ help-icon {
 }
 
 .help-icon:hover {
-  color: $accent1;
   cursor: pointer;
 }
 lo-multibox {
@@ -1364,7 +1340,6 @@ number-slider {
   }
 }
 .resizable-handle {
-  color: $accent1;
   font-size: 1.4em;
   font-weight: normal;
   cursor: col-resize;
@@ -1514,8 +1489,6 @@ toggle[disabled] .switch {
   pointer-events: none;
 }
 
-$tooltip-color: $accent1;
-
 tooltip {
   display: block;
   position: absolute;
@@ -1534,7 +1507,6 @@ tooltip {
   }
 
   .tooltip-content {
-    background-color: $tooltip-color;
     @include border-radius();
     @include drop-shadow();
     padding: 10px;
@@ -1568,7 +1540,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-left-color: $tooltip-color;
     margin-top: -13px;
     left: 100%;
   }
@@ -1610,7 +1581,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-right-color: $tooltip-color;
     margin-top: -13px;
   }
 }
@@ -1653,7 +1623,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-bottom-color: $tooltip-color;
     margin-left: -13px;
   }
 }
@@ -1666,7 +1635,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-top-color: $tooltip-color;
     margin-left: -13px;
   }
 }
@@ -1712,10 +1680,6 @@ tooltip {
     li {
       padding: 10px;
       cursor: pointer;
-
-      &:hover, &.highlight {
-        background-color: $accent-light;
-      }
     }
   }
 }

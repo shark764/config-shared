@@ -27,8 +27,6 @@
   }
 
   div:hover {
-    background-color: $accent-light;
-    @include box-shadow(inset 4px 0px 0px 0px $accent1);
     cursor: pointer;
   }
 }
