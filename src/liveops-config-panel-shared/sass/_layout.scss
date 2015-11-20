@@ -126,6 +126,8 @@ header {
       padding: 15px;
 
       .table {
+        border: $light-grey solid 1px;
+        font-size: 0.9em;
         max-width: $max-control-width + 200px;
   
         th {
