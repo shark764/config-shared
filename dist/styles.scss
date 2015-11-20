@@ -313,10 +313,8 @@ $fontRobotoCondensed: 'Roboto Condensed';
 }
 
 .table {
-  border: $light-grey solid 1px;
   border-spacing: 0;
   @include border-radius(0px);
-  font-size: 0.9em;
   width: 100%;
   
   &.clone-header {
