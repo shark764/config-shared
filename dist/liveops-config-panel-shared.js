@@ -783,8 +783,8 @@ $templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<d
 $templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
 $templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
+$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
 $templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\n         class=\"lo-hover-highlight\"\n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
@@ -1029,6 +1029,31 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+/**
+  Taken from a stackoverflow.com post reply
+
+  http://stackoverflow.com/a/25822878
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('disableContents', [function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        var inputNames = 'input, button, select, textarea, label';
+        
+        var inputs = tElem.find(inputNames);
+        angular.forEach(inputs, function(el){
+          el = angular.element(el);
+          var prevVal = el.attr('ng-disabled');
+          prevVal = prevVal ? prevVal +  ' || ': '';
+          prevVal += tAttrs.disableContents;
+          el.attr('ng-disabled', prevVal);
+        });
+      }
+    };
+  }]);
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.directives')
   .controller('DropdownController', ['$scope', '$document', '$element', function ($scope, $document, $element) {
     var self= this;
@@ -1212,31 +1237,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-/**
-  Taken from a stackoverflow.com post reply
-
-  http://stackoverflow.com/a/25822878
-**/
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('disableContents', [function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        var inputNames = 'input, button, select, textarea, label';
-        
-        var inputs = tElem.find(inputNames);
-        angular.forEach(inputs, function(el){
-          el = angular.element(el);
-          var prevVal = el.attr('ng-disabled');
-          prevVal = prevVal ? prevVal +  ' || ': '';
-          prevVal += tAttrs.disableContents;
-          el.attr('ng-disabled', prevVal);
-        });
-      }
-    };
-  }]);
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.directives')
 
   .controller('EditFieldController', function ($scope) {
@@ -1333,21 +1333,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-.directive('highlightOnClick', ['$window', function ($window) {
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      element.on('click', function () {
-        if (!$window.getSelection().toString()) {
-          this.setSelectionRange(0, this.value.length);
-        }
-      });
-    }
-  };
-}]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
     return {
       templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
@@ -1370,6 +1355,21 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
    }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+.directive('highlightOnClick', ['$window', function ($window) {
+  return {
+    restrict: 'A',
+    link: function (scope, element) {
+      element.on('click', function () {
+        if (!$window.getSelection().toString()) {
+          this.setSelectionRange(0, this.value.length);
+        }
+      });
+    }
+  };
+}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1883,6 +1883,61 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('confirmToggle', ['Modal', '$timeout', function(Modal, $timeout) {
+    return {
+      require: ['ngModel', '^toggle'],
+      link: function ($scope, $element, $attrs, controllers) {
+        controllers[0].$parsers.push(function (newValue) {
+          return $scope.onToggle(newValue);
+        });
+        
+        $scope.onToggle = function(newValue){
+          $timeout(function(){ //For display until confirm dialog value is resolved
+            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
+          });
+          
+          return Modal.showConfirm({
+            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
+          }).then(function(){
+            $scope.$parent.ngModel = newValue;
+          });
+        };
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('toggle', [function() {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
+      scope : {
+        ngModel : '=',
+        ngDisabled : '=',
+        name: '@',
+        trueValue: '@',
+        falseValue: '@',
+        confirmEnableMessage: '@',
+        confirmDisableMessage: '@'
+      },
+      controller: function ($scope) {
+        if (angular.isUndefined($scope.trueValue)){
+          $scope.trueValue = true;
+        }
+
+        if(angular.isUndefined($scope.falseValue)) {
+          $scope.falseValue = false;
+        }
+
+        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
+          $scope.confirmOnToggle = true;
+        }
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('tooltip', ['$document', '$timeout', function ($document, $timeout) {
     return {
       templateUrl: 'liveops-config-panel-shared/directives/tooltip/tooltip.html',
@@ -1989,61 +2044,6 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
   }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('confirmToggle', ['Modal', '$timeout', function(Modal, $timeout) {
-    return {
-      require: ['ngModel', '^toggle'],
-      link: function ($scope, $element, $attrs, controllers) {
-        controllers[0].$parsers.push(function (newValue) {
-          return $scope.onToggle(newValue);
-        });
-        
-        $scope.onToggle = function(newValue){
-          $timeout(function(){ //For display until confirm dialog value is resolved
-            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
-          });
-          
-          return Modal.showConfirm({
-            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
-          }).then(function(){
-            $scope.$parent.ngModel = newValue;
-          });
-        };
-      }
-    };
-   }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('toggle', [function() {
-    return {
-      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
-      scope : {
-        ngModel : '=',
-        ngDisabled : '=',
-        name: '@',
-        trueValue: '@',
-        falseValue: '@',
-        confirmEnableMessage: '@',
-        confirmDisableMessage: '@'
-      },
-      controller: function ($scope) {
-        if (angular.isUndefined($scope.trueValue)){
-          $scope.trueValue = true;
-        }
-
-        if(angular.isUndefined($scope.falseValue)) {
-          $scope.falseValue = false;
-        }
-
-        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
-          $scope.confirmOnToggle = true;
-        }
-      }
-    };
-   }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -2358,30 +2358,6 @@ angular.module('liveopsConfigPanel.shared.filters')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
-  .filter('selectedOptions', ['$filter', function ($filter) {
-    return function (items, field) {
-      var filtered = [];
-      var options = $filter('invoke')(field.options);
-      angular.forEach(items, function (item) {
-        var wasAdded = false;
-        angular.forEach(options, function (option) {
-          var value = $filter('invoke')(option.value, option);
-          if (!wasAdded && option.checked &&
-            $filter('matchesField')(item, field.name, value)) {
-
-            filtered.push(item);
-            wasAdded = true;
-          }
-        });
-      });
-
-      return filtered;
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
   .filter('search', ['$parse', function ($parse) {
     return function (items, fields, query) {
       if (!fields || !query) {
@@ -2434,6 +2410,30 @@ angular.module('liveopsConfigPanel.shared.filters')
       return filtered;
     };
   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+  .filter('selectedOptions', ['$filter', function ($filter) {
+    return function (items, field) {
+      var filtered = [];
+      var options = $filter('invoke')(field.options);
+      angular.forEach(items, function (item) {
+        var wasAdded = false;
+        angular.forEach(options, function (option) {
+          var value = $filter('invoke')(option.value, option);
+          if (!wasAdded && option.checked &&
+            $filter('matchesField')(item, field.name, value)) {
+
+            filtered.push(item);
+            wasAdded = true;
+          }
+        });
+      });
+
+      return filtered;
+    };
+  }]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
