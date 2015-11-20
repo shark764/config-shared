@@ -380,45 +380,6 @@ if (!String.prototype.contains) {
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('auditText', ['$filter', 'TenantUser', 'Session',
-    function ($filter, TenantUser, Session) {
-      return {
-        restrict: 'AE',
-        scope: {
-          translation: '@',
-          userId: '=',
-          date: '='
-        },
-        template: '{{get()}}',
-        link: function ($scope) {
-          $scope.get = function () {
-            if (!$scope.userId) {
-              return  $filter('translate')($scope.translation, {
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            var user = TenantUser.cachedGet({
-              id: $scope.userId,
-              tenantId: Session.tenant.tenantId
-            }, 'AuditTextUsers');
-
-            if(user.$resolved) {
-              $scope.text = $filter('translate')($scope.translation, {
-                displayName: user.getDisplay(),
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            return $scope.text;
-          };
-        }
-      };
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('autocomplete', ['filterFilter', '$timeout', function(filterFilter, $timeout) {
     return {
       restrict: 'E',
@@ -467,6 +428,45 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('auditText', ['$filter', 'TenantUser', 'Session',
+    function ($filter, TenantUser, Session) {
+      return {
+        restrict: 'AE',
+        scope: {
+          translation: '@',
+          userId: '=',
+          date: '='
+        },
+        template: '{{get()}}',
+        link: function ($scope) {
+          $scope.get = function () {
+            if (!$scope.userId) {
+              return  $filter('translate')($scope.translation, {
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            var user = TenantUser.cachedGet({
+              id: $scope.userId,
+              tenantId: Session.tenant.tenantId
+            }, 'AuditTextUsers');
+
+            if(user.$resolved) {
+              $scope.text = $filter('translate')($scope.translation, {
+                displayName: user.getDisplay(),
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            return $scope.text;
+          };
+        }
+      };
+    }
+  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -784,7 +784,7 @@ $templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSl
 $templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
-$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-main-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
+$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
 $templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\n         class=\"lo-hover-highlight\"\n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
