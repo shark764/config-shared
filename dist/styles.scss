@@ -1372,6 +1372,11 @@ lo-multibox {
   text-align: center;
   width: 100%;
 }
+.resizable-handle {
+  font-size: 1.4em;
+  font-weight: normal;
+  cursor: col-resize;
+}
 number-slider {
   .inner-addon {
     position: relative;
@@ -1436,11 +1441,6 @@ number-slider {
       text-align: left;
     }
   }
-}
-.resizable-handle {
-  font-size: 1.4em;
-  font-weight: normal;
-  cursor: col-resize;
 }
 .scrollable-table-container {
   position: relative;
