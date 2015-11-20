@@ -1,0 +1,77 @@
+.lo-accent-text, a {
+  color: $accent1;
+}
+
+a:hover {
+  color: $main-color;
+}
+
+.lo-main-text, .btn:not(.btn-primary){
+  color: $main-color;
+}
+
+.lo-main-bg, .btn-primary {
+  background-color: $main-color;
+}
+
+.lo-highlight {
+  background-color: $accent-light;
+}
+
+.lo-hover-highlight:hover {
+  background-color: $accent-light !important;
+}
+
+.lo-highlight-border {
+  border-color: $accent-light;
+}
+
+.lo-accent-bg {
+  background-color: $accent1;
+}
+
+.lo-accent-border {
+  border-color: $accent1;
+}
+
+.lo-accent-hover {
+  color: $accent1;
+}
+
+.lo-accent-hover-border:hover {
+  border-color: $accent1 !important;
+}
+
+.lo-accent-hover-box-border:hover {
+  box-shadow: inset 4px 0px 0px 0px $accent1;
+}
+
+.lo-alert {
+  color: $main-color;
+  background-color: $accent-light;
+  border: 2px solid $accent1;
+}
+
+.table tbody tr:hover {
+  background-color: $accent-light;
+}
+
+.help-tooltip.left .tooltip-arrow:before {
+    border-left-color: $accent1;
+}
+
+.help-tooltip.right .tooltip-arrow:before {
+   border-right-color: $accent1;
+}
+
+.help-tooltip.bottom.center .tooltip-arrow:before {
+  border-bottom-color: $accent1;
+}
+
+.help-tooltip.top.center .tooltip-arrow:before {
+  border-top-color: $accent1;
+}
+
+input:not([readonly]):focus {
+  border-color: $accent1;
+}
