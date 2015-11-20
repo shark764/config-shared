@@ -145,38 +145,6 @@ angular.module('liveopsConfigPanel.shared.config')
 
 ;
 
-angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
-$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\n  <input\n    autocomplete=\"off\"\n    name=\"{{nameField}}\"\n    ng-required=\"isRequired\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"\n    placeholder=\"{{placeholder}}\"\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\n      <li ng-class=\"{\'highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\n    </ul>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\n    <filter-dropdown\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\n      options=\"selectedItems()\"\n      display-path=\"getDisplay\"\n      value-path=\"id\">\n    </filter-dropdown>\n  </div>\n\n  <div class=\"detail-body\">\n    <!-- bulkAction elements injected here -->\n  </div>\n\n  <div class=\"detail-controls\">\n    <input id=\"cancel-bulk-actions-btn\"\n      type=\"button\"\n      class=\"btn\"\n      ng-click=\"cancel()\"\n      value=\"{{\'value.cancel\' | translate}}\">\n    </input>\n    <input id=\"submit-bulk-actions-btn\"\n      ng-disabled=\"!canExecute()\"\n      type=\"button\"\n      class=\"btn btn-primary\"\n      ng-click=\"confirmExecute()\"\n      value=\"{{\'value.submit\' | translate}}\">\n  </div>\n</form>\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\n    <div>\n      <span>{{label}}</span>\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\n    </div>\n  </div>\n\n  <div class=\"dropdown-container\">\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\n      <ul>\n        <li id=\"{{item.id}}\"\n          ng-repeat=\"item in items | orderBy:orderBy\"\n          ng-click=\"optionClick(item.onClick)\">\n            <span ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\n            <a ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\n  <span>{{label}}</span>\n  <div ng-if=\"showAll\" class=\"all-label\">\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\n  </div>\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\n</div>\n\n<div class=\"dropdown-container\">\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\n    <div class=\"all\" ng-if=\"showAll\" ng-click=\"all.checked = !all.checked\">\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\n      <label>All</label>\n    </div>\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\n      class=\"dropdown-option\" ng-click=\"checkItem(option)\" >\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\n        {{option | parse:displayPath | invoke:option}}\n      </label>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\n  <div ng-repeat=\"(error, value) in field.$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\n  ng-messages=\"form[fieldName].$error\">\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\n  <i class=\"fa fa-info fa-stack-1x\"></i>\n</span>");
-$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\n      readonly=\"true\" border=\"0\"  class=\"label\"\n      ng-required=\"true\"\n      ng-model=\"display\" />\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\n  </div>\n\n  <div class=\"edit-box\" ng-show=\"showDrop\">\n    <type-ahead\n      items=\"items\"\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\n      on-select=\"onSelect(selectedItem)\"\n      keep-expanded=\"true\"\n      selected-item=\"selectedItem\"></type-ahead>\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\n      ng-click=\"createItem()\" \n      value=\"{{\'multibox.create.btn\' | translate}}\" />\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\n\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
-$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
-$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item}\"  \n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");}]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-  .filter('hasPermission', ['UserPermissions', function (UserPermissions) {
-    return function (permissions) {
-      if (! angular.isArray(permissions)){
-        permissions = [permissions];
-      }
-      
-      return UserPermissions.hasPermissionInList(permissions);
-    };
-  }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -767,6 +735,31 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+/**
+  Taken from a stackoverflow.com post reply
+
+  http://stackoverflow.com/a/25822878
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('disableContents', [function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        var inputNames = 'input, button, select, textarea, label';
+        
+        var inputs = tElem.find(inputNames);
+        angular.forEach(inputs, function(el){
+          el = angular.element(el);
+          var prevVal = el.attr('ng-disabled');
+          prevVal = prevVal ? prevVal +  ' || ': '';
+          prevVal += tAttrs.disableContents;
+          el.attr('ng-disabled', prevVal);
+        });
+      }
+    };
+  }]);
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('loCancel', ['$q',
     function ($q) {
@@ -789,6 +782,26 @@ angular.module('liveopsConfigPanel.shared.directives')
       };
     }
   ]);
+angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
+$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\n  <input\n    autocomplete=\"off\"\n    name=\"{{nameField}}\"\n    ng-required=\"isRequired\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"\n    placeholder=\"{{placeholder}}\"\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\n      <li ng-class=\"{\'highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\n    </ul>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\n    <filter-dropdown\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\n      options=\"selectedItems()\"\n      display-path=\"getDisplay\"\n      value-path=\"id\">\n    </filter-dropdown>\n  </div>\n\n  <div class=\"detail-body\">\n    <!-- bulkAction elements injected here -->\n  </div>\n\n  <div class=\"detail-controls\">\n    <input id=\"cancel-bulk-actions-btn\"\n      type=\"button\"\n      class=\"btn\"\n      ng-click=\"cancel()\"\n      value=\"{{\'value.cancel\' | translate}}\">\n    </input>\n    <input id=\"submit-bulk-actions-btn\"\n      ng-disabled=\"!canExecute()\"\n      type=\"button\"\n      class=\"btn btn-primary\"\n      ng-click=\"confirmExecute()\"\n      value=\"{{\'value.submit\' | translate}}\">\n  </div>\n</form>\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\n    <div>\n      <span>{{label}}</span>\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\n    </div>\n  </div>\n\n  <div class=\"dropdown-container\">\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\n      <ul>\n        <li id=\"{{item.id}}\"\n          ng-repeat=\"item in items | orderBy:orderBy\"\n          ng-click=\"optionClick(item.onClick)\">\n            <span ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\n            <a ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\n  <span>{{label}}</span>\n  <div ng-if=\"showAll\" class=\"all-label\">\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\n  </div>\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\n</div>\n\n<div class=\"dropdown-container\">\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\n    <div class=\"all\" ng-if=\"showAll\" ng-click=\"all.checked = !all.checked\">\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\n      <label>All</label>\n    </div>\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\n      class=\"dropdown-option\" ng-click=\"checkItem(option)\" >\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\n        {{option | parse:displayPath | invoke:option}}\n      </label>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\n  <div ng-repeat=\"(error, value) in field.$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\n  <i class=\"fa fa-info fa-stack-1x\"></i>\n</span>");
+$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\n  ng-messages=\"form[fieldName].$error\">\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\n      readonly=\"true\" border=\"0\"  class=\"label\"\n      ng-required=\"true\"\n      ng-model=\"display\" />\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\n  </div>\n\n  <div class=\"edit-box\" ng-show=\"showDrop\">\n    <type-ahead\n      items=\"items\"\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\n      on-select=\"onSelect(selectedItem)\"\n      keep-expanded=\"true\"\n      selected-item=\"selectedItem\"></type-ahead>\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\n      ng-click=\"createItem()\" \n      value=\"{{\'multibox.create.btn\' | translate}}\" />\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\n\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
+$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
+$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item}\"  \n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1027,31 +1040,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-/**
-  Taken from a stackoverflow.com post reply
-
-  http://stackoverflow.com/a/25822878
-**/
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('disableContents', [function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        var inputNames = 'input, button, select, textarea, label';
-        
-        var inputs = tElem.find(inputNames);
-        angular.forEach(inputs, function(el){
-          el = angular.element(el);
-          var prevVal = el.attr('ng-disabled');
-          prevVal = prevVal ? prevVal +  ' || ': '';
-          prevVal += tAttrs.disableContents;
-          el.attr('ng-disabled', prevVal);
-        });
-      }
-    };
-  }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1293,6 +1281,31 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
+      scope : {
+        text : '@',
+        translateValue: '@'
+      },
+      link: function($scope, element){
+        $scope.target = element;
+        var tooltipElement;
+
+        $scope.showTooltip = function(){
+          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
+          $document.find('body').append(tooltipElement);
+        };
+
+        $scope.destroyTooltip = function(){
+          tooltipElement.remove();
+        };
+      }
+    };
+   }]);
+'use strict';
+
 /*
   formFieldValidationMessage is basically a clone of formError with a couple o
   key differences:
@@ -1330,31 +1343,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
    });
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
-    return {
-      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
-      scope : {
-        text : '@',
-        translateValue: '@'
-      },
-      link: function($scope, element){
-        $scope.target = element;
-        var tooltipElement;
-
-        $scope.showTooltip = function(){
-          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
-          $document.find('body').append(tooltipElement);
-        };
-
-        $scope.destroyTooltip = function(){
-          tooltipElement.remove();
-        };
-      }
-    };
-   }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1826,7 +1814,7 @@ angular.module('liveopsConfigPanel.shared.directives')
       link : function($scope, $element) {
         $scope.targetElement = angular.element(document.getElementById($scope.elementId));
 
-        $element.on('mousedown', function() {
+        $element.on('mousedown', function(event) {
           if (event.button !== 2) {
             event.preventDefault();
             $document.on('mousemove', mousemove);
@@ -2981,7 +2969,19 @@ angular.module('liveopsConfigPanel.shared.services')
 
             return promise;
           };
-
+          
+          Resource.hasItem = function(params, cacheKey) {
+            var key = cacheKey ? cacheKey : this.prototype.resourceName;
+            var cache = queryCache.get(key);
+            
+            if(!cache) {
+              return false;
+            }
+            
+            var item = _.find(cache, params);
+            return !!item;
+          };
+          
           Resource.cachedGet = function(params, cacheKey, invalidate) {
             var key = cacheKey ? cacheKey : this.prototype.resourceName;
 
@@ -3002,6 +3002,7 @@ angular.module('liveopsConfigPanel.shared.services')
               }
 
               cache.push(item);
+              cache.$promise = item.$promise;
             }
 
             return item;
@@ -3480,63 +3481,6 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
-
-      var Integration = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
-        resourceName: 'Integration',
-        updateFields: [{
-          name: 'properties'
-        }, {
-          name: 'accountSid'
-        }, {
-          name: 'authToken'
-        }, {
-          name: 'webRtc'
-        }, {
-          name: 'active'
-        }],
-        updateInterceptor: emitInterceptor
-      });
-
-      Integration.prototype.getDisplay = function () {
-        return this.type;
-      };
-
-      return Integration;
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPanel.mock'])
-  .service('mockIntegrations', function (Integration) {
-    return [new Integration({
-      'id': 'integrationId1'
-    }), new Integration({
-      'id': 'integrationId2'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockIntegrations',
-    function ($httpBackend, apiHostname, mockIntegrations) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations').respond({
-        'result': mockIntegrations
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId1').respond({
-        'result': mockIntegrations[0]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId2').respond({
-        'result': mockIntegrations[1]
-      });
-
-    }
-  ]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock'])
   .service('mockGroups', function(Group) {
     return [new Group({
@@ -3617,6 +3561,63 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+
+      var Integration = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
+        resourceName: 'Integration',
+        updateFields: [{
+          name: 'properties'
+        }, {
+          name: 'accountSid'
+        }, {
+          name: 'authToken'
+        }, {
+          name: 'webRtc'
+        }, {
+          name: 'active'
+        }],
+        updateInterceptor: emitInterceptor
+      });
+
+      Integration.prototype.getDisplay = function () {
+        return this.type;
+      };
+
+      return Integration;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPanel.mock'])
+  .service('mockIntegrations', function (Integration) {
+    return [new Integration({
+      'id': 'integrationId1'
+    }), new Integration({
+      'id': 'integrationId2'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockIntegrations',
+    function ($httpBackend, apiHostname, mockIntegrations) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations').respond({
+        'result': mockIntegrations
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId1').respond({
+        'result': mockIntegrations[0]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId2').respond({
+        'result': mockIntegrations[1]
+      });
+
+    }
+  ]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.list.mock', ['liveopsConfigPanel.mock'])
   .service('mockLists', ['List', function (List) {
     return [new List({
@@ -3678,6 +3679,49 @@ angular.module('liveopsConfigPanel.shared.services')
       return ListType;
     }
   ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.media.mock', ['liveopsConfigPanel.mock'])
+  .value('medias', [{
+    id: 'm1'
+  }, {
+    id: 'm2'
+  }])
+  .run(function($httpBackend, apiHostname, Session, medias) {
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/media').respond({
+      'result': medias
+    });
+  });
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+
+      var Media = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/media/:id',
+        resourceName: 'Media',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'source'
+        }, {
+          name: 'type'
+        }, {
+          name: 'properties',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
+      });
+
+       Media.prototype.getDisplay = function (){
+       return this.name;
+      };
+    
+      return Media;
+    }
+  ]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.tenant.listType.mock', ['liveopsConfigPanel.mock'])
@@ -3757,106 +3801,6 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.media.mock', ['liveopsConfigPanel.mock'])
-  .value('medias', [{
-    id: 'm1'
-  }, {
-    id: 'm2'
-  }])
-  .run(function($httpBackend, apiHostname, Session, medias) {
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/media').respond({
-      'result': medias
-    });
-  });
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
-
-      var Media = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/media/:id',
-        resourceName: 'Media',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'source'
-        }, {
-          name: 'type'
-        }, {
-          name: 'properties',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
-      });
-
-       Media.prototype.getDisplay = function (){
-       return this.name;
-      };
-    
-      return Media;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfigPanel.mock'])
-  .service('mockMediaCollections', function (MediaCollection) {
-    return [new MediaCollection({
-      id: 'mc1'
-    }), new MediaCollection({
-      id: 'mc2'
-    })];
-  })
-  .service('mockMedias', function (Media) {
-    return [new Media({
-      id: 'm1'
-    }), new Media({
-      id: 'm2'
-    })];
-  })
-  .run(function ($httpBackend, apiHostname, Session, mockMedias, mockMediaCollections) {
-    Session.tenant = {
-      tenantId: '1'
-    };
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media').respond(200, mockMedias);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media-collections').respond(200, mockMediaCollections);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media').respond(200, mockMedias);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media-collections').respond(200, mockMediaCollections);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media').respond(200, []);
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media-collections').respond(200, []);
-  });
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('MediaCollection', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'mediaCollectionMapCleanTransformer',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, mediaCollectionMapCleanTransformer) {
-
-      var MediaCollection = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/media-collections/:id',
-        resourceName: 'MediaCollection',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'mediaMap',
-          optional: true
-        }, {
-          name: 'defaultMediaKey',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        putRequestTransformer: mediaCollectionMapCleanTransformer
-      });
-
-      return MediaCollection;
-    }
-  ]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.services')
   .factory('Queue', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
@@ -3924,6 +3868,206 @@ angular.module('liveopsConfigPanel.tenant.queue.mock', ['liveopsConfigPanel.mock
       $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/queues').respond({
         'result': mockQueues[2]
       });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfigPanel.mock'])
+  .service('mockMediaCollections', function (MediaCollection) {
+    return [new MediaCollection({
+      id: 'mc1'
+    }), new MediaCollection({
+      id: 'mc2'
+    })];
+  })
+  .service('mockMedias', function (Media) {
+    return [new Media({
+      id: 'm1'
+    }), new Media({
+      id: 'm2'
+    })];
+  })
+  .run(function ($httpBackend, apiHostname, Session, mockMedias, mockMediaCollections) {
+    Session.tenant = {
+      tenantId: '1'
+    };
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media').respond(200, mockMedias);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/1/media-collections').respond(200, mockMediaCollections);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media').respond(200, mockMedias);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/2/media-collections').respond(200, mockMediaCollections);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media').respond(200, []);
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/3/media-collections').respond(200, []);
+  });
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('MediaCollection', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'mediaCollectionMapCleanTransformer',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, mediaCollectionMapCleanTransformer) {
+
+      var MediaCollection = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/media-collections/:id',
+        resourceName: 'MediaCollection',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'mediaMap',
+          optional: true
+        }, {
+          name: 'defaultMediaKey',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        putRequestTransformer: mediaCollectionMapCleanTransformer
+      });
+
+      return MediaCollection;
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
+  .service('mockSkills', function(Skill) {
+    return [new Skill({
+      'id': 'skillId1',
+      'name': 'skillName1',
+      'tenantId': 'tenant-id',
+      'hasProficiency': true
+    }), new Skill({
+      'id': 'skillId2',
+      'name': 'skillName2',
+      'tenantId': 'tenant-id',
+      'hasProficiency': false
+    }), new Skill({
+      'id': 'skillId3',
+      'name': 'skillName3',
+      'description': 'Does not exist yet!',
+      'tenantId': 'tenant-id',
+      'hasProficiency': false
+    })];
+  })
+  .service('mockUserSkills', function(TenantUserSkill) {
+    return [new TenantUserSkill({
+      'skillId': 'skillId1',
+      'tenantId': 'tenant-id',
+      'userId': 'userId1',
+      'proficiency': 0
+    }), new TenantUserSkill({
+      'skillId': 'skillId1',
+      'tenantId': 'tenant-id',
+      'userId': 'userId2',
+      'proficiency': 5
+    }), new TenantUserSkill({
+      'skillId': 'skillId2',
+      'tenantId': 'tenant-id',
+      'userId': 'userId1',
+      'proficiency': 8
+    }), new TenantUserSkill({
+      'skillId': 'skillId3',
+      'tenantId': 'tenant-id',
+      'userId': 'userId2',
+      'proficiency': 10
+    })];
+  })
+  .service('mockSkillUsers', function(TenantSkillUser) {
+    return [new TenantSkillUser({
+      'userId': 'userId1',
+      'proficiency': 0
+    }), new TenantSkillUser({
+      'userId': 'userId2',
+      'proficiency': 5
+    }), new TenantSkillUser({
+      'userId': 'userId1',
+      'proficiency': 8
+    }), new TenantSkillUser({
+      'userId': 'userId2',
+      'proficiency': 10
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockSkills', 'mockUserSkills', 'mockSkillUsers',
+    function($httpBackend, apiHostname, mockSkills, mockUserSkills, mockSkillUsers) {
+      //GET tenants/skills
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills').respond({
+        'result': [mockSkills[0], mockSkills[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1').respond({
+        'result': mockSkills[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2').respond({
+        'result': mockSkills[1]
+      });
+
+      //GET tenants/user/skills
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
+        'result': [mockUserSkills[0], mockUserSkills[2]]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/skills').respond({
+        'result': [mockUserSkills[1]]
+      });
+
+      //GET tenants/skills/user
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1/users').respond({
+        'result': [mockSkillUsers[0], mockSkillUsers[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2/users').respond({
+        'result': [mockSkillUsers[2]]
+      });
+
+      //POST tenants/skills
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/skills').respond({
+        'result': mockSkills[2]
+      });
+
+      //POST tenants/users/skills
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
+        'result': mockUserSkills[2]
+      });
+
+      //DELETE tenants/users/skills
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond(200);
+
+      //PUT tenants/users/skills
+      $httpBackend.when('PUT', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond({
+        'result': mockUserSkills[0]
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+      var Skill = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
+        resourceName: 'Skill',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'hasProficiency'
+        }, {
+          name: 'active',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Skill.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Skill;
     }
   ]);
 'use strict';
@@ -4158,149 +4302,6 @@ angular.module('liveopsConfigPanel.shared.services')
     }
   ]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
-  .service('mockSkills', function(Skill) {
-    return [new Skill({
-      'id': 'skillId1',
-      'name': 'skillName1',
-      'tenantId': 'tenant-id',
-      'hasProficiency': true
-    }), new Skill({
-      'id': 'skillId2',
-      'name': 'skillName2',
-      'tenantId': 'tenant-id',
-      'hasProficiency': false
-    }), new Skill({
-      'id': 'skillId3',
-      'name': 'skillName3',
-      'description': 'Does not exist yet!',
-      'tenantId': 'tenant-id',
-      'hasProficiency': false
-    })];
-  })
-  .service('mockUserSkills', function(TenantUserSkill) {
-    return [new TenantUserSkill({
-      'skillId': 'skillId1',
-      'tenantId': 'tenant-id',
-      'userId': 'userId1',
-      'proficiency': 0
-    }), new TenantUserSkill({
-      'skillId': 'skillId1',
-      'tenantId': 'tenant-id',
-      'userId': 'userId2',
-      'proficiency': 5
-    }), new TenantUserSkill({
-      'skillId': 'skillId2',
-      'tenantId': 'tenant-id',
-      'userId': 'userId1',
-      'proficiency': 8
-    }), new TenantUserSkill({
-      'skillId': 'skillId3',
-      'tenantId': 'tenant-id',
-      'userId': 'userId2',
-      'proficiency': 10
-    })];
-  })
-  .service('mockSkillUsers', function(TenantSkillUser) {
-    return [new TenantSkillUser({
-      'userId': 'userId1',
-      'proficiency': 0
-    }), new TenantSkillUser({
-      'userId': 'userId2',
-      'proficiency': 5
-    }), new TenantSkillUser({
-      'userId': 'userId1',
-      'proficiency': 8
-    }), new TenantSkillUser({
-      'userId': 'userId2',
-      'proficiency': 10
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockSkills', 'mockUserSkills', 'mockSkillUsers',
-    function($httpBackend, apiHostname, mockSkills, mockUserSkills, mockSkillUsers) {
-      //GET tenants/skills
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills').respond({
-        'result': [mockSkills[0], mockSkills[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1').respond({
-        'result': mockSkills[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2').respond({
-        'result': mockSkills[1]
-      });
-
-      //GET tenants/user/skills
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
-        'result': [mockUserSkills[0], mockUserSkills[2]]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/skills').respond({
-        'result': [mockUserSkills[1]]
-      });
-
-      //GET tenants/skills/user
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1/users').respond({
-        'result': [mockSkillUsers[0], mockSkillUsers[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2/users').respond({
-        'result': [mockSkillUsers[2]]
-      });
-
-      //POST tenants/skills
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/skills').respond({
-        'result': mockSkills[2]
-      });
-
-      //POST tenants/users/skills
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
-        'result': mockUserSkills[2]
-      });
-
-      //DELETE tenants/users/skills
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond(200);
-
-      //PUT tenants/users/skills
-      $httpBackend.when('PUT', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond({
-        'result': mockUserSkills[0]
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
-      var Skill = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
-        resourceName: 'Skill',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'hasProficiency'
-        }, {
-          name: 'active',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Skill.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return Skill;
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
