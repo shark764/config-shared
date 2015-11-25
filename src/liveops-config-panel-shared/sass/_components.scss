@@ -78,6 +78,10 @@
     color: $dark-grey;
     font-weight: 600;
   }
+  
+  tbody th {
+    border-bottom: none;
+  }
 
   tbody tr:hover {
     background-color: $accent-light;
