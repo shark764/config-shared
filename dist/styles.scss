@@ -1312,6 +1312,12 @@ lo-multibox {
   text-align: center;
   width: 100%;
 }
+.resizable-handle {
+  color: $accent1;
+  font-size: 1.4em;
+  font-weight: normal;
+  cursor: col-resize;
+}
 number-slider {
   .inner-addon {
     position: relative;
@@ -1376,12 +1382,6 @@ number-slider {
       text-align: left;
     }
   }
-}
-.resizable-handle {
-  color: $accent1;
-  font-size: 1.4em;
-  font-weight: normal;
-  cursor: col-resize;
 }
 .scrollable-table-container {
   position: relative;
@@ -1734,6 +1734,8 @@ tooltip {
   }
 }
 
+.edit-field-input {
+}
 .edit-field-drop-down {
   select {
     width: 100%;
@@ -1744,8 +1746,6 @@ tooltip {
       font-size: 22px;
     }
   }
-}
-.edit-field-input {
 }
 #modal {
   box-sizing: border-box;
