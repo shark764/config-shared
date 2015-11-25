@@ -159,6 +159,49 @@ angular.module('liveopsConfigPanel.shared.filters')
   }]);
 'use strict';
 
+Array.prototype.removeItem = function (item) {
+  var idx = this.indexOf(item);
+  if (idx > -1){
+    this.splice(idx, 1);
+  }
+};
+
+Array.prototype.clear = function() {
+  this.splice(0,this.length);
+};
+
+Array.prototype.shuffle = function() {
+  var i = this.length, j, temp;
+  if ( i === 0 ) { return this; }
+  while ( --i ) {
+     j = Math.floor( Math.random() * ( i + 1 ) );
+     temp = this[i];
+     this[i] = this[j];
+     this[j] = temp;
+  }
+  return this;
+};
+'use strict';
+
+String.prototype.insert = function (index, string) {
+  if (index > 0) {
+    return this.substring(0, index) + string + this.substring(index, this.length);
+  } else {
+    return string + this;
+  }
+};
+
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+if (!String.prototype.contains) {
+  String.prototype.contains = function(s) {
+      return this.indexOf(s) > -1;
+  };
+}
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.services')
   .service('Alert', ['toastr', '$window', function (toastr, $window) {
     this.confirm = function(message, onOk, onCancel){
@@ -334,49 +377,6 @@ angular.module('liveopsConfigPanel.shared.services')
   angular.module('liveopsConfigPanel.shared.services')
   .service('flowSetup', flowSetup);
 })();
-'use strict';
-
-Array.prototype.removeItem = function (item) {
-  var idx = this.indexOf(item);
-  if (idx > -1){
-    this.splice(idx, 1);
-  }
-};
-
-Array.prototype.clear = function() {
-  this.splice(0,this.length);
-};
-
-Array.prototype.shuffle = function() {
-  var i = this.length, j, temp;
-  if ( i === 0 ) { return this; }
-  while ( --i ) {
-     j = Math.floor( Math.random() * ( i + 1 ) );
-     temp = this[i];
-     this[i] = this[j];
-     this[j] = temp;
-  }
-  return this;
-};
-'use strict';
-
-String.prototype.insert = function (index, string) {
-  if (index > 0) {
-    return this.substring(0, index) + string + this.substring(index, this.length);
-  } else {
-    return string + this;
-  }
-};
-
-String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-if (!String.prototype.contains) {
-  String.prototype.contains = function(s) {
-      return this.indexOf(s) > -1;
-  };
-}
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
