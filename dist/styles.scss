@@ -1071,47 +1071,6 @@ fieldset {
     }
   }
 }
-.edit-field {
-  margin-bottom: 15px;
-  color: $darkest-grey;
-  .input-toggle {
-    div {
-      cursor: pointer;
-      margin-top: 5px;
-      display: block;
-      border: $lightest-grey 1px solid;
-      @include border-radius(4px);
-      label {
-        display: inline-block;
-        margin: 10px;
-      }
-      .placeholder {
-        color: $grey;
-      }
-      i {
-        margin-top: 3px;
-        display: inline-block;
-        float: right;
-        height: 39px;
-        width: 38px;
-        vertical-align: middle;
-        font-size: 28px;
-        text-align: center;
-      }
-    }
-    div:hover {
-      border: $grey 1px solid;
-    }
-  }
-  input,
-  select {
-    display: block;
-    margin-top: 5px;
-    border: 1px solid $grey;
-    @include border-radius(4px);
-    padding: 8px;
-  }
-}
 .dropdown-container {
   position: relative;
   text-align: left;
@@ -1248,6 +1207,47 @@ fieldset {
   padding-bottom: 10px;
 }
 
+.edit-field {
+  margin-bottom: 15px;
+  color: $darkest-grey;
+  .input-toggle {
+    div {
+      cursor: pointer;
+      margin-top: 5px;
+      display: block;
+      border: $lightest-grey 1px solid;
+      @include border-radius(4px);
+      label {
+        display: inline-block;
+        margin: 10px;
+      }
+      .placeholder {
+        color: $grey;
+      }
+      i {
+        margin-top: 3px;
+        display: inline-block;
+        float: right;
+        height: 39px;
+        width: 38px;
+        vertical-align: middle;
+        font-size: 28px;
+        text-align: center;
+      }
+    }
+    div:hover {
+      border: $grey 1px solid;
+    }
+  }
+  input,
+  select {
+    display: block;
+    margin-top: 5px;
+    border: 1px solid $grey;
+    @include border-radius(4px);
+    padding: 8px;
+  }
+}
 $help-icon-width: 2em;
 $help-icon-height: $help-icon-width;
 
