@@ -11,7 +11,7 @@ angular.module('liveopsConfigPanel.shared.directives')
     return {
       compile: function(tElem, tAttrs) {
         var inputNames = 'input, button, select, textarea, label';
-        
+
         var inputs = tElem.find(inputNames);
         angular.forEach(inputs, function(el){
           el = angular.element(el);

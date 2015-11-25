@@ -40,7 +40,7 @@ var sourceFiles = [
   // Then add all JavaScript files
   path.join(sourceDirectory, '/**/*.js'),
 
-  path.join('!', sourceDirectory, '/**/*.spec.js'),
+  path.join('!' + sourceDirectory, '/**/*.spec.js')
 ];
 
 var lintFiles = [
@@ -88,7 +88,7 @@ gulp.task('styles', function () {
   ], {
     read: false
   });
-  
+
   var styleFiles = gulp.src([
     'src/liveops-config-panel-shared/sass/_constants.scss',
     'src/liveops-config-panel-shared/sass/_mixins.scss',
