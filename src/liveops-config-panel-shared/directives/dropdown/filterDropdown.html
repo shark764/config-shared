@@ -15,7 +15,7 @@
     </div>
     <div ng-repeat="option in options | orderBy:orderBy"
       class="dropdown-option" ng-click="checkItem(option)" >
-      <input name="{{option | parse:valuePath | invoke:option}}" type="checkbox" ng-checked="option.checked"/>
+      <input name="{{option | parse:valuePath | invoke:option}}" type="checkbox" ng-checked="option.checked || (showAll && all.checked)"/>
       <label for="{{option | parse:valuePath | invoke:option}}">
         {{option | parse:displayPath | invoke:option}}
       </label>
