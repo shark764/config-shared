@@ -350,7 +350,7 @@ textarea{
   resize: vertical;
 }
 
-input[type=password], input[type=text], input[type=email], input[type=tel], input[type=number], input[type=url], input[type=date], input[type=time] select, textarea {
+input[type=password], input[type=text], input[type=email], input[type=tel], input[type=number], input[type=url], input[type=date], input[type=time], select, textarea {
   background-color: #fff;
   border-radius: 3px;
   border: 1px solid transparent;
@@ -795,17 +795,6 @@ div[disable-contents] + .input-group, .input-group + div[disable-contents] {
 
 * {
   box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  min-width: $min-body-width;
-  overflow-y: hidden; /*Required to prevent tooltips from (occasionally) briefly creating a scrollbar */
-  overflow-x: auto; /*Required to show scrollbar on small windows */
-}
-
-body > .ng-view {
-  height: calc(100% - #{$navbar-height});
 }
 
 body {
