@@ -48,7 +48,7 @@ angular.module('liveopsConfigPanel.shared.directives')
             }
           };
           
-          function checkAll(){
+          var checkAll = function(){
             angular.forEach($scope.options, function (option) {
               option.checked = true;
             });

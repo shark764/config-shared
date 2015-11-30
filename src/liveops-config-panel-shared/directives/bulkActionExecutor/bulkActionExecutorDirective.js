@@ -94,7 +94,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               Alert.success($translate.instant('bulkAction.success'));
               $scope.resetForm();
             });
-          }
+          };
 
           $scope.canExecute = controller.canExecute;
         }
