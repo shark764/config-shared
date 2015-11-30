@@ -12,7 +12,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }
 
         return cpy;
-      }
+      };
 
       var TenantUser = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/users/:id',

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('confirmToggle', ['Modal', '$timeout', function(Modal, $timeout) {
+  .directive('confirmToggle', ['Modal', function(Modal) {
     return {
       require: ['ngModel', '^toggle'],
       link: function ($scope, $element, $attrs, controllers) {

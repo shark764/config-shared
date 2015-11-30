@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .controller('bulkActionExecutorController', ['$scope', '$filter', '$q', '$translate',
-    function ($scope, $filter, $q, $translate) {
+  .controller('bulkActionExecutorController', ['$scope', '$filter', '$q',
+    function ($scope, $filter, $q) {
       var self = this;
       $scope.bulkActions = [];
 
@@ -31,7 +31,7 @@ angular.module('liveopsConfigPanel.shared.directives')
             if(bulkAction.doesQualify(item)) {
               affectedItems.push(item);
             }
-          })
+          });
           
         });
         
