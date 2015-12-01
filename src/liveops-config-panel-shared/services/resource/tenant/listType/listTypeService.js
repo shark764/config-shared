@@ -1,19 +1,17 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('List', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
+  .factory('ListType', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
 
       var List = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/lists/:id',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/list-types/:id',
         resourceName: 'List',
         updateFields: [{
           name: 'name'
         }, {
           name: 'description',
           optional: true
-        }, , {
-          name: 'items'
         }],
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
