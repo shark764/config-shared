@@ -14,6 +14,8 @@ angular.module('liveopsConfigPanel.shared.services')
           optional: true
         }, {
           name: 'items'
+        }, {
+          name: 'active'
         }],
         getInterceptor: itemBackupInterceptor,
         queryInterceptor: itemBackupInterceptor,

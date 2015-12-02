@@ -6,7 +6,7 @@ angular.module('liveopsConfigPanel.shared.services')
 
       var List = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/list-types/:id',
-        resourceName: 'List',
+        resourceName: 'ListType',
         updateFields: [{
           name: 'name'
         }, {
