@@ -12,7 +12,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'description',
           optional: true
-        }, , {
+        }, {
           name: 'items'
         }],
         getInterceptor: itemBackupInterceptor,

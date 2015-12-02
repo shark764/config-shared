@@ -5,28 +5,28 @@ angular.module('liveopsConfigPanel.tenant.listType.mock', ['liveopsConfigPanel.m
     return [new ListType({
       'id': 'listTypeId1',
       'fields': [{
-        "type": "string",
-        "name": "field1",
-        "label": "String field",
-        "required": true
+        'type': 'string',
+        'name': 'field1',
+        'label': 'String field',
+        'required': true
       }, {
-        "type": "number",
-        "name": "field2",
-        "label": "Number field",
-        "required": false
+        'type': 'number',
+        'name': 'field2',
+        'label': 'Number field',
+        'required': false
       }, {
-        "type": "boolean",
-        "name": "field3",
-        "label": "Bool field",
-        "required": false
+        'type': 'boolean',
+        'name': 'field3',
+        'label': 'Bool field',
+        'required': false
       }]
     }), new ListType({
       'id': 'listTypeId2',
       'fields': [{
-        "type": "boolean",
-        "name": "field1",
-        "label": "Bool field",
-        "required": true
+        'type': 'boolean',
+        'name': 'field1',
+        'label': 'Bool field',
+        'required': true
       }]
     }), new ListType({
       'id': 'listTypeId3',
