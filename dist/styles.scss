@@ -1379,6 +1379,72 @@ number-slider {
     }
   }
 }
+query-creator {
+
+  .tag-wrapper {
+    .tag:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .add-group-button {
+    width: 40px;
+  }
+
+  .proficiency-operator-dropdown {
+    width: 65%;
+  }
+
+  .proficiency-value {
+    display: block;
+    width: 35%;
+  }
+
+  .details-group + .details-group {
+    margin-top: 20px;
+  }
+
+  .tag-wrapper {
+    display: block;
+  }
+
+  .input-group label{
+    border-right: 3px solid transparent;
+  }
+
+  label.has-elements {
+    border-right: 3px solid $accent-light;
+  }
+
+  .query-component {
+    margin-left: 10px;
+
+    h4 {
+      color: $dark-grey;
+    }
+
+    .input-group > div {
+      margin-left: 5px;
+    }
+
+    .divider-header {
+      margin-top: 10px;
+      max-width: $max-control-width;
+    }
+  }
+
+  .tag {
+    margin: 0;
+  }
+
+  condition-group-editor {
+    display: block;
+
+    &:first-child {
+    }
+  }
+}
+
 .resizable-handle {
   color: $accent1;
   font-size: 1.4em;
@@ -1749,6 +1815,42 @@ tooltip {
 }
 .edit-field-input {
 }
+readonly-query {
+  display: block;
+  margin-bottom: 10px;
+
+  .tag {
+    margin: 0 5px;
+    &:first-child {
+      margin: 0;
+    }
+  }
+  .show-advanced-link, .show-basic-link {
+    display: block;
+    text-align: right;
+    padding-top: 0.7em;
+  }
+
+  .show-basic-link {
+    margin-bottom: 5px;
+  }
+
+  .tag-wrapper {
+    margin: 5px 0;
+  }
+}
+
+.compact-view .show-advanced-link, .compact-view .show-basic-link {
+  width: 50%;
+  display:inline-block;
+  margin-top: 5px;
+}
+
+.compact-view #version-basic-query-details > label {
+  width: 50%;
+  display: inline-block;
+}
+
 #modal {
   box-sizing: border-box;
   width: 100%;

@@ -834,26 +834,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     }
   ]);
 
-angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
-$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\n  <input\n    autocomplete=\"off\"\n    name=\"{{nameField}}\"\n    ng-required=\"isRequired\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"\n    placeholder=\"{{placeholder}}\"\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\n      <li ng-class=\"{\'highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\n    </ul>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\n    <filter-dropdown\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\n      options=\"selectedItems()\"\n      display-path=\"getDisplay\"\n      value-path=\"id\">\n    </filter-dropdown>\n  </div>\n\n  <div class=\"detail-body\">\n    <!-- bulkAction elements injected here -->\n  </div>\n\n  <div class=\"detail-controls\">\n    <input id=\"cancel-bulk-actions-btn\"\n      type=\"button\"\n      class=\"btn\"\n      ng-click=\"cancel()\"\n      value=\"{{\'value.cancel\' | translate}}\">\n    </input>\n    <input id=\"submit-bulk-actions-btn\"\n      ng-disabled=\"!canExecute()\"\n      type=\"button\"\n      class=\"btn btn-primary\"\n      ng-click=\"confirmExecute()\"\n      value=\"{{\'value.submit\' | translate}}\">\n  </div>\n</form>\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\n    <div>\n      <span>{{label}}</span>\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\n    </div>\n  </div>\n\n  <div class=\"dropdown-container\">\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\n      <ul>\n        <li id=\"{{item.id}}\"\n          ng-repeat=\"item in items | orderBy:orderBy\"\n          ng-click=\"optionClick(item.onClick)\">\n            <span ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\n            <a ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\n  <span>{{label}}</span>\n  <div ng-if=\"showAll\" class=\"all-label\">\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\n  </div>\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\n</div>\n\n<div class=\"dropdown-container\">\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\n    <div class=\"all\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\n      <label>All</label>\n    </div>\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\n      class=\"dropdown-option\" ng-click=\"checkItem(option)\" >\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\n        {{option | parse:displayPath | invoke:option}}\n      </label>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\n  <div ng-repeat=\"(error, value) in field.$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\n  ng-messages=\"form[fieldName].$error\">\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\n  <i class=\"fa fa-info fa-stack-1x\"></i>\n</span>");
-$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\n      readonly=\"true\" border=\"0\"  class=\"label\"\n      ng-required=\"true\"\n      ng-model=\"display\" />\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\n  </div>\n\n  <div class=\"edit-box\" ng-show=\"showDrop\">\n    <type-ahead\n      items=\"items\"\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\n      on-select=\"onSelect(selectedItem)\"\n      keep-expanded=\"true\"\n      selected-item=\"selectedItem\"></type-ahead>\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\n      ng-click=\"createItem()\" \n      value=\"{{\'multibox.create.btn\' | translate}}\" />\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\n\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
-$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
-$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item}\"  \n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1035,6 +1015,30 @@ angular.module('liveopsConfigPanel.shared.directives')
       $document.off('click', self.onClick);
     };
   }]);
+angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
+$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    name=\"{{nameField}}\"\r\n    ng-required=\"isRequired\"\r\n    type=\"text\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"\r\n    placeholder=\"{{placeholder}}\"\r\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\r\n      <li ng-class=\"{\'highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\r\n    </ul>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\r\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\r\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\r\n    <filter-dropdown\r\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\r\n      options=\"selectedItems()\"\r\n      display-path=\"getDisplay\"\r\n      value-path=\"id\">\r\n    </filter-dropdown>\r\n  </div>\r\n\r\n  <div class=\"detail-body\">\r\n    <!-- bulkAction elements injected here -->\r\n  </div>\r\n\r\n  <div class=\"detail-controls\">\r\n    <input id=\"cancel-bulk-actions-btn\"\r\n      type=\"button\"\r\n      class=\"btn\"\r\n      ng-click=\"cancel()\"\r\n      value=\"{{\'value.cancel\' | translate}}\">\r\n    </input>\r\n    <input id=\"submit-bulk-actions-btn\"\r\n      ng-disabled=\"!canExecute()\"\r\n      type=\"button\"\r\n      class=\"btn btn-primary\"\r\n      ng-click=\"confirmExecute()\"\r\n      value=\"{{\'value.submit\' | translate}}\">\r\n  </div>\r\n</form>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\r\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\r\n    <div>\r\n      <span>{{label}}</span>\r\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\r\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"dropdown-container\">\r\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\r\n      <ul>\r\n        <li id=\"{{item.id}}\"\r\n          ng-repeat=\"item in items | orderBy:orderBy\"\r\n          ng-click=\"optionClick(item.onClick)\">\r\n            <span ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\r\n            <a ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\r\n  <span>{{label}}</span>\r\n  <div ng-if=\"showAll\" class=\"all-label\">\r\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\r\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\r\n  </div>\r\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\r\n</div>\r\n\r\n<div class=\"dropdown-container\">\r\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\r\n    <div class=\"all\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\r\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\r\n      <label>All</label>\r\n    </div>\r\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\r\n      class=\"dropdown-option\" ng-click=\"checkItem(option)\" >\r\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\r\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\r\n        {{option | parse:displayPath | invoke:option}}\r\n      </label>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\r\n  <div ng-repeat=\"(error, value) in field.$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\r\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\r\n  ng-messages=\"form[fieldName].$error\">\r\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\r\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\r\n  <i class=\"fa fa-info fa-stack-1x\"></i>\r\n</span>");
+$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\r\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\r\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\r\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\r\n      readonly=\"true\" border=\"0\"  class=\"label\"\r\n      ng-required=\"true\"\r\n      ng-model=\"display\" />\r\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\r\n  </div>\r\n\r\n  <div class=\"edit-box\" ng-show=\"showDrop\">\r\n    <type-ahead\r\n      items=\"items\"\r\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\r\n      on-select=\"onSelect(selectedItem)\"\r\n      keep-expanded=\"true\"\r\n      selected-item=\"selectedItem\"></type-ahead>\r\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\r\n      ng-click=\"createItem()\" \r\n      value=\"{{\'multibox.create.btn\' | translate}}\" />\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\r\n\r\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\r\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\r\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\r\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>\r\n\r\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>");
+$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
+$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    placeholder=\"{{placeholder}}\"\r\n    name=\"{{nameField}}\"\r\n    id=\"typeahead-container\"\r\n    type=\"text\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \r\n      ng-mouseover=\"hovering=true\" \r\n      ng-mouseout=\"hovering=false\">\r\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\r\n         ng-class=\"{\'highlight\' : highlightedItem == item}\"  \r\n         ng-click=\"select(item)\" >\r\n           {{item.getDisplay() || item[nameField]}}\r\n       </li>\r\n    </ul>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\r\n<div class=\"confirm\">\r\n  <h3 class=\"header\">{{title}}</h3>\r\n  <p>{{message}}</p>\r\n  \r\n  <div class=\"footer\">\r\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\r\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\r\n  </div>\r\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\r\n  <ng-transclude></ng-transclude>\r\n  <div class=\"input-toggle\">\r\n\r\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\r\n      <option value=\"\">{{defaultText}}</option>\r\n    </select>\r\n\r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\r\n  <label>{{label}}</label>\r\n  <div class=\"input-toggle\">\r\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\r\n    \r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\r\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\r\n    {{ cqe.sectionLabel }}\r\n  </label>\r\n\r\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\r\n    <div>\r\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\r\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\r\n      </type-ahead>\r\n\r\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\r\n    </div>\r\n\r\n    <button class=\"add btn\" type=\"button\"\r\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\r\n      <i class=\"fa fa-plus\"></i>\r\n    </button>\r\n  </div>\r\n\r\n  <div class=\"tag-wrapper clear\">\r\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\r\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\r\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\r\n    </div> \r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/query/queryCreator.html","<div class=\"divider-header first-header\">\r\n  <h4>Query</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qc.isAdvancedMode\" ng-click=\"qc.advancedMode()\">\r\n      (Show advanced query editor)\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qc.isAdvancedMode && qc.initialAdvancedQuery\" ng-click=\"qc.basicMode()\">\r\n      (Show basic query builder)\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<ng-form name=\"qc.forms.advancedQueryForm\">\r\n  <div class=\"input-group\" ng-show=\"qc.isAdvancedMode\">\r\n    <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n    <textarea zermelo-query-validator id=\"advanced-query-field\"\r\n      ng-required=\"true\" type=\"text\" ng-model=\"qc.advancedQuery\" name=\"query\"\r\n     ng-change=\"qc.advancedQueryChanged()\"></textarea>\r\n     <form-error field=\"qc.forms.advancedQueryForm.query\"\r\n       error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n       error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\">\r\n     </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<div ng-show=\"!qc.isAdvancedMode\">\r\n  <div class=\"input-group\" id=\"add-query-filter\">\r\n    <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n    <div class=\"instant-add\" disable-contents=\"qc.possibleGroups.length == 0\">\r\n      <select id=\"select-filter-dropdown\"\r\n        ng-model=\"qc.currentGroup\">\r\n        <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n        <option ng-repeat=\"key in qc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n      </select>\r\n      <div class=\"add-group-button\">\r\n        <button class=\"add btn\" type=\"button\"\r\n          ng-disabled=\"!qc.currentGroup\"\r\n          ng-click=\"qc.addGroup(qc.currentGroup)\">\r\n\r\n          <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n        </button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <div ng-repeat=\"item in qc.query.groups\" class=\"details-group\">\r\n\r\n    <div class=\"query-component\">\r\n      <div class=\"divider-header\">\r\n        <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n        <a class=\"pull-right\" ng-click=\"qc.verifyRemoveGroup(item.key)\">(remove filter)</a>\r\n      </div>\r\n      <object-group-editor\r\n        object-group=\"item.objectGroup\"\r\n        key=\"item.key\">\r\n      </object-group-editor>\r\n    </div>\r\n  </div>\r\n</div>\r\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1471,16 +1475,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-.directive('modal', [function () {
-  return {
-    restrict: 'E',
-    templateUrl : 'liveops-config-panel-shared/directives/modal/modal.html'
-  };
-}]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('ngResource', [function () {
     return {
       restrict: 'A',
@@ -1489,6 +1483,16 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
   }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+.directive('modal', [function () {
+  return {
+    restrict: 'E',
+    templateUrl : 'liveops-config-panel-shared/directives/modal/modal.html'
+  };
+}]);
 
 'use strict';
 
@@ -2198,6 +2202,38 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
   }]);
+
+(function() {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('zermeloQueryValidator', ZermeloQueryValidator);
+
+    function ZermeloQueryValidator(ZermeloQuery, jsedn) {
+      return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function ($scope, element, attr, ctrl) {
+
+          function validateZermelo(input) {
+            ctrl.$setValidity('zermelo', false);
+
+            try {
+              if(ZermeloQuery.fromEdn(jsedn.parse(input))) {
+                ctrl.$setValidity('zermelo', true);
+              }
+            } catch (e) {}
+
+            return input;
+          }
+
+          ctrl.$parsers.unshift(validateZermelo);
+          ctrl.$formatters.unshift(validateZermelo);
+        }
+      };
+    }
+
+})();
 
 'use strict';
 
@@ -3150,6 +3186,341 @@ angular.module('liveopsConfigPanel.shared.services')
       }
     };
   }]);
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloCondition', function ($rootScope, jsedn) {
+
+      function Condition(tag, identifier) {
+        this.tag = tag;
+        this.identifier = identifier;
+        this.filter = null;
+      }
+
+      Condition.prototype.setFilter = function () {
+        if(arguments.length === 1) {
+          this.filter = arguments[0];
+        }
+
+        if(arguments.length === 2) {
+          this.filter = [arguments[0], arguments[1]];
+        }
+      };
+
+      Condition.prototype.toEdn = function () {
+        var ednFilter = this.filter instanceof Array ?
+          new jsedn.List([new jsedn.sym(this.filter[0]), this.filter[1]]) :
+          this.filter;
+
+        return new jsedn.Map([new jsedn.Tagged(new jsedn.Tag(this.tag), this.identifier), ednFilter]);
+      };
+
+      Condition.fromEdn = function (edn) {
+        if(edn instanceof jsedn.Map) {
+          var condition = new Condition();
+
+          // jsedn seems to ignore the #uuid tag? will have to investigate
+          // the library to find out why. most other things work fine.
+          // for now, manually inject uuid
+          condition.tag = 'uuid';
+          condition.identifier = edn.keys[0];
+          condition.filter = edn.vals[0];
+
+          if(!angular.isString(condition.identifier)) {
+            throw 'condition must start with #uuid';
+          }
+
+          if(condition.filter instanceof jsedn.List) {
+
+            if(condition.filter.val.length !== 2) {
+              throw 'condition filter must be exactly length 2 if it is a list';
+            }
+
+            condition.filter = [condition.filter.val[0].val, condition.filter.val[1]];
+
+          } else if(condition.filter !== true) {
+            throw 'if condition filter is not a list, it must be true';
+          }
+
+          return condition;
+        }
+
+        return null;
+      };
+
+      return Condition;
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloConditionGroup', function (jsedn, ZermeloCondition) {
+
+      function ConditionGroup(operator) {
+        this.operator = operator;
+        this.conditions = [];
+      }
+
+      ConditionGroup.prototype.getConditionIdentifiers = function () {
+        var ids = [];
+
+        for(var i = 0; i < this.conditions.length; i++) {
+          ids.push(this.conditions[i].identifier);
+        }
+
+        return ids;
+      };
+
+      ConditionGroup.prototype.addCondition = function (condition) {
+        this.conditions.push(condition);
+      };
+
+      ConditionGroup.prototype.removeCondition = function (condition) {
+        this.conditions.splice(this.conditions.indexOf(condition), 1);
+      };
+
+      ConditionGroup.prototype.toEdn = function (allowEmpty) {
+        var list = new jsedn.List([new jsedn.sym(this.operator)]);
+
+        for (var i = 0; i < this.conditions.length; i++) {
+          var condition = this.conditions[i].toEdn();
+
+          if(allowEmpty || condition) {
+            list.val.push(condition);
+          }
+        }
+
+        return list.val.length > 1 || allowEmpty ? list : null;
+      };
+
+      ConditionGroup.fromEdn = function (edn) {
+        if(edn instanceof jsedn.List) {
+          var conditionGroup = new ConditionGroup();
+
+          conditionGroup.operator = edn.at(0).val;
+
+          for(var i = 1; i < edn.val.length; i++) {
+            conditionGroup.conditions.push(ZermeloCondition.fromEdn(edn.val[i]));
+          }
+
+          return conditionGroup;
+        }
+
+        return null;
+      };
+
+      return ConditionGroup;
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloObjectGroup', function (jsedn, _, ZermeloConditionGroup) {
+
+      function ObjectGroup() {
+        this.andConditions = new ZermeloConditionGroup('and');
+        this.orConditions = new ZermeloConditionGroup('or');
+      }
+
+      ObjectGroup.prototype.hasConditions = function () {
+        return this.andConditions.conditions.length > 0 || this.orConditions.conditions.length > 0;
+      };
+
+      ObjectGroup.prototype.toEdn = function (allowEmpty) {
+        var list = new jsedn.List([new jsedn.sym('and')]),
+            conditionGroups = [this.andConditions, this.orConditions];
+
+        for (var i = 0; i < conditionGroups.length; i++) {
+          var conditionGroup = conditionGroups[i].toEdn(allowEmpty);
+
+          if(allowEmpty || conditionGroup) {
+            list.val.push(conditionGroup);
+          }
+        }
+
+        return list.val.length > 1 ? list : null;
+      };
+
+      ObjectGroup.fromEdn = function (list) {
+        if(list instanceof jsedn.List) {
+            var og = new ObjectGroup();
+
+            if(list.val[0].val !== 'and') {
+              throw 'object group must start with and';
+            }
+
+            list.map(function (i) {
+              if(i instanceof jsedn.List) {
+                switch (i.at(0).val) {
+                  case 'and':
+                    og.andConditions = ZermeloConditionGroup.fromEdn(i);
+                    break;
+                  case 'or':
+                    og.orConditions = ZermeloConditionGroup.fromEdn(i);
+                    break;
+                  default:
+                    return null;
+                }
+              }
+            });
+
+            return og;
+        }
+
+        return null;
+      };
+
+      return ObjectGroup;
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloQuery', function ($rootScope, _, ZermeloObjectGroup, jsedn) {
+
+      var ALLOWED_KEYS = [':groups', ':skills'];
+
+      function Query() {
+        this.groups = [];
+        this.afterSecondsInQueue = null;
+      }
+
+      Query.prototype.getGroup = function (key) {
+        return _.findWhere(this.groups, {key: key});
+      };
+
+      Query.prototype.setGroup = function (key, objectGroup) {
+        this.groups.push({
+          key: key,
+          objectGroup: objectGroup
+        });
+      };
+
+      Query.prototype.removeGroup = function (key) {
+        this.groups = _.filter(this.groups, function (item) {
+          return item.key !== key;
+        });
+      };
+
+      Query.prototype.toEdn = function (allowEmpty) {
+        var map = new jsedn.Map();
+
+        for (var i = 0; i < this.groups.length; i++) {
+          var group = this.groups[i],
+              key = group.key,
+              list = group.objectGroup.toEdn(allowEmpty);
+
+          if(allowEmpty || list) {
+            map.set(new jsedn.Keyword(key), list);
+          }
+
+          if(this.afterSecondsInQueue) {
+            map.set(new jsedn.Keyword(':afterSecondsInQueue'), this.afterSecondsInQueue);
+          }
+        }
+
+        return map;
+      };
+
+      Query.fromEdn = function (map) {
+        if (angular.isString(map)) {
+          map = jsedn.parse(map);
+        }
+
+        if(map instanceof jsedn.Map) {
+          var query = new Query(),
+              keys = map.keys;
+
+          for(var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+
+            if(key.val === ':afterSecondsInQueue') {
+              query.afterSecondsInQueue = map[key];
+            } else if (_.includes(ALLOWED_KEYS, key.val)) {
+              query.setGroup(key.val, ZermeloObjectGroup.fromEdn(map.at(key)));
+            } else {
+              throw 'invalid key in query; must be :afterSecondsInQueue OR in ' + angular.toJson(ALLOWED_KEYS);
+            }
+          }
+
+          return query;
+        }
+
+        return null;
+      };
+
+      return Query;
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloQueryList', function (ZermeloQuery, jsedn) {
+
+      function QueryList() {
+        this.queries = [];
+      }
+
+      QueryList.prototype.addQuery = function (query) {
+        this.queries.push(query);
+      };
+
+      QueryList.prototype.removeQuery = function (query) {
+        this.queries.splice(this.queries.indexOf(query), 1);
+      };
+
+      QueryList.prototype.toEdn = function () {
+        var list = new jsedn.List();
+
+        for(var i = 0; i < this.queries.length; i++) {
+          var query = this.queries[i],
+              map = query.toEdn();
+
+          if(map) {
+            list.val.push(map);
+          }
+        }
+
+        return list;
+      };
+
+      QueryList.fromEdn = function (edn) {
+        if(edn instanceof jsedn.List) {
+          var queryList = new QueryList();
+
+          for(var i = 0; i < edn.val.length; i++) {
+            queryList.addQuery(ZermeloQuery.fromEdn(edn.val[i]));
+          }
+
+          return queryList;
+        }
+
+        return null;
+      };
+
+      return QueryList;
+    });
+
+})();
+
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -3187,6 +3558,328 @@ angular.module('liveopsConfigPanel.shared.directives')
         placeholder: '@'
       },
       controller: 'EditFieldController'
+    };
+  });
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .controller('ConditionGroupEditorController', ConditionGroupEditorController);
+
+    function ConditionGroupEditorController($scope, ZermeloCondition, _, $translate) {
+      var vm = this;
+
+      vm.conditionGroup = $scope.conditionGroup;
+      vm.items = $scope.items;
+      vm.sectionLabel = $scope.sectionLabel;
+      vm.placeholderText = $scope.placeholderText;
+      vm.conditionProficiency = 1;
+      vm.conditionOperator = '>=';
+      vm.readonly = $scope.readonly;
+
+      vm.findItemForCondition = function(condition) {
+        return  _.findWhere(vm.items, {id: condition.identifier});
+      };
+
+      vm.getConditionName = function (condition) {
+        condition = vm.findItemForCondition(condition);
+
+        if(condition) {
+          return condition.getDisplay();
+        }
+
+        return $translate.instant('value.unknown');
+      };
+
+      vm.prettyConditionFilter = function (condition) {
+        var item = vm.findItemForCondition(condition);
+
+        if(item && condition.filter instanceof Array &&
+              item.hasProficiency) {
+
+          return condition.filter[0] + ' ' + condition.filter[1];
+        }
+
+        return '';
+      };
+
+      vm.addSelectedCondition = function() {
+        var cond = new ZermeloCondition('uuid', vm.selectedItem.id);
+        cond.setFilter(true);
+
+        if(vm.selectedItem.hasProficiency === false) {
+          cond.setFilter('>=', 1);
+        }
+        else if(vm.selectedItem.hasProficiency) {
+          cond.setFilter(vm.conditionOperator, vm.conditionProficiency);
+        }
+
+        vm.conditionGroup.addCondition(cond);
+        vm.selectedItem = null;
+      };
+
+      vm.conditionsFilter = function (item) {
+        return !_.includes(vm.conditionGroup.getConditionIdentifiers(), item.id);
+      };
+
+    }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('conditionGroupEditor', QueryCreator);
+
+    function QueryCreator() {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html',
+        controller: 'ConditionGroupEditorController as cqe',
+        scope: {
+          conditionGroup: '=',
+          items: '=',
+          sectionLabel: '@',
+          placeholderText: '@',
+          readonly: '='
+        }
+      };
+    }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .controller('ObjectGroupEditorController', GroupsQueryCreatorController);
+
+    function GroupsQueryCreatorController($scope, $translate, Session, Skill, Group) {
+      var vm = this;
+
+      vm.objectGroup = $scope.objectGroup;
+      vm.key = $scope.key;
+      vm.placeholderText = $translate.instant('queue.query.builder.' + vm.key + '.placeholder');
+      vm.readonly = $scope.readonly;
+
+      vm.modelType = vm.key === ':skills' ? Skill : Group;
+
+      vm.items = vm.modelType.cachedQuery({
+          tenantId: Session.tenant.tenantId
+      });
+    }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('objectGroupEditor', QueryCreator);
+
+    function QueryCreator() {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html',
+        controller: 'ObjectGroupEditorController as oge',
+        scope: {
+          objectGroup: '=',
+          key: '=',
+          readonly: '='
+        }
+      };
+    }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('proficiencySelector', QueryCreator);
+
+    function QueryCreator() {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html',
+        scope: {
+          operator: '=',
+          proficiency: '='
+        }
+      };
+    }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .controller('QueryCreatorController', QueryCreator);
+
+    function QueryCreator($scope, ZermeloCondition, jsedn, ZermeloObjectGroup,
+      ZermeloQuery, _, Skill, Group, $translate, Alert) {
+
+      var vm = this;
+
+      var ALLOWED_GROUP_KEYS = [':skills', ':groups'];
+
+      $scope.$watch(function (){
+        return $scope.query;
+      }, function (nv) {
+        if(!vm.query || (nv && nv !== vm.query.toEdn().ednEncode())) {
+
+          vm.advancedQuery = nv;
+
+          try {
+            var ednQuery = ZermeloQuery.fromEdn(nv);
+            return vm.initQuery(ednQuery);
+          } catch (e) { }
+
+          vm.isAdvancedMode = true;
+          vm.forms.advancedQueryForm.query.$setTouched();
+        }
+      });
+
+      $scope.$watch(function () {
+        return vm.query;
+      }, function (nv) {
+        if(nv) {
+          $scope.query = nv.toEdn().ednEncode();
+        }
+      }, true);
+
+      vm.advancedQueryChanged = function () {
+        if(!vm.initialAdvancedQuery ) {
+          vm.initialAdvancedQuery = ZermeloQuery.fromEdn(vm.advancedQuery);
+        }
+      };
+
+      vm.advancedMode = function () {
+        vm.advancedQuery = vm.query.toEdn(true).ednEncode();
+        vm.initialAdvancedQuery = vm.advancedQuery;
+        vm.isAdvancedMode = true;
+      };
+
+      vm.basicMode = function () {
+        var query = null;
+
+        try {
+          query = ZermeloQuery.fromEdn(vm.advancedQuery);
+        } catch (e) {}
+
+        if(!query) {
+          return Alert.confirm($translate.instant('queue.details.version.query.basic.invalid'),
+            function () {
+              vm.initQuery(ZermeloQuery.fromEdn(vm.initialAdvancedQuery));
+              vm.isAdvancedMode = false;
+            },
+            angular.noop
+          );
+        }
+
+        vm.initQuery(query);
+        vm.isAdvancedMode = false;
+      };
+
+      vm.initQuery = function (query) {
+        vm.query = query || new ZermeloQuery();
+        vm.possibleGroups = _.xor(_.pluck(vm.query.groups, 'key'), ALLOWED_GROUP_KEYS);
+      };
+
+      vm.addGroup = function (key) {
+        vm.query.setGroup(key, new ZermeloObjectGroup());
+        vm.possibleGroups.splice(vm.possibleGroups.indexOf(key), 1);
+        vm.currentGroup = '';
+      };
+
+      vm.verifyRemoveGroup = function (key) {
+        if(vm.query.getGroup(key).objectGroup.hasConditions()) {
+          return Alert.confirm($translate.instant('queue.query.builder.remove.filter.confirm'),
+            function () {
+              vm.removeGroup(key);
+            }, angular.noop
+          );
+        }
+
+        return vm.removeGroup(key);
+      };
+
+      vm.removeGroup = function(key) {
+        vm.query.removeGroup(key);
+        vm.possibleGroups.push(key);
+      };
+
+      vm.modelType = function (key) {
+        if(key === ':skills') {
+          return Skill;
+        }
+
+        if(key === ':groups') {
+          return Group;
+        }
+
+        return null;
+      };
+
+      vm.groupModelType = Group;
+      vm.skillsModelType = Skill;
+
+      vm.possibleGroups = ALLOWED_GROUP_KEYS;
+      vm.isAdvancedMode = false;
+    }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('queryCreator', QueryCreator);
+
+    function QueryCreator() {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/query/queryCreator.html',
+        controller: 'QueryCreatorController as qc',
+        scope: {
+          query: '='
+        }
+      };
+    }
+
+})();
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('readonlyQuery', function () {
+    return {
+      restrict : 'E',
+      scope : {
+        query : '='
+      },
+      transclude : true,
+      controller : function ($scope, ZermeloQuery) {
+
+        $scope.$watch('query', function (nv) {
+          try {
+            $scope.ednQuery = ZermeloQuery.fromEdn(nv);
+          } catch (e) {
+            $scope.ednQuery = null;
+          }
+
+          $scope.showBasicQuery = !!$scope.ednQuery;
+        });
+
+      },
+      link : function ($scope, element, attrs, ctrl, transclude) {
+        transclude($scope, function (clone) {
+          element.append(clone);
+        });
+      }
     };
   });
 
@@ -3509,6 +4202,63 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+
+      var Integration = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
+        resourceName: 'Integration',
+        updateFields: [{
+          name: 'properties'
+        }, {
+          name: 'accountSid'
+        }, {
+          name: 'authToken'
+        }, {
+          name: 'webRtc'
+        }, {
+          name: 'active'
+        }],
+        updateInterceptor: emitInterceptor
+      });
+
+      Integration.prototype.getDisplay = function () {
+        return this.type;
+      };
+
+      return Integration;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPanel.mock'])
+  .service('mockIntegrations', function (Integration) {
+    return [new Integration({
+      'id': 'integrationId1'
+    }), new Integration({
+      'id': 'integrationId2'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockIntegrations',
+    function ($httpBackend, apiHostname, mockIntegrations) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations').respond({
+        'result': mockIntegrations
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId1').respond({
+        'result': mockIntegrations[0]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId2').respond({
+        'result': mockIntegrations[1]
+      });
+
+    }
+  ]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock'])
   .service('mockGroups', function(Group) {
     return [new Group({
@@ -3587,63 +4337,6 @@ angular.module('liveopsConfigPanel.shared.services')
       return Group;
     }
   ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
-
-      var Integration = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
-        resourceName: 'Integration',
-        updateFields: [{
-          name: 'properties'
-        }, {
-          name: 'accountSid'
-        }, {
-          name: 'authToken'
-        }, {
-          name: 'webRtc'
-        }, {
-          name: 'active'
-        }],
-        updateInterceptor: emitInterceptor
-      });
-
-      Integration.prototype.getDisplay = function () {
-        return this.type;
-      };
-
-      return Integration;
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPanel.mock'])
-  .service('mockIntegrations', function (Integration) {
-    return [new Integration({
-      'id': 'integrationId1'
-    }), new Integration({
-      'id': 'integrationId2'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockIntegrations',
-    function ($httpBackend, apiHostname, mockIntegrations) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations').respond({
-        'result': mockIntegrations
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId1').respond({
-        'result': mockIntegrations[0]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId2').respond({
-        'result': mockIntegrations[1]
-      });
-
-    }
-  ]);
-
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
