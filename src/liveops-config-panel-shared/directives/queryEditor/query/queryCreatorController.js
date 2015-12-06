@@ -37,8 +37,14 @@
       }, true);
 
       vm.advancedQueryChanged = function () {
-        if(!vm.initialAdvancedQuery ) {
-          vm.initialAdvancedQuery = ZermeloQuery.fromEdn(vm.advancedQuery);
+        var ednQuery = ZermeloQuery.fromEdn(vm.advancedQuery);
+
+        if(ednQuery) {
+          if(!vm.initialAdvancedQuery ) {
+            vm.initialAdvancedQuery = ednQuery;
+          }
+
+          $scope.query = ednQuery.toEdn().ednEncode();
         }
       };
 
