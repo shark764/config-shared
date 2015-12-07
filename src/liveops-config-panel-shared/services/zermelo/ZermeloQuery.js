@@ -13,7 +13,7 @@
       }
 
       Query.prototype.getGroup = function (key) {
-        return _.findWhere(this.groups, {key: key});
+        return _.findWhere(this.groups, {key: key}) || null;
       };
 
       Query.prototype.setGroup = function (key, objectGroup) {
@@ -30,6 +30,10 @@
       };
 
       Query.prototype.toEdn = function (allowEmpty) {
+        if(!allowEmpty && this.groups.length === 0) {
+          return null;
+        }
+
         var map = new jsedn.Map();
 
         for (var i = 0; i < this.groups.length; i++) {
@@ -50,27 +54,33 @@
       };
 
       Query.fromEdn = function (map) {
-        if (angular.isString(map)) {
-          map = jsedn.parse(map);
-        }
-
-        if(map instanceof jsedn.Map) {
-          var query = new Query(),
-              keys = map.keys;
-
-          for(var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-
-            if(key.val === ':afterSecondsInQueue') {
-              query.afterSecondsInQueue = map[key];
-            } else if (_.includes(ALLOWED_KEYS, key.val)) {
-              query.setGroup(key.val, ZermeloObjectGroup.fromEdn(map.at(key)));
-            } else {
-              throw 'invalid key in query; must be :afterSecondsInQueue OR in ' + angular.toJson(ALLOWED_KEYS);
-            }
+        try {
+          if (angular.isString(map)) {
+            map = jsedn.parse(map);
           }
 
-          return query;
+          if(map instanceof jsedn.Map) {
+            var query = new Query(),
+                keys = map.keys;
+
+            for(var i = 0; i < keys.length; i++) {
+              var key = keys[i];
+
+              if(key.val === ':afterSecondsInQueue') {
+                query.afterSecondsInQueue = map[key];
+              } else if (_.includes(ALLOWED_KEYS, key.val)) {
+                query.setGroup(key.val, ZermeloObjectGroup.fromEdn(map.at(key)));
+              } else {
+                throw 'invalid key in query; must be :afterSecondsInQueue OR in ' + angular.toJson(ALLOWED_KEYS);
+              }
+            }
+
+            return query;
+          }
+
+          throw 'query must be a map';
+        } catch (e) {
+
         }
 
         return null;

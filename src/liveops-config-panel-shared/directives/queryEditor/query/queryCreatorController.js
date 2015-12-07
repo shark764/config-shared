@@ -13,15 +13,17 @@
 
       $scope.$watch(function (){
         return $scope.query;
+        
       }, function (nv) {
         if(!vm.query || (nv && nv !== vm.query.toEdn().ednEncode())) {
 
           vm.advancedQuery = nv;
 
-          try {
-            var ednQuery = ZermeloQuery.fromEdn(nv);
+          var ednQuery = ZermeloQuery.fromEdn(nv);
+
+          if(ednQuery) {
             return vm.initQuery(ednQuery);
-          } catch (e) { }
+          }
 
           vm.isAdvancedMode = true;
           vm.forms.advancedQueryForm.query.$setTouched();

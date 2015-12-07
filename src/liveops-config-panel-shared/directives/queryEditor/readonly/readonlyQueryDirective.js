@@ -11,12 +11,7 @@ angular.module('liveopsConfigPanel.shared.directives')
       controller : function ($scope, ZermeloQuery) {
 
         $scope.$watch('query', function (nv) {
-          try {
-            $scope.ednQuery = ZermeloQuery.fromEdn(nv);
-          } catch (e) {
-            $scope.ednQuery = null;
-          }
-
+          $scope.ednQuery = ZermeloQuery.fromEdn(nv);
           $scope.showBasicQuery = !!$scope.ednQuery;
         });
 

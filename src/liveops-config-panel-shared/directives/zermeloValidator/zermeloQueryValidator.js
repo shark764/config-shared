@@ -11,13 +11,8 @@
         link: function ($scope, element, attr, ctrl) {
 
           function validateZermelo(input) {
-            ctrl.$setValidity('zermelo', false);
-
-            try {
-              if(ZermeloQuery.fromEdn(jsedn.parse(input))) {
-                ctrl.$setValidity('zermelo', true);
-              }
-            } catch (e) {}
+            // if fromEdn returns null; set validity to false
+            ctrl.$setValidity('zermelo', !!ZermeloQuery.fromEdn(jsedn.parse(input)) );
 
             return input;
           }

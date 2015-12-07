@@ -3,7 +3,7 @@
 
   angular
     .module('liveopsConfigPanel.shared.services')
-    .factory('ZermeloConditionGroup', function (jsedn, ZermeloCondition) {
+    .factory('ZermeloConditionGroup', function (jsedn, ZermeloCondition, _) {
 
       function ConditionGroup(operator) {
         this.operator = operator;
@@ -25,11 +25,11 @@
       };
 
       ConditionGroup.prototype.removeCondition = function (condition) {
-        this.conditions.splice(this.conditions.indexOf(condition), 1);
+        _.pull(this.conditions, condition);
       };
 
       ConditionGroup.prototype.toEdn = function (allowEmpty) {
-        var list = new jsedn.List([new jsedn.sym(this.operator)]);
+        var list = new jsedn.List([new jsedn.Symbol(this.operator)]);
 
         for (var i = 0; i < this.conditions.length; i++) {
           var condition = this.conditions[i].toEdn();
@@ -49,13 +49,13 @@
           conditionGroup.operator = edn.at(0).val;
 
           for(var i = 1; i < edn.val.length; i++) {
-            conditionGroup.conditions.push(ZermeloCondition.fromEdn(edn.val[i]));
+            conditionGroup.addCondition(ZermeloCondition.fromEdn(edn.val[i]));
           }
 
           return conditionGroup;
         }
 
-        return null;
+        throw 'condition group must be a list';
       };
 
       return ConditionGroup;

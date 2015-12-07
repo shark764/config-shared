@@ -23,13 +23,13 @@
 
       Condition.prototype.toEdn = function () {
         var ednFilter = this.filter instanceof Array ?
-          new jsedn.List([new jsedn.sym(this.filter[0]), this.filter[1]]) :
+          new jsedn.List([new jsedn.Symbol(this.filter[0]), this.filter[1]]) :
           this.filter;
 
         return new jsedn.Map([new jsedn.Tagged(new jsedn.Tag(this.tag), this.identifier), ednFilter]);
       };
 
-      Condition.fromEdn = function (edn) {
+      Condition.fromEdn = function (edn) {  
         if(edn instanceof jsedn.Map) {
           var condition = new Condition();
 
@@ -59,7 +59,7 @@
           return condition;
         }
 
-        return null;
+        throw 'condition must be a map';
       };
 
       return Condition;
