@@ -4,7 +4,7 @@
   angular.module('liveopsConfigPanel.shared.directives')
     .controller('QueryCreatorController', QueryCreator);
 
-    function QueryCreator($scope, ZermeloCondition, jsedn, ZermeloObjectGroup,
+    function QueryCreator($scope, ZermeloCondition, ZermeloObjectGroup,
       ZermeloQuery, _, Skill, Group, $translate, Alert) {
 
       var vm = this;
@@ -13,7 +13,7 @@
 
       $scope.$watch(function (){
         return $scope.query;
-        
+
       }, function (nv) {
         if(!vm.query || (nv && nv !== vm.query.toEdn().ednEncode())) {
 
@@ -34,7 +34,15 @@
         return vm.query;
       }, function (nv) {
         if(nv) {
-          $scope.query = nv.toEdn().ednEncode();
+          var edn = nv.toEdn();
+
+          if(edn) {
+            $scope.query = edn.ednEncode();
+          } else {
+            $scope.query = null;
+          }
+
+
         }
       }, true);
 

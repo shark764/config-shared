@@ -12,7 +12,7 @@
 
           function validateZermelo(input) {
             // if fromEdn returns null; set validity to false
-            ctrl.$setValidity('zermelo', !!ZermeloQuery.fromEdn(jsedn.parse(input)) );
+            ctrl.$setValidity('zermelo', !!ZermeloQuery.fromEdn(input));
 
             return input;
           }
