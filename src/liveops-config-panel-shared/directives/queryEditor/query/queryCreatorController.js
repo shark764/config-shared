@@ -2,10 +2,9 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('QueryCreatorController', QueryCreator);
-
-    function QueryCreator($scope, ZermeloCondition, ZermeloObjectGroup,
-      ZermeloQuery, _, Skill, Group, $translate, Alert) {
+    .controller('QueryCreatorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
+      'ZermeloQuery', '_', 'Skill', 'Group', '$translate', 'Alert', function ($scope,
+        ZermeloCondition, ZermeloObjectGroup, ZermeloQuery, _, Skill, Group, $translate, Alert) {
 
       var vm = this;
 
@@ -130,6 +129,6 @@
 
       vm.possibleGroups = ALLOWED_GROUP_KEYS;
       vm.isAdvancedMode = false;
-    }
+    }]);
 
 })();

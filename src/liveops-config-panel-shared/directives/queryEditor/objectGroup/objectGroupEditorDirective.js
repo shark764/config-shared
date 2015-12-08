@@ -2,9 +2,7 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('objectGroupEditor', QueryCreator);
-
-    function QueryCreator() {
+    .directive('objectGroupEditor', function() {
       return {
         restrict: 'E',
         templateUrl: 'liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html',
@@ -15,6 +13,5 @@
           readonly: '='
         }
       };
-    }
-
+    });
 })();

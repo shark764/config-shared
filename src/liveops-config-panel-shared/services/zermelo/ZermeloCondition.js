@@ -3,7 +3,7 @@
 
   angular
     .module('liveopsConfigPanel.shared.services')
-    .factory('ZermeloCondition', function ($rootScope, jsedn) {
+    .factory('ZermeloCondition', ['jsedn', function (jsedn) {
 
       function Condition(tag, identifier) {
         this.tag = tag;
@@ -29,7 +29,7 @@
         return new jsedn.Map([new jsedn.Tagged(new jsedn.Tag(this.tag), this.identifier), ednFilter]);
       };
 
-      Condition.fromEdn = function (edn) {  
+      Condition.fromEdn = function (edn) {
         if(edn instanceof jsedn.Map) {
           var condition = new Condition();
 
@@ -63,6 +63,6 @@
       };
 
       return Condition;
-    });
+    }]);
 
 })();

@@ -2,9 +2,8 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('ObjectGroupEditorController', GroupsQueryCreatorController);
-
-    function GroupsQueryCreatorController($scope, $translate, Session, Skill, Group) {
+    .controller('ObjectGroupEditorController', ['$scope', '$translate', 'Session', 'Skill', 'Group',
+      function ($scope, $translate, Session, Skill, Group) {
       var vm = this;
 
       vm.objectGroup = $scope.objectGroup;
@@ -17,6 +16,6 @@
       vm.items = vm.modelType.cachedQuery({
           tenantId: Session.tenant.tenantId
       });
-    }
+    }]);
 
 })();
