@@ -45,7 +45,7 @@
         expect(zcg.conditions).toEqual([zc2]);
       });
 
-      it('should have no affect if the condition does not exist', function () {
+      it('should have no effect if the condition does not exist', function () {
         var zcg = new ZermeloConditionGroup('and'),
             zc1 = new ZermeloCondition('uuid', '1'),
             zc2 = new ZermeloCondition('uuid', '2'),
