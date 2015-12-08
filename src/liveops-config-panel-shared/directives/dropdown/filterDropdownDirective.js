@@ -30,10 +30,14 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           // If 'all' was checked but some other option has been unchecked, uncheck 'all' option
           // If 'all' was unchecked but all other options are checked, check 'all' option
-          $scope.$watch('options', function () {
+          $scope.$watch('options', function (newList, oldList) {
             var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
-
-            if (checkedOptions.length === $scope.options.length ) {
+            
+            if ($scope.all.checked && (newList.length > oldList.length)){
+              // If a new item was added to the options list, while the 'All' option is selected,
+              // we make sure it is checked
+              checkAll();
+            } else if (checkedOptions.length === $scope.options.length ) {
               $scope.all.checked = true;
             } else {
               $scope.all.checked = false;
