@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormSubmit', ['$parse',
-    function($parse) {
+  .directive('loFormSubmit', ['$parse', 'apiErrorKeys',
+    function($parse, apiErrorKeys) {
       return {
         restrict: 'A',
         require: 'form',
@@ -15,10 +15,21 @@ angular.module('liveopsConfigPanel.shared.directives')
             if ($parse('data.error')(error)) {
               angular.forEach(error.data.error.attribute, function(value, key) {
                 if (angular.isDefined(self.formController[key])){
-                  self.formController[key].$setValidity('api', false);
-                  self.formController[key].$error = {
-                    api: value
-                  };
+                  
+                  //if api error is a hardcoded key like "required", then simply
+                  //set the form field error key to {value: true}
+                  if(apiErrorKeys.indexOf(value) >= 0) {
+                    self.formController[key].$setValidity(value, false);
+                    self.formController[key].$error = {};
+                    self.formController[key].$error[value] = true;
+                  } else {
+                    self.formController[key].$setValidity('api', false);
+                    self.formController[key].$error = {
+                      api: value
+                    };
+                  }
+                  
+                  
                   self.formController[key].$setTouched();
                   self.formController[key].$setPristine();
                   

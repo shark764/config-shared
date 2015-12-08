@@ -1,16 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash',
-    function($http, $resource, $q, queryCache, _) {
-      function parseResponseResultTransformer(value) {
-        if (value.result) {
-          return value.result;
-        }
-
-        return value;
-      }
-
+  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash', 'resultTransformer',
+    function($http, $resource, $q, queryCache, _, resultTransformer) {
       function createJsonReplacer(key, value) {
         if (_.startsWith(key, '$')) {
           return undefined;
@@ -85,7 +77,7 @@ angular.module('liveopsConfigPanel.shared.services')
           };
 
           var defaultResponseTransformer =
-            Array.prototype.concat($http.defaults.transformResponse, parseResponseResultTransformer);
+            Array.prototype.concat($http.defaults.transformResponse, resultTransformer);
 
           var getRequestTransformer = params.getRequestTransformer;
           var getResponseTransformer = params.getResponseTransformer ?
