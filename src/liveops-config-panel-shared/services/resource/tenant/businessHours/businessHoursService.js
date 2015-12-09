@@ -12,8 +12,6 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }, {
-          name: 'tenantId'
-        }, {
           name: 'timezone'
         }, {
           name: 'sunStartTimeMinutes',
