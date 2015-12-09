@@ -348,6 +348,7 @@ $input-border-shadow: rgba(102,175,233,.6);
 
 textarea{
   resize: vertical;
+  font-family: $main-font;
 }
 
 input[type=password], input[type=text], input[type=email], input[type=tel], input[type=number], input[type=url], input[type=date], input[type=time], select, textarea {
@@ -386,6 +387,10 @@ input[type=password], input[type=text], input[type=email], input[type=tel], inpu
     color: $grey;
     background-color: #fafafa;
   }
+}
+
+select {
+  padding-left: 5px;
 }
 
 select.default-selected {
