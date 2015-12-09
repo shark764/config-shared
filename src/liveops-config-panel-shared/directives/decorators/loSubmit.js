@@ -33,17 +33,23 @@ angular.module('liveopsConfigPanel.shared.directives')
           },
           function(error) {
             var def = $q.defer();
-            loFormSubmit.populateApiErrors(error);
+            
+            if (loFormSubmit){
+              loFormSubmit.populateApiErrors(error);
+            }
+            
             def.reject(error);
             return def.promise;
           });
           
-          promise = promise.then(function(resource) {
-            loFormAlert.alertSuccess(resource);
-          }, 
-          function(error) {
-            loFormAlert.alertFailure(error.config.data);
-          });
+          if (loFormAlert){
+            promise = promise.then(function(resource) {
+              loFormAlert.alertSuccess(resource);
+            }, 
+            function(error) {
+              loFormAlert.alertFailure(error.config.data);
+            });
+          }
           
           $scope.$apply();
         });
