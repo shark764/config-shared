@@ -14,7 +14,7 @@
         return $scope.query;
 
       }, function (nv) {
-        if(!vm.query || (nv && nv !== vm.query.toEdn(true).ednEncode())) {
+        if(!vm.query || (nv && nv !== vm.query.toEdn().ednEncode())) {
 
           vm.advancedQuery = nv;
 
