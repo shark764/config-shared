@@ -5,7 +5,7 @@ angular.module('liveopsConfigPanel.shared.services')
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
 
       var BusinessHours = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:businessHoursId/exceptions/:id',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:businessHourId/exceptions/:id',
         resourceName: 'BusinessHourException',
         updateFields: [{
           name: 'date'
