@@ -1044,8 +1044,8 @@ $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html
 $templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\n    {{ cqe.sectionLabel }}\n  </label>\n\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\n    <div>\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\n      </type-ahead>\n\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\n    </div>\n\n    <button class=\"add btn\" type=\"button\"\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\n      <i class=\"fa fa-plus\"></i>\n    </button>\n  </div>\n\n  <div class=\"tag-wrapper clear\">\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\n    </div> \n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\n  </select>\n  <number-slider value=\"proficiency\"\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\n  </number-slider>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.andConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n\n<condition-group-editor\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.orConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\n  </select>\n  <number-slider value=\"proficiency\"\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\n  </number-slider>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/query/queryCreator.html","<div class=\"divider-header first-header\">\n  <h4>Query</h4>\n  <a class=\"pull-right\">\n    <span id=\"show-advanced-query\" ng-show=\"!qc.isAdvancedMode\" ng-click=\"qc.advancedMode()\">\n      (Show advanced query editor)\n    </span>\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qc.isAdvancedMode && qc.initialAdvancedQuery\" ng-click=\"qc.basicMode()\">\n      (Show basic query builder)\n    </span>\n  </a>\n</div>\n\n\n<ng-form name=\"qc.forms.advancedQueryForm\">\n  <div class=\"input-group\" ng-show=\"qc.isAdvancedMode\">\n    <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\n    <textarea zermelo-query-validator id=\"advanced-query-field\"\n      ng-required=\"true\" type=\"text\" ng-model=\"qc.advancedQuery\" name=\"query\"\n     ng-change=\"qc.advancedQueryChanged()\"></textarea>\n     <form-error field=\"qc.forms.advancedQueryForm.query\"\n       error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\n       error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\">\n     </form-error>\n  </div>\n</ng-form>\n\n<div ng-show=\"!qc.isAdvancedMode\">\n  <div class=\"input-group\" id=\"add-query-filter\">\n    <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\n    <div class=\"instant-add\" disable-contents=\"qc.possibleGroups.length == 0\">\n      <select id=\"select-filter-dropdown\"\n        ng-model=\"qc.currentGroup\">\n        <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\n        <option ng-repeat=\"key in qc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\n      </select>\n      <div class=\"add-group-button\">\n        <button class=\"add btn\" type=\"button\"\n          ng-disabled=\"!qc.currentGroup\"\n          ng-click=\"qc.addGroup(qc.currentGroup)\">\n\n          <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\n        </button>\n      </div>\n    </div>\n  </div>\n\n  <div ng-repeat=\"item in qc.query.groups\" class=\"details-group\">\n\n    <div class=\"query-component\">\n      <div class=\"divider-header\">\n        <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\n        <a class=\"pull-right\" ng-click=\"qc.verifyRemoveGroup(item.key)\">(remove filter)</a>\n      </div>\n      <object-group-editor\n        object-group=\"item.objectGroup\"\n        key=\"item.key\">\n      </object-group-editor>\n    </div>\n  </div>\n</div>\n");}]);
 'use strict';
 
@@ -3626,23 +3626,6 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('proficiencySelector', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html',
-        scope: {
-          operator: '=',
-          proficiency: '='
-        }
-      };
-    });
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
     .controller('ObjectGroupEditorController', ['$scope', '$translate', 'Session', 'Skill', 'Group',
       function ($scope, $translate, Session, Skill, Group) {
       var vm = this;
@@ -3677,6 +3660,23 @@ angular.module('liveopsConfigPanel.shared.directives')
         }
       };
     });
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('proficiencySelector', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html',
+        scope: {
+          operator: '=',
+          proficiency: '='
+        }
+      };
+    });
+
 })();
 
 (function () {
@@ -3884,82 +3884,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
-  .service('mockTenants', function (Tenant) {
-    return [new Tenant({
-      'id': 'tenant-id'
-    }), new Tenant({
-      'id': 'tenant-id-2'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockTenants',
-    function ($httpBackend, apiHostname, mockTenants) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id').respond({
-        'result': mockTenants[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-2').respond({
-        'result': mockTenants[1]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants?regionId=regionId1').respond({
-        'result': mockTenants
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-0').respond(404);
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
-
-      var Tenant = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:id',
-        resourceName: 'Tenant',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'active'
-        }, {
-          name: 'adminUserId'
-        }],
-        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Tenant.prototype.getDisplay = function () {
-        return this.name;
-      };
-      
-      //This is an awkward workaround for tenant list functionality 
-      //in the case where list should only show current selected tenant due to having MANAGE_TENANT permission
-      var obj = Tenant;
-      Tenant.prototype.getAsArray = function(id){
-        var cached = queryCache.get(id + 'arr');
-
-        if (!cached) {
-          var item = obj.get({id: id});
-          var mockArray = [item];
-          mockArray.$promise = item.$promise;
-          mockArray.$resolved = true;
-          queryCache.put(id + 'arr', mockArray);
-          return mockArray;
-        }
-
-        return cached;
-      };
-
-      return Tenant;
-    }
-  ]);
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.services')
   .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'userUpdateTransformer',
     function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, userUpdateTransformer) {
@@ -4062,6 +3986,82 @@ angular.module('liveopsConfigPanel.user.mock', ['liveopsConfigPanel.mock'])
       $httpBackend.when('GET', apiHostname + '/v1/users/userId0?tenantId=tenant-id').respond(404);
       
       $httpBackend.when('POST', apiHostname + '/v1/users').respond(mockUsers[2]);
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTenants', function (Tenant) {
+    return [new Tenant({
+      'id': 'tenant-id'
+    }), new Tenant({
+      'id': 'tenant-id-2'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTenants',
+    function ($httpBackend, apiHostname, mockTenants) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id').respond({
+        'result': mockTenants[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-2').respond({
+        'result': mockTenants[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants?regionId=regionId1').respond({
+        'result': mockTenants
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id-0').respond(404);
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
+
+      var Tenant = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:id',
+        resourceName: 'Tenant',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'active'
+        }, {
+          name: 'adminUserId'
+        }],
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Tenant.prototype.getDisplay = function () {
+        return this.name;
+      };
+      
+      //This is an awkward workaround for tenant list functionality 
+      //in the case where list should only show current selected tenant due to having MANAGE_TENANT permission
+      var obj = Tenant;
+      Tenant.prototype.getAsArray = function(id){
+        var cached = queryCache.get(id + 'arr');
+
+        if (!cached) {
+          var item = obj.get({id: id});
+          var mockArray = [item];
+          mockArray.$promise = item.$promise;
+          mockArray.$resolved = true;
+          queryCache.put(id + 'arr', mockArray);
+          return mockArray;
+        }
+
+        return cached;
+      };
+
+      return Tenant;
     }
   ]);
 'use strict';
@@ -4481,6 +4481,49 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.media.mock', ['liveopsConfigPanel.mock'])
+  .value('medias', [{
+    id: 'm1'
+  }, {
+    id: 'm2'
+  }])
+  .run(function($httpBackend, apiHostname, Session, medias) {
+    $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/media').respond({
+      'result': medias
+    });
+  });
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+
+      var Media = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/media/:id',
+        resourceName: 'Media',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'source'
+        }, {
+          name: 'type'
+        }, {
+          name: 'properties',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
+      });
+
+       Media.prototype.getDisplay = function (){
+       return this.name;
+      };
+    
+      return Media;
+    }
+  ]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfigPanel.mock'])
   .service('mockMediaCollections', function (MediaCollection) {
     return [new MediaCollection({
@@ -4533,49 +4576,6 @@ angular.module('liveopsConfigPanel.shared.services')
       });
 
       return MediaCollection;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.media.mock', ['liveopsConfigPanel.mock'])
-  .value('medias', [{
-    id: 'm1'
-  }, {
-    id: 'm2'
-  }])
-  .run(function($httpBackend, apiHostname, Session, medias) {
-    $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/media').respond({
-      'result': medias
-    });
-  });
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
-
-      var Media = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/media/:id',
-        resourceName: 'Media',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'source'
-        }, {
-          name: 'type'
-        }, {
-          name: 'properties',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
-      });
-
-       Media.prototype.getDisplay = function (){
-       return this.name;
-      };
-    
-      return Media;
     }
   ]);
 
