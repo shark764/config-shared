@@ -1600,6 +1600,56 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('scrollTable', [function() {
+    return {
+      restrict: 'A',
+      replace: 'true',
+      compile: function CompilingFunction($templateElement) {
+        $templateElement.removeAttr('scroll-table'); //Prevent infinite recursion
+
+        var headerHeight = $templateElement.find('thead').height();
+        if (headerHeight === 0){
+          headerHeight = 35;
+        }
+
+        var headerCopy = $templateElement.find('thead').clone(true, true);
+        headerCopy.find('th').css('height', headerHeight + 'px');
+
+        var cloneHeaderTable = angular.element('<table class="clone-header">' + headerCopy[0].outerHTML + '</table>');
+        var origClasses = $templateElement[0].className;
+        cloneHeaderTable.addClass(origClasses);
+
+        //Remove duplicated header inputs for cleaner HTML
+        //Note: if a cell contains only an input and has no width explicitly set,
+        //removing the input will cause misalignment between the table cells and the header cells.
+        $templateElement.find('thead').find('input').remove();
+
+        $templateElement.replaceWith('<div class="scrollable-table-container" style="padding-top:' + headerHeight + 'px;">' +
+            cloneHeaderTable[0].outerHTML +
+            '<div class="table-wrapper"><div>' + $templateElement[0].outerHTML + '</div></div>' +
+            '</div>');
+
+        return function($scope, element, attrs){
+          if (attrs.maxHeight){
+            $scope.$watch(function(){return element.find('tbody').find('tr').length;}, function(count){
+              if (count > 0){
+                var approxHeight = headerHeight * count;
+                if (approxHeight < attrs.maxHeight){
+                  element.css('height', approxHeight + headerHeight + 5 + 'px');
+                } else {
+                  element.css('height', attrs.maxHeight + 'px');
+                }
+              }
+            });
+          }
+        };
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('separateValidation', [function () {
     return {
       restrict: 'A',
@@ -1644,56 +1694,6 @@ angular.module('liveopsConfigPanel.shared.directives')
         };
 
         angular.extend(formController, nullFormCtrl);
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('scrollTable', [function() {
-    return {
-      restrict: 'A',
-      replace: 'true',
-      compile: function CompilingFunction($templateElement) {
-        $templateElement.removeAttr('scroll-table'); //Prevent infinite recursion
-
-        var headerHeight = $templateElement.find('thead').height();
-        if (headerHeight === 0){
-          headerHeight = 35;
-        }
-
-        var headerCopy = $templateElement.find('thead').clone(true, true);
-        headerCopy.find('th').css('height', headerHeight + 'px');
-
-        var cloneHeaderTable = angular.element('<table class="clone-header">' + headerCopy[0].outerHTML + '</table>');
-        var origClasses = $templateElement[0].className;
-        cloneHeaderTable.addClass(origClasses);
-
-        //Remove duplicated header inputs for cleaner HTML
-        //Note: if a cell contains only an input and has no width explicitly set,
-        //removing the input will cause misalignment between the table cells and the header cells.
-        $templateElement.find('thead').find('input').remove();
-
-        $templateElement.replaceWith('<div class="scrollable-table-container" style="padding-top:' + headerHeight + 'px;">' +
-            cloneHeaderTable[0].outerHTML +
-            '<div class="table-wrapper"><div>' + $templateElement[0].outerHTML + '</div></div>' +
-            '</div>');
-
-        return function($scope, element, attrs){
-          if (attrs.maxHeight){
-            $scope.$watch(function(){return element.find('tbody').find('tr').length;}, function(count){
-              if (count > 0){
-                var approxHeight = headerHeight * count;
-                if (approxHeight < attrs.maxHeight){
-                  element.css('height', approxHeight + headerHeight + 5 + 'px');
-                } else {
-                  element.css('height', attrs.maxHeight + 'px');
-                }
-              }
-            });
-          }
-        };
       }
     };
   }]);
@@ -1771,29 +1771,35 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .controller('dateToMinuteConverterController', [function() {
+    this.format = function (value) {
+      if(value === -1) {
+        return null;
+      } else if(angular.isNumber(value)) {
+        return new Date(0,0,0,0,value,0,0);
+      }
+
+      return value;
+    };
+    
+    this.parse = function(value) {
+      if(value === null) {
+        return -1;
+      } else if(!(value instanceof Date)) {
+        return value;
+      }
+
+      return (value.getHours() * 60) + value.getMinutes();
+    };
+  }])
   .directive('dateToMinuteConverter', [function () {
     return {
       require: 'ngModel',
+      controller: 'dateToMinuteConverterController',
       link: function ($scope, elem, attr, ngModel) {
-        ngModel.$formatters.push(function(value) {
-          if(value === -1) {
-            return null;
-          } else if(angular.isNumber(value)) {
-            return new Date(0,0,0,0,value,0,0);
-          }
-
-          return value;
-        });
-
-        ngModel.$parsers.push(function(value) {
-          if(value === null) {
-            return -1;
-          } else if(!value) {
-            return value;
-          }
-
-          return (value.getHours() * 60) + value.getMinutes();
-        });
+        var controller = elem.data('$dateToMinuteConverterController');
+        ngModel.$formatters.push(controller.format);
+        ngModel.$parsers.push(controller.parse);
       }
     };
   }]);
@@ -4333,7 +4339,36 @@ angular.module('liveopsConfigPanel.shared.services')
     }
   ]);
 
+'use strict';
 
+angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTimezones', function () {
+    return [
+      'America/Edmonton',
+      'America/Eirunepe',
+      'America/El_Salvador',
+      'America/Ensenada',
+      'America/Fort_Wayne',
+      'America/Fortaleza',
+      'America/Glace_Bay',
+      'America/Godthab',
+      'America/Goose_Bay',
+      'America/Grand_Turk',
+      'America/Grenada',
+      'America/Guadeloupe',
+      'America/Guatemala',
+      'America/Guayaquil',
+      'America/Guyana',
+      'America/Halifax'
+    ];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
+    function ($httpBackend, apiHostname, mockTimezones) {
+      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
+        'result': mockTimezones
+      });
+    }
+  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -4438,6 +4473,94 @@ angular.module('liveopsConfigPanel.user.mock', ['liveopsConfigPanel.mock'])
       $httpBackend.when('GET', apiHostname + '/v1/users/userId0?tenantId=tenant-id').respond(404);
       
       $httpBackend.when('POST', apiHostname + '/v1/users').respond(mockUsers[2]);
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPanel.mock'])
+  .service('mockBusinessHours', function (BusinessHour) {
+    return [new BusinessHour({
+      'id': 'businessHourId1',
+      'name': 'bh1',
+      'tenantId': 'tenant-id',
+      'description': null,
+      'active': true,
+      'timezone': 'America/Argentina/Buenos_Aires',
+      
+      'sunStartTimeMinutes': null,
+      'sunEndTimeMinutes': null,
+      'monStartTimeMinutes': null,
+      'monEndTimeMinutes': null,
+      'tueStartTimeMinutes': null,
+      'tueEndTimeMinutes': null,
+      'wedStartTimeMinutes': null,
+      'wedEndTimeMinutes': null,
+      'thuStartTimeMinutes': null,
+      'thuEndTimeMinutes': null,
+      'friStartTimeMinutes': null,
+      'friEndTimeMinutes': null,
+      'satEndTimeMinutes': null,
+      'satStartTimeMinutes': null,
+      
+      'exceptions': [{
+        'id': 'businessHourException1',
+        'businessHoursId': 'businessHour1',
+        'date': '2016-12-10T00:00:00Z',
+        'tenantId': 'tenant-id',
+        'description': null,
+        'isAllDay': false,
+        'startTimeMinutes': 0,
+        'endTimeMinutes': 480
+      }, {
+        'id': 'businessHourException2',
+        'businessHoursId': 'businessHour1',
+        'date': '2016-12-10T00:00:00Z',
+        'tenantId': 'tenant-id',
+        'description': null,
+        'isAllDay': false,
+        'startTimeMinutes': 60,
+        'endTimeMinutes': 780
+      }]
+    }), new BusinessHour({
+      'id': 'businessHourId2',
+      'name': 'bh1',
+      'tenantId': 'tenant-id',
+      'description': null,
+      'active': true,
+      'timezone': 'America/Halifax',
+      
+      'sunStartTimeMinutes': 60,
+      'sunEndTimeMinutes': 780,
+      'monStartTimeMinutes': null,
+      'monEndTimeMinutes': null,
+      'tueStartTimeMinutes': null,
+      'tueEndTimeMinutes': null,
+      'wedStartTimeMinutes': null,
+      'wedEndTimeMinutes': null,
+      'thuStartTimeMinutes': null,
+      'thuEndTimeMinutes': null,
+      'friStartTimeMinutes': null,
+      'friEndTimeMinutes': null,
+      'satEndTimeMinutes': null,
+      'satStartTimeMinutes': null,
+      'exceptions': []
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockBusinessHours',
+    function ($httpBackend, apiHostname, mockBusinessHours) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId1').respond({
+        'result': mockBusinessHours[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId2').respond({
+        'result': mockBusinessHours[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours').respond({
+        'result': [mockBusinessHours[0], mockBusinessHours[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId0').respond(404);
     }
   ]);
 'use strict';
