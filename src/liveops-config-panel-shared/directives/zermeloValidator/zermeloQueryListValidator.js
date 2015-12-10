@@ -2,21 +2,21 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('zermeloQueryValidator', ['ZermeloQuery', 'jsedn',
-      function (ZermeloQuery, jsedn) {
+    .directive('zermeloQueryListValidator', ['ZermeloQueryList', 'jsedn',
+      function (ZermeloQueryList, jsedn) {
         return {
           restrict: 'A',
           require: 'ngModel',
           link: function ($scope, element, attr, ctrl) {
 
             function validateZermelo(input) {
-              var query = null;
+              var queryList = null;
 
               try {
-                query = ZermeloQuery.fromEdn(input);
+                queryList = ZermeloQueryList.fromEdn(input);
               } catch (e) {}
 
-              ctrl.$setValidity('zermelo', !!query);
+              ctrl.$setValidity('zermelo', !!queryList);
 
               return input;
             }

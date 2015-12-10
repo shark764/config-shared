@@ -8,9 +8,11 @@
         templateUrl: 'liveops-config-panel-shared/directives/queryEditor/query/queryCreator.html',
         controller: 'QueryCreatorController as qc',
         scope: {
-          query: '='
+          query: '=',
+          previousQuery: '=',
+          minSeconds: '='
         }
       };
-    }); 
+    });
 
 })();

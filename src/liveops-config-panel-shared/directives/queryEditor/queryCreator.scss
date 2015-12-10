@@ -1,4 +1,28 @@
-query-creator {
+query-list-creator {
+
+  .add-filter {
+    margin-bottom: 0;
+  }
+
+  .time-input {
+    margin-bottom: 10px;
+
+    label {
+      width: 40%;
+    }
+
+    input, select {
+      width: 50%;
+    }
+  }
+
+  .add-query {
+    margin-top: 10px;
+    h4, div {
+      display: inline;
+      margin-right: 15px;
+    }
+  }
 
   .tag-wrapper {
     .tag:first-child {

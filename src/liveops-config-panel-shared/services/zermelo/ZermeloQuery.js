@@ -8,10 +8,23 @@
 
         var ALLOWED_KEYS = [':groups', ':skills'],
             ASIQ_KEY = ':after-seconds-in-queue';
+
         function Query() {
           this.groups = [];
-          this.afterSecondsInQueue = null;
+          this.afterSecondsInQueue = 0;
         }
+
+        Query.ALLOWED_GROUP_KEYS = ALLOWED_KEYS;
+
+        Query.prototype.hasConditions = function () {
+          for(var i = 0; i < this.groups.length; i++) {
+              if(this.groups[i].objectGroup.hasConditions()) {
+                return true;
+              }
+          }
+
+          return false;
+        };
 
         Query.prototype.getGroup = function (key) {
           return _.findWhere(this.groups, {key: key}) || null;
@@ -31,15 +44,9 @@
         };
 
         Query.prototype.toEdn = function (allowEmpty) {
-          if(!allowEmpty && this.groups.length === 0) {
-            return null;
-          }
+          var map = new jsedn.Map([]);
 
-          var map = new jsedn.Map();
-
-          if(this.afterSecondsInQueue) {
-            map.set(new jsedn.Keyword(ASIQ_KEY), this.afterSecondsInQueue);
-          }
+          map.set(new jsedn.Keyword(ASIQ_KEY), this.afterSecondsInQueue);
 
           for (var i = 0; i < this.groups.length; i++) {
             var group = this.groups[i],
@@ -59,6 +66,10 @@
           if(map instanceof jsedn.Map) {
             var query = new Query(),
                 keys = map.keys;
+
+            if(!angular.isNumber(map.at(new jsedn.Keyword(ASIQ_KEY)))) {
+              throw ASIQ_KEY + ' must be defined and must be a number';
+            }
 
             for(var i = 0; i < keys.length; i++) {
               var key = keys[i];

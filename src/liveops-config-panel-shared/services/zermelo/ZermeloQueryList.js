@@ -18,6 +18,19 @@
           _.pull(this.queries, query);
         };
 
+        QueryList.fromSingleQuery = function(ednQuery) {
+          try {
+            var q = ZermeloQuery.fromEdn(jsedn.parse(ednQuery)),
+                ql = new QueryList();
+
+            ql.addQuery(q);
+
+            return ql;
+          } catch (e) { }
+
+          return null;
+        };
+
         QueryList.fromEdn = function (edn) {
           try {
             if(angular.isString(edn)) {
@@ -29,6 +42,10 @@
 
               for(var i = 0; i < edn.val.length; i++) {
                 ql.addQuery(ZermeloQuery.fromEdn(edn.val[i]));
+
+                if(i > 0 && ql.queries[i].afterSecondsInQueue <= ql.queries[i-1].afterSecondsInQueue) {
+                  throw 'after-seconds-in-queue must be increasing'
+                }
               }
 
               return ql;

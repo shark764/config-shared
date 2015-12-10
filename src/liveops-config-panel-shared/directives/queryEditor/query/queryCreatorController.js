@@ -3,90 +3,69 @@
 
   angular.module('liveopsConfigPanel.shared.directives')
     .controller('QueryCreatorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
-      'ZermeloQuery', '_', 'Skill', 'Group', '$translate', 'Alert', function ($scope,
-        ZermeloCondition, ZermeloObjectGroup, ZermeloQuery, _, Skill, Group, $translate, Alert) {
+      'ZermeloQuery', '_', '$translate', 'Modal', function ($scope,
+        ZermeloCondition, ZermeloObjectGroup, ZermeloQuery, _, $translate, Modal) {
 
       var vm = this;
 
-      var ALLOWED_GROUP_KEYS = [':skills', ':groups'];
+      vm.forms = {};
+      vm.query = $scope.query;
+      vm.afterSecondsMultiplier = 1;
+      vm.timeAmount = vm.query.afterSecondsInQueue;
+      vm.minSecondsRequired = $scope.minSeconds;
+      vm.previousQuery = $scope.previousQuery;
 
-      $scope.$watch(function (){
-        return $scope.query;
+      if(vm.query.afterSecondsInQueue) {
+        vm.afterSecondsMultiplier = vm.query.afterSecondsInQueue % 60 === 0 ? 60 : 1;
+        vm.afterTimeInQueue = vm.query.afterSecondsInQueue / vm.afterTimeMultiplier;
+      };
 
-      }, function (nv) {
-        if(!vm.query || (nv && nv !== vm.query.toEdn().ednEncode())) {
-
-          vm.advancedQuery = nv;
-
-          var ednQuery = ZermeloQuery.fromEdn(nv);
-
-          if(ednQuery) {
-            return vm.initQuery(ednQuery);
-          }
-
-          vm.isAdvancedMode = true;
-          vm.forms.advancedQueryForm.query.$setTouched();
-        }
+      $scope.$watch('previousQuery.afterSecondsInQueue', function () {
+        vm.checkMinValue();
       });
 
-      $scope.$watch(function () {
-        return vm.query;
-      }, function (nv) {
-        if(nv) {
-          var edn = nv.toEdn();
+      vm.checkMinValue = function () {
+        if(vm.previousQuery && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
+          var validity = vm.previousQuery.afterSecondsInQueue < vm.query.afterSecondsInQueue;
+          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
 
-          if(edn) {
-            $scope.query = edn.ednEncode();
-          } else {
-            $scope.query = '{}';
+          if(!validity) {
+            vm.forms.timeAfterForm.amount.$setTouched();
           }
-
-
-        }
-      }, true);
-
-      vm.advancedQueryChanged = function () {
-        var ednQuery = ZermeloQuery.fromEdn(vm.advancedQuery);
-
-        if(ednQuery) {
-          if(!vm.initialAdvancedQuery ) {
-            vm.initialAdvancedQuery = ednQuery;
-          }
-
-          $scope.query = ednQuery.toEdn().ednEncode();
         }
       };
 
-      vm.advancedMode = function () {
-        vm.advancedQuery = vm.query.toEdn(true).ednEncode();
-        vm.initialAdvancedQuery = vm.advancedQuery;
-        vm.isAdvancedMode = true;
-      };
+      vm.afterTimeOptions = [
+        {
+          label: $translate.instant('queue.details.priorityUnit.seconds'),
+          value: 1
+        },
+        {
+          label: $translate.instant('queue.details.priorityUnit.minutes'),
+          value: 60
+        }
+      ];
 
-      vm.basicMode = function () {
-        var query = null;
-
-        try {
-          query = ZermeloQuery.fromEdn(vm.advancedQuery);
-        } catch (e) {}
-
-        if(!query) {
-          return Alert.confirm($translate.instant('queue.details.version.query.basic.invalid'),
-            function () {
-              vm.initQuery(ZermeloQuery.fromEdn(vm.initialAdvancedQuery));
-              vm.isAdvancedMode = false;
-            },
-            angular.noop
-          );
+      vm.updateMultiplier = function () {
+        switch (vm.afterSecondsMultiplier) {
+          case 1:
+            vm.timeAmount = vm.timeAmount * 60;
+            break;
+          case 60:
+            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
+            break;
         }
 
-        vm.initQuery(query);
-        vm.isAdvancedMode = false;
+        vm.updateTimeInSeconds();
       };
 
-      vm.initQuery = function (query) {
-        vm.query = query || new ZermeloQuery();
-        vm.possibleGroups = _.xor(_.pluck(vm.query.groups, 'key'), ALLOWED_GROUP_KEYS);
+      vm.updateTimeInSeconds = function () {
+        vm.query.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
+        vm.checkMinValue();
+      };
+
+      vm.minTimeRequired = function (multiplier) {
+        return vm.minSecondsRequired / multiplier;
       };
 
       vm.addGroup = function (key) {
@@ -97,10 +76,13 @@
 
       vm.verifyRemoveGroup = function (key) {
         if(vm.query.getGroup(key).objectGroup.hasConditions()) {
-          return Alert.confirm($translate.instant('queue.query.builder.remove.filter.confirm'),
-            function () {
-              vm.removeGroup(key);
-            }, angular.noop
+          return Modal.showConfirm(
+            {
+              message: $translate.instant('queue.query.builder.remove.filter.confirm'),
+              okCallback: function () {
+                vm.removeGroup(key);
+              }
+            }
           );
         }
 
@@ -112,22 +94,7 @@
         vm.possibleGroups.push(key);
       };
 
-      vm.modelType = function (key) {
-        if(key === ':skills') {
-          return Skill;
-        }
-
-        if(key === ':groups') {
-          return Group;
-        }
-
-        return null;
-      };
-
-      vm.groupModelType = Group;
-      vm.skillsModelType = Skill;
-
-      vm.possibleGroups = ALLOWED_GROUP_KEYS;
+      vm.possibleGroups = _.xor(_.pluck(vm.query.groups, 'key'), ZermeloQuery.ALLOWED_GROUP_KEYS);
       vm.isAdvancedMode = false;
     }]);
 
