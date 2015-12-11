@@ -14,6 +14,7 @@
           this.afterSecondsInQueue = 0;
         }
 
+        Query.ASIQ_KEY = ASIQ_KEY;
         Query.ALLOWED_GROUP_KEYS = ALLOWED_KEYS;
 
         Query.prototype.hasConditions = function () {

@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('QueryListCreatorController', ['$scope', 'ZermeloQueryList', 'ZermeloQuery', 'Modal', '$translate',
-      function ($scope, ZermeloQueryList, ZermeloQuery, Modal, $translate) {
+    .controller('QueryListCreatorController', ['$scope', 'ZermeloQueryList', 'ZermeloQuery', 'Modal', '$translate', '_',
+      function ($scope, ZermeloQueryList, ZermeloQuery, Modal, $translate, _) {
 
         var vm = this;
 
@@ -15,13 +15,7 @@
 
             vm.advancedQuery = nv;
 
-            var ednQuery = null;
-
-            if(_.startsWith(nv, '{')) {
-              ednQuery = ZermeloQueryList.fromSingleQuery(nv);
-            } else {
-              ednQuery = ZermeloQueryList.fromEdn(nv);
-            }
+            var ednQuery = ZermeloQueryList.fromEdn(nv);
 
             if(ednQuery) {
               return vm.initQueryList(ednQuery);

@@ -18,9 +18,11 @@
           _.pull(this.queries, query);
         };
 
-        QueryList.fromSingleQuery = function(ednQuery) {
+        QueryList.fromSingleQuery = function(edn) {
           try {
-            var q = ZermeloQuery.fromEdn(jsedn.parse(ednQuery)),
+            edn.set(new jsedn.Keyword(ZermeloQuery.ASIQ_KEY), 0);
+
+            var q = ZermeloQuery.fromEdn(edn),
                 ql = new QueryList();
 
             ql.addQuery(q);
@@ -34,7 +36,13 @@
         QueryList.fromEdn = function (edn) {
           try {
             if(angular.isString(edn)) {
+              var isSingleQuery = _.startsWith(edn, '{');
+
               edn = jsedn.parse(edn);
+
+              if(isSingleQuery) {
+                return QueryList.fromSingleQuery(edn);
+              }
             }
 
             if(edn instanceof jsedn.List) {
