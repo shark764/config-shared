@@ -13,20 +13,20 @@
       vm.afterSecondsMultiplier = 1;
       vm.timeAmount = vm.escalation.afterSecondsInQueue;
       vm.minSecondsRequired = $scope.minSeconds;
-      vm.escalationQuery = $scope.previousEscalation;
+      vm.previousEscalation = $scope.previousEscalation;
 
       if(vm.escalation.afterSecondsInQueue) {
         vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
         vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
       };
 
-      $scope.$watch('previousQuery.afterSecondsInQueue', function () {
+      $scope.$watch('previousEscalation.afterSecondsInQueue', function () {
         vm.checkMinValue();
       });
 
       vm.checkMinValue = function () {
-        if(vm.escalationQuery && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
-          var validity = vm.escalationQuery.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
+        if(vm.escalation && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
+          var validity = vm.previousEscalation.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
           vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
 
           if(!validity) {

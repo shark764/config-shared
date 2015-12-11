@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 12/11/15 - 1.0.10
 - removed constants that were duplicated from config-ui
-  
+
 ## 12/11/15 - 1.0.11
 - Fix version tagging
 
@@ -22,3 +22,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 12/11/15 - 1.0.14
 - Allow updating timezone on tenants
+
+## 12/11/15 - 1.0.15
+- fixed escalation query time error handling
