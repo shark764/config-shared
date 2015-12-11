@@ -14,4 +14,6 @@ angular.module('liveopsConfigPanel.shared.config')
 
 .constant('uuidcacheKey', 'LIVEOPS-CACHE-KEY')
 
+.constant('apiErrorKeys', ['required'])
+
 ;
