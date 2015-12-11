@@ -16,7 +16,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   
 ## 12/11/15 - 1.0.11
 - Fix version tagging
-- 
 
 ## 12/11/2015 - 1.0.13
 - hiding inactive items from query editor selections
