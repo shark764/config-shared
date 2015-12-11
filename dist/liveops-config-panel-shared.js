@@ -703,8 +703,8 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormSubmit', ['$parse',
-    function($parse) {
+  .directive('loFormSubmit', ['$parse', 'apiErrorKeys',
+    function($parse, apiErrorKeys) {
       return {
         restrict: 'A',
         require: 'form',
@@ -717,10 +717,21 @@ angular.module('liveopsConfigPanel.shared.directives')
             if ($parse('data.error')(error)) {
               angular.forEach(error.data.error.attribute, function(value, key) {
                 if (angular.isDefined(self.formController[key])){
-                  self.formController[key].$setValidity('api', false);
-                  self.formController[key].$error = {
-                    api: value
-                  };
+                  
+                  //if api error is a hardcoded key like "required", then simply
+                  //set the form field error key to {value: true}
+                  if(apiErrorKeys.indexOf(value) >= 0) {
+                    self.formController[key].$setValidity(value, false);
+                    self.formController[key].$error = {};
+                    self.formController[key].$error[value] = true;
+                  } else {
+                    self.formController[key].$setValidity('api', false);
+                    self.formController[key].$error = {
+                      api: value
+                    };
+                  }
+                  
+                  
                   self.formController[key].$setTouched();
                   self.formController[key].$setPristine();
                   
@@ -821,31 +832,28 @@ angular.module('liveopsConfigPanel.shared.directives')
   .directive('loSubmit', ['$q', '$parse', function ($q, $parse) {
     return {
       restrict: 'A',
-      require: ['^loFormSubmit', '?^loFormCancel', '?^loFormAlert', '?^loFormReset'],
+      require: ['^loFormSubmit', '?^loFormCancel', '?^loFormAlert'],
       link: function ($scope, $elem, $attrs, $ctrl) {
         $attrs.event = angular.isDefined($attrs.event) ? $attrs.event : 'click';
-        
+
         var loFormSubmit = $ctrl[0];
         var loFormCancel = $ctrl[1];
         var loFormAlert = $ctrl[2];
-        var loFormReset = $ctrl[3];
-        
+
         $elem.bind($attrs.event, function () {
           var ngDisabled = $parse($attrs.ngDisabled)($scope);
           if(!!ngDisabled){
             return;
           }
-          
+
           //TODO check if $attrs.loSubmit is actually a thing that return resource
           var promise = $q.when($scope.$eval($attrs.loSubmit));
-          
+
           promise = promise.then(function(resource) {
             if(loFormCancel) {
               loFormCancel.resetForm();
-            } else if (loFormReset) {
-              loFormReset.resetForm();
             }
-            
+
             return resource;
           },
           function(error) {
@@ -1110,8 +1118,8 @@ $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html
 $templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\n    {{ cqe.sectionLabel }}\n  </label>\n\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\n    <div>\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\n      </type-ahead>\n\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\n    </div>\n\n    <button class=\"add btn\" type=\"button\"\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\n      <i class=\"fa fa-plus\"></i>\n    </button>\n  </div>\n\n  <div class=\"tag-wrapper clear\">\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\n    </div> \n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\n  <h4>{{\'value.details.query\' | translate}}</h4>\n  <a class=\"pull-right\">\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\n      {{\'queue.details.version.query.advanced.link\' | translate}}\n    </span>\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\n      {{\'queue.details.version.query.basic.link\' | translate}}\n    </span>\n  </a>\n</div>\n\n\n<ng-form name=\"qlc.forms.advancedQueryForm\">\n  <div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\n    <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\n    <textarea zermelo-escalation-list-validator id=\"advanced-query-field\"\n      ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\n     ng-change=\"qlc.advancedQueryChanged()\"></textarea>\n     <form-error field=\"qlc.forms.advancedQueryForm.query\"\n       error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\n       error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\">\n     </form-error>\n  </div>\n</ng-form>\n\n\n\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\n      <h4>{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\n      <a class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\n    </div>\n\n    <escalation-editor\n      escalation=\"escalation\"\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\n    </escalation-editor>\n\n    <div >\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\n      </div>\n\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\n        <h4>{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\n        <div class=\"add-group-button\">\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\n            <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\n    <input ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\n    <select ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\n    </select>\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\n      error-type-required=\"Time in queue is required\"\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\n    </form-error>\n  </div>\n</ng-form>\n\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\n  <h4>{{\'value.details.query\' | translate}}</h4>\n  <a class=\"pull-right\">\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\n      {{\'queue.details.version.query.advanced.link\' | translate}}\n    </span>\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\n      {{\'queue.details.version.query.basic.link\' | translate}}\n    </span>\n  </a>\n</div>\n\n\n<ng-form name=\"qlc.forms.advancedQueryForm\">\n  <div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\n    <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\n    <textarea zermelo-escalation-list-validator id=\"advanced-query-field\"\n      ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\n     ng-change=\"qlc.advancedQueryChanged()\"></textarea>\n     <form-error field=\"qlc.forms.advancedQueryForm.query\"\n       error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\n       error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\">\n     </form-error>\n  </div>\n</ng-form>\n\n\n\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\n      <h4>{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\n      <a class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\n    </div>\n\n    <escalation-editor\n      escalation=\"escalation\"\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\n    </escalation-editor>\n\n    <div >\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\n      </div>\n\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\n        <h4>{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\n        <div class=\"add-group-button\">\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\n            <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\n<div class=\"input-group\" id=\"add-query-filter\">\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\n    <select id=\"select-filter-dropdown\"\n      ng-model=\"eqc.currentGroup\">\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\n    </select>\n    <div class=\"add-group-button\">\n      <button class=\"add btn\" type=\"button\"\n        ng-disabled=\"!eqc.currentGroup\"\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\n\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\n      </button>\n    </div>\n  </div>\n</div>\n\n\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\n\n  <div class=\"query-component\">\n    <div class=\"divider-header\">\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\n      <a class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\n        {{\'queue.query.filter.remove\' | translate}}\n      </a>\n    </div>\n    <object-group-editor\n      object-group=\"item.objectGroup\"\n      key=\"item.key\">\n    </object-group-editor>\n  </div>\n\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.andConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n\n<condition-group-editor\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.orConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\n  </select>\n  <number-slider value=\"proficiency\"\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\n  </number-slider>\n</div>\n");}]);
@@ -1756,6 +1764,42 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.sendResizeEvent(newElementWidth);
           $scope.applyClasses(newElementWidth, $scope.targetElement);
         };
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .controller('dateToMinuteConverterController', [function() {
+    this.format = function (value) {
+      if(value === -1) {
+        return null;
+      } else if(angular.isNumber(value)) {
+        return new Date(0,0,0,0,value,0,0);
+      }
+
+      return value;
+    };
+    
+    this.parse = function(value) {
+      if(value === null) {
+        return -1;
+      } else if(!(value instanceof Date)) {
+        return value;
+      }
+
+      return (value.getHours() * 60) + value.getMinutes();
+    };
+  }])
+  .directive('dateToMinuteConverter', [function () {
+    return {
+      require: 'ngModel',
+      controller: 'dateToMinuteConverterController',
+      link: function ($scope, elem, attr, ngModel) {
+        var controller = elem.data('$dateToMinuteConverterController');
+        ngModel.$formatters.push(controller.format);
+        ngModel.$parsers.push(controller.parse);
       }
     };
   }]);
@@ -2736,16 +2780,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash',
-    function($http, $resource, $q, queryCache, _) {
-      function parseResponseResultTransformer(value) {
-        if (value.result) {
-          return value.result;
-        }
-
-        return value;
-      }
-
+  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash', 'resultTransformer',
+    function($http, $resource, $q, queryCache, _, resultTransformer) {
       function createJsonReplacer(key, value) {
         if (_.startsWith(key, '$')) {
           return undefined;
@@ -2820,7 +2856,7 @@ angular.module('liveopsConfigPanel.shared.services')
           };
 
           var defaultResponseTransformer =
-            Array.prototype.concat($http.defaults.transformResponse, parseResponseResultTransformer);
+            Array.prototype.concat($http.defaults.transformResponse, resultTransformer);
 
           var getRequestTransformer = params.getRequestTransformer;
           var getResponseTransformer = params.getResponseTransformer ?
@@ -3084,6 +3120,19 @@ angular.module('liveopsConfigPanel.shared.services')
   .factory('queryCache', ['$cacheFactory',
     function($cacheFactory) {
       return $cacheFactory('queryCache');
+    }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('resultTransformer', [
+    function() {
+      return function (value) {
+        if (value.result) {
+          return value.result;
+        }
+
+        return value;
+      };
     }]);
 'use strict';
 
@@ -3804,6 +3853,98 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
+    .controller('EscalationEditorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
+      'ZermeloEscalationList', '_', '$translate', 'Modal', function ($scope,
+        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate, Modal) {
+
+      var vm = this;
+
+      vm.forms = {};
+      vm.escalation = $scope.escalation;
+      vm.afterSecondsMultiplier = 1;
+      vm.timeAmount = vm.escalation.afterSecondsInQueue;
+      vm.minSecondsRequired = $scope.minSeconds;
+      vm.escalationQuery = $scope.previousEscalation;
+
+      if(vm.escalation.afterSecondsInQueue) {
+        vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
+        vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
+      };
+
+      $scope.$watch('previousQuery.afterSecondsInQueue', function () {
+        vm.checkMinValue();
+      });
+
+      vm.checkMinValue = function () {
+        if(vm.escalationQuery && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
+          var validity = vm.escalationQuery.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
+          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
+
+          if(!validity) {
+            vm.forms.timeAfterForm.amount.$setTouched();
+          }
+        }
+      };
+
+      vm.afterTimeOptions = [
+        {
+          label: $translate.instant('queue.details.priorityUnit.seconds'),
+          value: 1
+        },
+        {
+          label: $translate.instant('queue.details.priorityUnit.minutes'),
+          value: 60
+        }
+      ];
+
+      vm.updateMultiplier = function () {
+        switch (vm.afterSecondsMultiplier) {
+          case 1:
+            vm.timeAmount = vm.timeAmount * 60;
+            break;
+          case 60:
+            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
+            break;
+        }
+
+        vm.updateTimeInSeconds();
+      };
+
+      vm.updateTimeInSeconds = function () {
+        vm.escalation.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
+        vm.checkMinValue();
+      };
+
+      vm.minTimeRequired = function (multiplier) {
+        return vm.minSecondsRequired / multiplier;
+      };
+    }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('escalationEditor', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html',
+        controller: 'EscalationEditorController as ec',
+        scope: {
+          escalation: '=',
+          previousEscalation: '=',
+          minSeconds: '='
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
     .controller('EscalationListEditorController', ['$scope', 'ZermeloEscalationList', 'ZermeloEscalation', 'Modal', '$translate', '_',
       function ($scope, ZermeloEscalationList, ZermeloEscalation, Modal, $translate, _) {
 
@@ -3930,98 +4071,6 @@ angular.module('liveopsConfigPanel.shared.directives')
         controller: 'EscalationListEditorController as qlc',
         scope: {
           queryString: '='
-        }
-      };
-    });
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .controller('EscalationEditorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
-      'ZermeloEscalationList', '_', '$translate', 'Modal', function ($scope,
-        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate, Modal) {
-
-      var vm = this;
-
-      vm.forms = {};
-      vm.escalation = $scope.escalation;
-      vm.afterSecondsMultiplier = 1;
-      vm.timeAmount = vm.escalation.afterSecondsInQueue;
-      vm.minSecondsRequired = $scope.minSeconds;
-      vm.escalationQuery = $scope.previousEscalation;
-
-      if(vm.escalation.afterSecondsInQueue) {
-        vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
-        vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
-      };
-
-      $scope.$watch('previousQuery.afterSecondsInQueue', function () {
-        vm.checkMinValue();
-      });
-
-      vm.checkMinValue = function () {
-        if(vm.escalationQuery && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
-          var validity = vm.escalationQuery.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
-          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
-
-          if(!validity) {
-            vm.forms.timeAfterForm.amount.$setTouched();
-          }
-        }
-      };
-
-      vm.afterTimeOptions = [
-        {
-          label: $translate.instant('queue.details.priorityUnit.seconds'),
-          value: 1
-        },
-        {
-          label: $translate.instant('queue.details.priorityUnit.minutes'),
-          value: 60
-        }
-      ];
-
-      vm.updateMultiplier = function () {
-        switch (vm.afterSecondsMultiplier) {
-          case 1:
-            vm.timeAmount = vm.timeAmount * 60;
-            break;
-          case 60:
-            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
-            break;
-        }
-
-        vm.updateTimeInSeconds();
-      };
-
-      vm.updateTimeInSeconds = function () {
-        vm.escalation.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
-        vm.checkMinValue();
-      };
-
-      vm.minTimeRequired = function (multiplier) {
-        return vm.minSecondsRequired / multiplier;
-      };
-    }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .directive('escalationEditor', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html',
-        controller: 'EscalationEditorController as ec',
-        scope: {
-          escalation: '=',
-          previousEscalation: '=',
-          minSeconds: '='
         }
       };
     });
@@ -4274,6 +4323,55 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
+  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
+    function($resource, $http, apiHostname, resultTransformer) {
+      return $resource(apiHostname + '/v1/timezones', {}, {
+        query: {
+          method: 'GET',
+          isArray: true,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
+          cache: true
+        },
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTimezones', function () {
+    return [
+      'America/Edmonton',
+      'America/Eirunepe',
+      'America/El_Salvador',
+      'America/Ensenada',
+      'America/Fort_Wayne',
+      'America/Fortaleza',
+      'America/Glace_Bay',
+      'America/Godthab',
+      'America/Goose_Bay',
+      'America/Grand_Turk',
+      'America/Grenada',
+      'America/Guadeloupe',
+      'America/Guatemala',
+      'America/Guayaquil',
+      'America/Guyana',
+      'America/Halifax'
+    ];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
+    function ($httpBackend, apiHostname, mockTimezones) {
+      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
+        'result': mockTimezones
+      });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
   .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'userUpdateTransformer',
     function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, userUpdateTransformer) {
       var User = LiveopsResourceFactory.create({
@@ -4377,6 +4475,202 @@ angular.module('liveopsConfigPanel.user.mock', ['liveopsConfigPanel.mock'])
       $httpBackend.when('POST', apiHostname + '/v1/users').respond(mockUsers[2]);
     }
   ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPanel.mock'])
+  .service('mockBusinessHours', function (BusinessHour) {
+    return [new BusinessHour({
+      'id': 'businessHourId1',
+      'name': 'bh1',
+      'tenantId': 'tenant-id',
+      'description': null,
+      'active': true,
+      'timezone': 'America/Argentina/Buenos_Aires',
+      
+      'sunStartTimeMinutes': null,
+      'sunEndTimeMinutes': null,
+      'monStartTimeMinutes': null,
+      'monEndTimeMinutes': null,
+      'tueStartTimeMinutes': null,
+      'tueEndTimeMinutes': null,
+      'wedStartTimeMinutes': null,
+      'wedEndTimeMinutes': null,
+      'thuStartTimeMinutes': null,
+      'thuEndTimeMinutes': null,
+      'friStartTimeMinutes': null,
+      'friEndTimeMinutes': null,
+      'satEndTimeMinutes': null,
+      'satStartTimeMinutes': null,
+      
+      'exceptions': [{
+        'id': 'businessHourException1',
+        'businessHoursId': 'businessHour1',
+        'date': '2016-12-10T00:00:00Z',
+        'tenantId': 'tenant-id',
+        'description': null,
+        'isAllDay': false,
+        'startTimeMinutes': 0,
+        'endTimeMinutes': 480
+      }, {
+        'id': 'businessHourException2',
+        'businessHoursId': 'businessHour1',
+        'date': '2016-12-10T00:00:00Z',
+        'tenantId': 'tenant-id',
+        'description': null,
+        'isAllDay': false,
+        'startTimeMinutes': 60,
+        'endTimeMinutes': 780
+      }]
+    }), new BusinessHour({
+      'id': 'businessHourId2',
+      'name': 'bh1',
+      'tenantId': 'tenant-id',
+      'description': null,
+      'active': true,
+      'timezone': 'America/Halifax',
+      
+      'sunStartTimeMinutes': 60,
+      'sunEndTimeMinutes': 780,
+      'monStartTimeMinutes': null,
+      'monEndTimeMinutes': null,
+      'tueStartTimeMinutes': null,
+      'tueEndTimeMinutes': null,
+      'wedStartTimeMinutes': null,
+      'wedEndTimeMinutes': null,
+      'thuStartTimeMinutes': null,
+      'thuEndTimeMinutes': null,
+      'friStartTimeMinutes': null,
+      'friEndTimeMinutes': null,
+      'satEndTimeMinutes': null,
+      'satStartTimeMinutes': null,
+      'exceptions': []
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockBusinessHours',
+    function ($httpBackend, apiHostname, mockBusinessHours) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId1').respond({
+        'result': mockBusinessHours[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId2').respond({
+        'result': mockBusinessHours[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours').respond({
+        'result': [mockBusinessHours[0], mockBusinessHours[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId0').respond(404);
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .service('businessHourTransformer', ['BusinessHourException', function(BusinessHourException) {
+    this.transform = function(businessHour) {
+      businessHour.$exceptions = [];
+      for(var index = 0; index < businessHour.exceptions.length; index++) {
+        var exception = new BusinessHourException(businessHour.exceptions[index]);
+        businessHour.$exceptions.push(exception);
+        delete businessHour.exceptions[index];
+      }
+    };
+  }])
+  .service('businessHourInterceptor', ['businessHourTransformer',
+    function(businessHourTransformer) {
+      this.response = function(response) {
+        var businessHour = response.resource;
+
+        businessHourTransformer.transform(businessHour);
+
+        return businessHour;
+      };
+    }
+  ])
+  .service('businessHourQueryInterceptor', ['businessHourTransformer',
+    function(businessHourTransformer) {
+      this.response = function(response) {
+        angular.forEach(response.resource, function(businessHour) {
+          businessHourTransformer.transform(businessHour);
+        });
+
+        return response.resource;
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('BusinessHour', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor', 'businessHourInterceptor', 'businessHourQueryInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, businessHourInterceptor, businessHourQueryInterceptor) {
+
+      var BusinessHours = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:id',
+        resourceName: 'BusinessHour',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'active'
+        }, {
+          name: 'timezone'
+        }, {
+          name: 'sunStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'sunEndTimeMinutes',
+          optional: true
+        }, {
+          name: 'monStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'monEndTimeMinutes',
+          optional: true
+        }, {
+          name: 'tueStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'tueEndTimeMinutes',
+          optional: true
+        }, {
+          name: 'wedStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'wedEndTimeMinutes',
+          optional: true
+        }, {
+          name: 'thuStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'thuEndTimeMinutes',
+          optional: true
+        }, {
+          name: 'friStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'friEndTimeMinutes',
+          optional: true
+        }, {
+          name: 'satStartTimeMinutes',
+          optional: true
+        }, {
+          name: 'satEndTimeMinutes',
+          optional: true
+        }],
+        getInterceptor: businessHourInterceptor,
+        queryInterceptor: businessHourQueryInterceptor,
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      BusinessHours.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return BusinessHours;
+    }
+  ]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -5341,62 +5635,6 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor) {
-
-      var tenantUserStatusUpdateTransformer = function (obj) {
-        var cpy = angular.copy(obj);
-
-        if(obj.$original && obj.status === obj.$original.status) { 
-          delete cpy.status;
-        }
-
-        return cpy;
-      };
-
-      var TenantUser = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:id',
-        resourceName: 'TenantUser',
-        updateFields: [{
-          name: 'status'
-        }, {
-          name: 'roleId'
-        }, {
-          name: 'extensions'
-        }],
-        putRequestTransformer: tenantUserStatusUpdateTransformer,
-        postRequestTransformer: tenantUserStatusUpdateTransformer,
-        getInterceptor: tenantUserInterceptor,
-        queryInterceptor: tenantUserQueryInterceptor,
-        saveInterceptor: [tenantUserInterceptor, cacheAddInterceptor],
-        updateInterceptor: tenantUserInterceptor
-      });
-
-      TenantUser.prototype.getDisplay = function () {
-        if (this.$user) { //TODO: update unit tests and mocks to all have $user
-          return this.$user.getDisplay();
-        }
-      };
-
-      var reset = TenantUser.prototype.reset;
-
-      TenantUser.prototype.reset = function () {
-        reset.call(this);
-
-        this.$user.reset();
-      };
-
-      TenantUser.prototype.isNew = function() {
-        return !this.id;
-      };
-
-      return TenantUser;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
   .service('tenantUserTransformer', ['User', 'TenantRole', 'Session', function(User, TenantRole, Session) {
     var rename = function(tenantUser, fieldName, newFieldName) {
       tenantUser[newFieldName] = tenantUser[fieldName];
@@ -5463,6 +5701,62 @@ angular.module('liveopsConfigPanel.shared.services')
 
         return response.resource;
       };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor) {
+
+      var tenantUserStatusUpdateTransformer = function (obj) {
+        var cpy = angular.copy(obj);
+
+        if(obj.$original && obj.status === obj.$original.status) { 
+          delete cpy.status;
+        }
+
+        return cpy;
+      };
+
+      var TenantUser = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:id',
+        resourceName: 'TenantUser',
+        updateFields: [{
+          name: 'status'
+        }, {
+          name: 'roleId'
+        }, {
+          name: 'extensions'
+        }],
+        putRequestTransformer: tenantUserStatusUpdateTransformer,
+        postRequestTransformer: tenantUserStatusUpdateTransformer,
+        getInterceptor: tenantUserInterceptor,
+        queryInterceptor: tenantUserQueryInterceptor,
+        saveInterceptor: [tenantUserInterceptor, cacheAddInterceptor],
+        updateInterceptor: tenantUserInterceptor
+      });
+
+      TenantUser.prototype.getDisplay = function () {
+        if (this.$user) { //TODO: update unit tests and mocks to all have $user
+          return this.$user.getDisplay();
+        }
+      };
+
+      var reset = TenantUser.prototype.reset;
+
+      TenantUser.prototype.reset = function () {
+        reset.call(this);
+
+        this.$user.reset();
+      };
+
+      TenantUser.prototype.isNew = function() {
+        return !this.id;
+      };
+
+      return TenantUser;
     }
   ]);
 
@@ -5558,6 +5852,33 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
       $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/userId').respond(404);
 
       $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users').respond(mockTenantUsers[3]);
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('BusinessHourException', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+
+      var BusinessHours = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:businessHourId/exceptions/:id',
+        resourceName: 'BusinessHourException',
+        updateFields: [{
+          name: 'date'
+        }, {
+          name: 'isAllDay'
+        }],
+
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      BusinessHours.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return BusinessHours;
     }
   ]);
 
