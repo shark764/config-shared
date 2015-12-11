@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  describe('ZermeloConditionGroup', function () {
+  xdescribe('ZermeloConditionGroup', function () {
     var jsedn,
         ZermeloCondition,
         ZermeloConditionGroup;
