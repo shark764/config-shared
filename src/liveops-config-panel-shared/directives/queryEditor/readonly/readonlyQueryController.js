@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('ReadonlyQueryController', ['$scope', 'ZermeloQueryList',
-      function ($scope, ZermeloQueryList) {
+    .controller('ReadonlyQueryController', ['$scope', 'ZermeloEscalationList',
+      function ($scope, ZermeloEscalationList) {
         $scope.$watch('query', function (nv) {
-          $scope.ednQuery = ZermeloQueryList.fromEdn(nv);
+          $scope.ednQuery = ZermeloEscalationList.fromEdn(nv);
           $scope.showBasicQuery = !!$scope.ednQuery;
         });
       }]);

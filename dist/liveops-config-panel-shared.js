@@ -1117,10 +1117,11 @@ $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html
 $templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\r\n  <ng-transclude></ng-transclude>\r\n  <div class=\"input-toggle\">\r\n\r\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\r\n      <option value=\"\">{{defaultText}}</option>\r\n    </select>\r\n\r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\r\n  <label>{{label}}</label>\r\n  <div class=\"input-toggle\">\r\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\r\n    \r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\r\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\r\n    {{ cqe.sectionLabel }}\r\n  </label>\r\n\r\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\r\n    <div>\r\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\r\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\r\n      </type-ahead>\r\n\r\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\r\n    </div>\r\n\r\n    <button class=\"add btn\" type=\"button\"\r\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\r\n      <i class=\"fa fa-plus\"></i>\r\n    </button>\r\n  </div>\r\n\r\n  <div class=\"tag-wrapper clear\">\r\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\r\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\r\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\r\n    </div> \r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\r\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\r\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\r\n    <input ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\r\n    <select ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\r\n    </select>\r\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\r\n      error-type-required=\"Time in queue is required\"\r\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\r\n    </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\r\n  <h4>{{\'value.details.query\' | translate}}</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\r\n      {{\'queue.details.version.query.advanced.link\' | translate}}\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\r\n      {{\'queue.details.version.query.basic.link\' | translate}}\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<ng-form name=\"qlc.forms.advancedQueryForm\">\r\n  <div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\r\n    <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n    <textarea zermelo-escalation-list-validator id=\"advanced-query-field\"\r\n      ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\r\n     ng-change=\"qlc.advancedQueryChanged()\"></textarea>\r\n     <form-error field=\"qlc.forms.advancedQueryForm.query\"\r\n       error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n       error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\">\r\n     </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n\r\n\r\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\r\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\r\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\r\n      <h4>{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\r\n      <a class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\r\n    </div>\r\n\r\n    <escalation-editor\r\n      escalation=\"escalation\"\r\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\r\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\r\n    </escalation-editor>\r\n\r\n    <div >\r\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\r\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\r\n      </div>\r\n\r\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\r\n        <h4>{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\r\n        <div class=\"add-group-button\">\r\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\r\n            <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n          </button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\r\n<div class=\"input-group\" id=\"add-query-filter\">\r\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\r\n    <select id=\"select-filter-dropdown\"\r\n      ng-model=\"eqc.currentGroup\">\r\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n    </select>\r\n    <div class=\"add-group-button\">\r\n      <button class=\"add btn\" type=\"button\"\r\n        ng-disabled=\"!eqc.currentGroup\"\r\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\r\n\r\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n      </button>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\r\n\r\n  <div class=\"query-component\">\r\n    <div class=\"divider-header\">\r\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n      <a class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\r\n        {{\'queue.query.filter.remove\' | translate}}\r\n      </a>\r\n    </div>\r\n    <object-group-editor\r\n      object-group=\"item.objectGroup\"\r\n      key=\"item.key\">\r\n    </object-group-editor>\r\n  </div>\r\n\r\n</div>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/query/queryCreator.html","<ng-form name=\"qc.forms.timeAfterForm\">\r\n  <div class=\"input-group time-input\" ng-if=\"qc.minSecondsRequired > 0\">\r\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\r\n    <input ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"qc.timeAmount\" ng-change=\"qc.updateTimeInSeconds()\" />\r\n    <select ng-model=\"qc.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in qc.afterTimeOptions\" ng-change=\"qc.updateMultiplier()\">\r\n    </select>\r\n    <form-error field=\"qc.forms.timeAfterForm.amount\"\r\n      error-type-required=\"Time in queue is required\"\r\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\r\n    </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<div class=\"input-group\" id=\"add-query-filter\">\r\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n  <div class=\"instant-add add-filter\" disable-contents=\"qc.possibleGroups.length == 0\">\r\n    <select id=\"select-filter-dropdown\"\r\n      ng-model=\"qc.currentGroup\">\r\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n      <option ng-repeat=\"key in qc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n    </select>\r\n    <div class=\"add-group-button\">\r\n      <button class=\"add btn\" type=\"button\"\r\n        ng-disabled=\"!qc.currentGroup\"\r\n        ng-click=\"qc.addGroup(qc.currentGroup)\">\r\n\r\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n      </button>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<div ng-repeat=\"item in qc.query.groups\" class=\"details-group\">\r\n\r\n  <div class=\"query-component\">\r\n    <div class=\"divider-header\">\r\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n      <a class=\"pull-right\" ng-click=\"qc.verifyRemoveGroup(item.key)\">\r\n        {{\'queue.query.filter.remove\' | translate}}\r\n      </a>\r\n    </div>\r\n    <object-group-editor\r\n      object-group=\"item.objectGroup\"\r\n      key=\"item.key\">\r\n    </object-group-editor>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/queryList/queryListCreator.html","<div class=\"divider-header first-header\">\r\n  <h4>{{\'value.details.query\' | translate}}</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\r\n      {{\'queue.details.version.query.advanced.link\' | translate}}\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\r\n      {{\'queue.details.version.query.basic.link\' | translate}}\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<ng-form name=\"qlc.forms.advancedQueryForm\">\r\n  <div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\r\n    <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n    <textarea zermelo-query-list-validator id=\"advanced-query-field\"\r\n      ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\r\n     ng-change=\"qlc.advancedQueryChanged()\"></textarea>\r\n     <form-error field=\"qlc.forms.advancedQueryForm.query\"\r\n       error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n       error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\">\r\n     </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n\r\n\r\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"query in qlc.queryList.queries\">\r\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\r\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\r\n      <h4>{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\r\n      <a class=\"pull-right\" ng-click=\"qlc.removeQuery(query)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\r\n    </div>\r\n\r\n    <query-creator\r\n      query=\"query\"\r\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\r\n      previous-query=\"::qlc.queryList.queries[$index-1]\">\r\n    </query-creator>\r\n\r\n    <div >\r\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\r\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\r\n      </div>\r\n\r\n      <div ng-if=\"!qlc.queryList.queries[$index + 1]\" class=\"add-query detail-group\">\r\n        <h4>{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\r\n        <div class=\"add-group-button\">\r\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addQuery()\">\r\n            <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n          </button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n");}]);
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -2221,8 +2222,8 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('zermeloQueryListValidator', ['ZermeloQueryList', 'jsedn',
-      function (ZermeloQueryList, jsedn) {
+    .directive('zermeloEscalationListValidator', ['ZermeloEscalationList', 'jsedn',
+      function (ZermeloEscalationList, jsedn) {
         return {
           restrict: 'A',
           require: 'ngModel',
@@ -2232,7 +2233,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               var queryList = null;
 
               try {
-                queryList = ZermeloQueryList.fromEdn(input);
+                queryList = ZermeloEscalationList.fromEdn(input);
               } catch (e) {}
 
               ctrl.$setValidity('zermelo', !!queryList);
@@ -3378,6 +3379,231 @@ angular.module('liveopsConfigPanel.shared.services')
 
   angular
     .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloEscalation', ['_', 'ZermeloEscalationQuery', 'jsedn', 'ZermeloQuery',
+      function (_, ZermeloEscalationQuery, jsedn, ZermeloQuery) {
+
+        function Escalation() {
+          this.query = new ZermeloEscalationQuery();
+          this.afterSecondsInQueue = 0;
+        }
+
+        Escalation.ASIQ_KEY = new jsedn.Keyword(':after-seconds-in-queue');
+        Escalation.QUERY_KEY = new jsedn.Keyword(':query');
+
+        Escalation.prototype.hasConditions = function () {
+          return this.query.hasConditions();
+        };
+
+        Escalation.fromSingleQuery = function (query) {
+          var e = new Escalation(),
+              q = ZermeloQuery.fromEdn(query);
+
+          e.afterSecondsInQueue = 0;
+          e.query.groups = q.groups;
+
+          return e;
+        };
+
+        Escalation.prototype.toEdn = function (allowEmpty) {
+          var map = new jsedn.Map([]);
+          map.set(Escalation.ASIQ_KEY, this.afterSecondsInQueue);
+          map.set(Escalation.QUERY_KEY, this.query.toEdn(allowEmpty));
+          return map;
+        };
+
+        Escalation.fromEdn = function (edn) {
+          var e = new Escalation();
+
+          if(edn instanceof jsedn.List) {
+            return Escalation.fromSimpleQuery(edn);
+          }
+
+          if(edn instanceof jsedn.Map) {
+            e.afterSecondsInQueue = edn.at(Escalation.ASIQ_KEY);
+            e.query = ZermeloEscalationQuery.fromEdn(edn.at(Escalation.QUERY_KEY));
+
+            if(!angular.isNumber(e.afterSecondsInQueue)) {
+              throw 'after seconds in queue must be a number';
+            }
+
+            return e;
+          }
+
+          throw 'escalation query must be a map';
+        };
+
+        return Escalation;
+      }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloEscalationList', ['_', 'ZermeloEscalation', 'jsedn',
+      function (_, ZermeloEscalation, jsedn) {
+
+        function EscalationList() {
+          this.escalations = [];
+        }
+
+        EscalationList.prototype.addEscalation = function(escalation) {
+          this.escalations.push(escalation);
+        };
+
+        EscalationList.prototype.removeEscalation = function(escalation) {
+          _.pull(this.escalations, escalation);
+        };
+
+        EscalationList.fromSingleQuery = function(edn) {
+          try {
+
+            var ql = new EscalationList();
+
+            ql.addEscalation(ZermeloEscalation.fromSingleQuery(edn));
+
+            return ql;
+          } catch (e) { }
+
+          return null;
+        };
+
+        EscalationList.fromEdn = function (edn) {
+          try {
+            if(angular.isString(edn)) {
+              var isSingleQuery = _.startsWith(edn, '{');
+
+              edn = jsedn.parse(edn);
+
+              if(isSingleQuery) {
+                return EscalationList.fromSingleQuery(edn);
+              }
+            }
+
+            if(edn instanceof jsedn.Vector) {
+              var ql = new EscalationList();
+
+              for(var i = 0; i < edn.val.length; i++) {
+                ql.addEscalation(ZermeloEscalation.fromEdn(edn.val[i]));
+
+                if(i > 0 && ql.escalations[i].afterSecondsInQueue <= ql.escalations[i-1].afterSecondsInQueue) {
+                  throw 'after-seconds-in-queue must be increasing'
+                }
+              }
+
+              return ql;
+            }
+
+            throw 'escalation list must be a vector';
+
+          } catch (e) { }
+
+          return null;
+        };
+
+        EscalationList.prototype.toEdn = function (allowEmpty) {
+            if(!allowEmpty && this.escalations.length === 0) {
+              return null;
+            }
+
+            var list = new jsedn.Vector([]);
+
+            for (var i = 0; i < this.escalations.length; i++) {
+              list.val.push(this.escalations[i].toEdn(allowEmpty));
+            }
+
+            return list;
+        };
+
+        return EscalationList;
+      }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
+    .factory('ZermeloEscalationQuery', ['_', 'jsedn', 'ZermeloObjectGroup',
+      function (_, jsedn, ZermeloObjectGroup) {
+
+        function EscalationQuery() {
+          this.groups = [];
+        }
+
+        EscalationQuery.ALLOWED_KEYS = [
+          ':skills',
+          ':groups'
+        ];
+
+        EscalationQuery.prototype.hasConditions = function () {
+          for(var i = 0; i < this.groups.length; i++) {
+            if (this.groups[i].hasConditions()) {
+              return true;
+            }
+          }
+
+          return false;
+        };
+
+        EscalationQuery.prototype.getGroup = function (key) {
+          return _.findWhere(this.groups, {key: key}) || null;
+        };
+
+        EscalationQuery.prototype.setGroup = function (key, objectGroup) {
+          this.groups.push({
+            key: key,
+            objectGroup: objectGroup
+          });
+        };
+
+        EscalationQuery.prototype.removeGroup = function (key) {
+          this.groups = _.filter(this.groups, function (item) {
+            return item.key !== key;
+          });
+        };
+
+        EscalationQuery.prototype.toEdn = function (allowEmpty) {
+          var map = new jsedn.Map([]);
+
+          for(var i = 0; i < this.groups.length; i++) {
+              var group = this.groups[i];
+              map.set(new jsedn.Keyword(group.key), group.objectGroup.toEdn(allowEmpty));
+          }
+
+          return map;
+        };
+
+        EscalationQuery.fromEdn = function (edn) {
+          var eq = new EscalationQuery();
+
+          if(edn instanceof jsedn.Map) {
+
+            edn.map(function (val, key) {
+              if(_.includes(EscalationQuery.ALLOWED_KEYS, key.val)) {
+                eq.setGroup(key.val, ZermeloObjectGroup.fromEdn(val));
+              }
+            });
+
+            return eq;
+          }
+
+          throw 'escalation query must be a map';
+        };
+
+        return EscalationQuery;
+      }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('liveopsConfigPanel.shared.services')
     .factory('ZermeloObjectGroup', ['jsedn', '_', 'ZermeloConditionGroup',
       function (jsedn, _, ZermeloConditionGroup) {
 
@@ -3442,20 +3668,27 @@ angular.module('liveopsConfigPanel.shared.services')
 (function () {
   'use strict';
 
+  /**
+
+    DEPRECATED:
+
+    This class exists to support the old version of queue queries that existed
+    before escalation queries were implemented.
+
+  **/
+
   angular
     .module('liveopsConfigPanel.shared.services')
     .factory('ZermeloQuery', ['_', 'ZermeloObjectGroup', 'jsedn',
       function (_, ZermeloObjectGroup, jsedn) {
 
-        var ALLOWED_KEYS = [':groups', ':skills'],
-            ASIQ_KEY = ':after-seconds-in-queue';
+        var ALLOWED_KEYS = [':groups', ':skills'];
 
         function Query() {
           this.groups = [];
           this.afterSecondsInQueue = 0;
         }
 
-        Query.ASIQ_KEY = ASIQ_KEY;
         Query.ALLOWED_GROUP_KEYS = ALLOWED_KEYS;
 
         Query.prototype.hasConditions = function () {
@@ -3488,8 +3721,6 @@ angular.module('liveopsConfigPanel.shared.services')
         Query.prototype.toEdn = function (allowEmpty) {
           var map = new jsedn.Map([]);
 
-          map.set(new jsedn.Keyword(ASIQ_KEY), this.afterSecondsInQueue);
-
           for (var i = 0; i < this.groups.length; i++) {
             var group = this.groups[i],
                 key = group.key,
@@ -3509,19 +3740,13 @@ angular.module('liveopsConfigPanel.shared.services')
             var query = new Query(),
                 keys = map.keys;
 
-            if(!angular.isNumber(map.at(new jsedn.Keyword(ASIQ_KEY)))) {
-              throw ASIQ_KEY + ' must be defined and must be a number';
-            }
-
             for(var i = 0; i < keys.length; i++) {
               var key = keys[i];
 
-              if(key.val === ASIQ_KEY) {
-                query.afterSecondsInQueue = map.at(key);
-              } else if (_.includes(ALLOWED_KEYS, key.val)) {
+              if (_.includes(ALLOWED_KEYS, key.val)) {
                 query.setGroup(key.val, ZermeloObjectGroup.fromEdn(map.at(key)));
               } else {
-                throw 'invalid key in query; must be ' + ASIQ_KEY + ' OR in ' + angular.toJson(ALLOWED_KEYS);
+                throw 'invalid key in query; must be in ' + angular.toJson(ALLOWED_KEYS);
               }
             }
 
@@ -3533,93 +3758,6 @@ angular.module('liveopsConfigPanel.shared.services')
         };
 
         return Query;
-      }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  angular
-    .module('liveopsConfigPanel.shared.services')
-    .factory('ZermeloQueryList', ['_', 'ZermeloQuery', 'jsedn',
-      function (_, ZermeloQuery, jsedn) {
-
-        function QueryList() {
-          this.queries = [];
-        }
-
-        QueryList.prototype.addQuery = function(query) {
-          this.queries.push(query);
-        };
-
-        QueryList.prototype.removeQuery = function(query) {
-          _.pull(this.queries, query);
-        };
-
-        QueryList.fromSingleQuery = function(edn) {
-          try {
-            edn.set(new jsedn.Keyword(ZermeloQuery.ASIQ_KEY), 0);
-
-            var q = ZermeloQuery.fromEdn(edn),
-                ql = new QueryList();
-
-            ql.addQuery(q);
-
-            return ql;
-          } catch (e) { }
-
-          return null;
-        };
-
-        QueryList.fromEdn = function (edn) {
-          try {
-            if(angular.isString(edn)) {
-              var isSingleQuery = _.startsWith(edn, '{');
-
-              edn = jsedn.parse(edn);
-
-              if(isSingleQuery) {
-                return QueryList.fromSingleQuery(edn);
-              }
-            }
-
-            if(edn instanceof jsedn.List) {
-              var ql = new QueryList();
-
-              for(var i = 0; i < edn.val.length; i++) {
-                ql.addQuery(ZermeloQuery.fromEdn(edn.val[i]));
-
-                if(i > 0 && ql.queries[i].afterSecondsInQueue <= ql.queries[i-1].afterSecondsInQueue) {
-                  throw 'after-seconds-in-queue must be increasing'
-                }
-              }
-
-              return ql;
-            }
-
-            throw 'query list must be a list';
-
-          } catch (e) { }
-
-          return null;
-        };
-
-        QueryList.prototype.toEdn = function (allowEmpty) {
-            if(!allowEmpty && this.queries.length === 0) {
-              return null;
-            }
-
-            var list = new jsedn.List([]);
-
-            for (var i = 0; i < this.queries.length; i++) {
-              list.val.push(this.queries[i].toEdn(allowEmpty));
-            }
-
-            return list;
-        };
-
-        return QueryList;
       }]);
 
 })();
@@ -3755,6 +3893,293 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
+    .controller('EscalationEditorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
+      'ZermeloEscalationList', '_', '$translate', 'Modal', function ($scope,
+        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate, Modal) {
+
+      var vm = this;
+
+      vm.forms = {};
+      vm.escalation = $scope.escalation;
+      vm.afterSecondsMultiplier = 1;
+      vm.timeAmount = vm.escalation.afterSecondsInQueue;
+      vm.minSecondsRequired = $scope.minSeconds;
+      vm.escalationQuery = $scope.previousEscalation;
+
+      if(vm.escalation.afterSecondsInQueue) {
+        vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
+        vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
+      };
+
+      $scope.$watch('previousQuery.afterSecondsInQueue', function () {
+        vm.checkMinValue();
+      });
+
+      vm.checkMinValue = function () {
+        if(vm.escalationQuery && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
+          var validity = vm.escalationQuery.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
+          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
+
+          if(!validity) {
+            vm.forms.timeAfterForm.amount.$setTouched();
+          }
+        }
+      };
+
+      vm.afterTimeOptions = [
+        {
+          label: $translate.instant('queue.details.priorityUnit.seconds'),
+          value: 1
+        },
+        {
+          label: $translate.instant('queue.details.priorityUnit.minutes'),
+          value: 60
+        }
+      ];
+
+      vm.updateMultiplier = function () {
+        switch (vm.afterSecondsMultiplier) {
+          case 1:
+            vm.timeAmount = vm.timeAmount * 60;
+            break;
+          case 60:
+            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
+            break;
+        }
+
+        vm.updateTimeInSeconds();
+      };
+
+      vm.updateTimeInSeconds = function () {
+        vm.escalation.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
+        vm.checkMinValue();
+      };
+
+      vm.minTimeRequired = function (multiplier) {
+        return vm.minSecondsRequired / multiplier;
+      };
+    }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('escalationEditor', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html',
+        controller: 'EscalationEditorController as ec',
+        scope: {
+          escalation: '=',
+          previousEscalation: '=',
+          minSeconds: '='
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .controller('EscalationListEditorController', ['$scope', 'ZermeloEscalationList', 'ZermeloEscalation', 'Modal', '$translate', '_',
+      function ($scope, ZermeloEscalationList, ZermeloEscalation, Modal, $translate, _) {
+
+        var vm = this;
+
+        $scope.$watch(function (){
+          return $scope.queryString;
+
+        }, function (nv) {
+          if(!vm.escalationList || (nv && nv !== vm.escalationList.toEdn().ednEncode())) {
+
+            vm.advancedQuery = nv;
+
+            var ednQuery = ZermeloEscalationList.fromEdn(nv);
+
+            if(ednQuery) {
+              return vm.initEscalationList(ednQuery);
+            }
+
+            vm.isAdvancedMode = true;
+            vm.forms.advancedQueryForm.query.$setTouched();
+          }
+        });
+
+        $scope.$watch(function () {
+          return vm.escalationList;
+        }, function (nv) {
+          if(nv) {
+            var edn = nv.toEdn();
+
+            if(edn) {
+              $scope.queryString = edn.ednEncode();
+            } else {
+              $scope.queryString = '()';
+            }
+
+
+          }
+        }, true);
+
+        vm.minSecondsForQuery = function (i) {
+          if(i > 0) {
+            return vm.escalationList.escalations[i - 1].afterSecondsInQueue + 1;
+          }
+
+          return 0;
+        };
+
+        vm.removeEscalation = function (escalation) {
+          if(escalation.hasConditions()) {
+            return Modal.showConfirm({
+              message : $translate.instant('queue.query.escalation.level.remove.confirm'),
+              okCallback: function () {
+                vm.escalationList.removeEscalation(escalation);
+              }
+            });
+          }
+
+          return vm.escalationList.removeEscalation(escalation);
+        };
+
+        vm.addEscalation = function () {
+          var q = new ZermeloEscalation();
+          q.afterSecondsInQueue = _.last(vm.escalationList.escalations).afterSecondsInQueue + 1;
+          vm.escalationList.addEscalation(q);
+        };
+
+        vm.advancedQueryChanged = function () {
+          var ednQuery = ZermeloEscalationList.fromEdn(vm.advancedQuery);
+
+          if(ednQuery) {
+            if(!vm.initialAdvancedQuery ) {
+              vm.initialAdvancedQuery = ednQuery;
+            }
+
+            $scope.queryString = ednQuery.toEdn().ednEncode();
+          }
+        };
+
+        vm.advancedMode = function () {
+          vm.advancedQuery = vm.escalationList.toEdn(true).ednEncode();
+          vm.initialAdvancedQuery = vm.advancedQuery;
+          vm.isAdvancedMode = true;
+        };
+
+        vm.basicMode = function () {
+          var query = null;
+
+          try {
+            query = ZermeloEscalationList.fromEdn(vm.advancedQuery);
+          } catch (e) {}
+
+          if(!query) {
+            return Modal.showConfirm(
+              {
+                message: $translate.instant('queue.details.version.query.basic.invalid'),
+                okCallback: function () {
+                  vm.initEscalationList(ZermeloEscalationList.fromEdn(vm.initialAdvancedQuery));
+                  vm.isAdvancedMode = false;
+                }
+              }
+            );
+          }
+
+          vm.initEscalationList(query);
+          vm.isAdvancedMode = false;
+        };
+
+        vm.initEscalationList = function (escalationList) {
+          vm.escalationList = escalationList || new ZermeloEscalationList();
+        };
+    }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('queryListCreator', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html',
+        controller: 'EscalationListEditorController as qlc',
+        scope: {
+          queryString: '='
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .controller('EscalationQueryEditorController', ['$scope', 'ZermeloEscalationQuery', 'ZermeloObjectGroup',
+       '_', '$translate', 'Modal', function ($scope, ZermeloEscalationQuery, ZermeloObjectGroup, _, $translate, Modal) {
+
+      var vm = this;
+      vm.escalationQuery = $scope.escalationQuery;
+
+      vm.addGroup = function (key) {
+        vm.escalationQuery.setGroup(key, new ZermeloObjectGroup());
+        vm.possibleGroups.splice(vm.possibleGroups.indexOf(key), 1);
+        vm.currentGroup = '';
+      };
+
+      vm.verifyRemoveGroup = function (key) {
+        if(vm.escalationQuery.getGroup(key).objectGroup.hasConditions()) {
+          return Modal.showConfirm(
+            {
+              message: $translate.instant('queue.query.builder.remove.filter.confirm'),
+              okCallback: function () {
+                vm.removeGroup(key);
+              }
+            }
+          );
+        }
+
+        return vm.removeGroup(key);
+      };
+
+      vm.removeGroup = function(key) {
+        vm.escalationQuery.removeGroup(key);
+        vm.possibleGroups.push(key);
+      };
+
+      vm.possibleGroups = _.xor(_.pluck(vm.escalationQuery.groups, 'key'), ZermeloEscalationQuery.ALLOWED_KEYS);
+      vm.isAdvancedMode = false;
+    }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('escalationQueryEditor', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html',
+        controller: 'EscalationQueryEditorController as eqc',
+        scope: {
+          escalationQuery: '='
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
     .controller('ObjectGroupEditorController', ['$scope', '$translate', 'Session', 'Skill', 'Group',
       function ($scope, $translate, Session, Skill, Group) {
       var vm = this;
@@ -3812,267 +4237,10 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('QueryCreatorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
-      'ZermeloQuery', '_', '$translate', 'Modal', function ($scope,
-        ZermeloCondition, ZermeloObjectGroup, ZermeloQuery, _, $translate, Modal) {
-
-      var vm = this;
-
-      vm.forms = {};
-      vm.query = $scope.query;
-      vm.afterSecondsMultiplier = 1;
-      vm.timeAmount = vm.query.afterSecondsInQueue;
-      vm.minSecondsRequired = $scope.minSeconds;
-      vm.previousQuery = $scope.previousQuery;
-
-      if(vm.query.afterSecondsInQueue) {
-        vm.afterSecondsMultiplier = vm.query.afterSecondsInQueue % 60 === 0 ? 60 : 1;
-        vm.afterTimeInQueue = vm.query.afterSecondsInQueue / vm.afterTimeMultiplier;
-      };
-
-      $scope.$watch('previousQuery.afterSecondsInQueue', function () {
-        vm.checkMinValue();
-      });
-
-      vm.checkMinValue = function () {
-        if(vm.previousQuery && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
-          var validity = vm.previousQuery.afterSecondsInQueue < vm.query.afterSecondsInQueue;
-          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
-
-          if(!validity) {
-            vm.forms.timeAfterForm.amount.$setTouched();
-          }
-        }
-      };
-
-      vm.afterTimeOptions = [
-        {
-          label: $translate.instant('queue.details.priorityUnit.seconds'),
-          value: 1
-        },
-        {
-          label: $translate.instant('queue.details.priorityUnit.minutes'),
-          value: 60
-        }
-      ];
-
-      vm.updateMultiplier = function () {
-        switch (vm.afterSecondsMultiplier) {
-          case 1:
-            vm.timeAmount = vm.timeAmount * 60;
-            break;
-          case 60:
-            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
-            break;
-        }
-
-        vm.updateTimeInSeconds();
-      };
-
-      vm.updateTimeInSeconds = function () {
-        vm.query.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
-        vm.checkMinValue();
-      };
-
-      vm.minTimeRequired = function (multiplier) {
-        return vm.minSecondsRequired / multiplier;
-      };
-
-      vm.addGroup = function (key) {
-        vm.query.setGroup(key, new ZermeloObjectGroup());
-        vm.possibleGroups.splice(vm.possibleGroups.indexOf(key), 1);
-        vm.currentGroup = '';
-      };
-
-      vm.verifyRemoveGroup = function (key) {
-        if(vm.query.getGroup(key).objectGroup.hasConditions()) {
-          return Modal.showConfirm(
-            {
-              message: $translate.instant('queue.query.builder.remove.filter.confirm'),
-              okCallback: function () {
-                vm.removeGroup(key);
-              }
-            }
-          );
-        }
-
-        return vm.removeGroup(key);
-      };
-
-      vm.removeGroup = function(key) {
-        vm.query.removeGroup(key);
-        vm.possibleGroups.push(key);
-      };
-
-      vm.possibleGroups = _.xor(_.pluck(vm.query.groups, 'key'), ZermeloQuery.ALLOWED_GROUP_KEYS);
-      vm.isAdvancedMode = false;
-    }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .directive('queryCreator', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/query/queryCreator.html',
-        controller: 'QueryCreatorController as qc',
-        scope: {
-          query: '=',
-          previousQuery: '=',
-          minSeconds: '='
-        }
-      };
-    });
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .controller('QueryListCreatorController', ['$scope', 'ZermeloQueryList', 'ZermeloQuery', 'Modal', '$translate', '_',
-      function ($scope, ZermeloQueryList, ZermeloQuery, Modal, $translate, _) {
-
-        var vm = this;
-
-        $scope.$watch(function (){
-          return $scope.queryString;
-
-        }, function (nv) {
-          if(!vm.queryList || (nv && nv !== vm.queryList.toEdn().ednEncode())) {
-
-            vm.advancedQuery = nv;
-
-            var ednQuery = ZermeloQueryList.fromEdn(nv);
-
-            if(ednQuery) {
-              return vm.initQueryList(ednQuery);
-            }
-
-            vm.isAdvancedMode = true;
-            vm.forms.advancedQueryForm.query.$setTouched();
-          }
-        });
-
-        $scope.$watch(function () {
-          return vm.queryList;
-        }, function (nv) {
-          if(nv) {
-            var edn = nv.toEdn();
-
-            if(edn) {
-              $scope.queryString = edn.ednEncode();
-            } else {
-              $scope.queryString = '()';
-            }
-
-
-          }
-        }, true);
-
-        vm.minSecondsForQuery = function (i) {
-          if(i > 0) {
-            return vm.queryList.queries[i - 1].afterSecondsInQueue + 1;
-          }
-
-          return 0;
-        };
-
-        vm.removeQuery = function (query) {
-          if(query.hasConditions()) {
-            return Modal.showConfirm({
-              message : $translate.instant('queue.query.escalation.level.remove.confirm'),
-              okCallback: function () {
-                vm.queryList.removeQuery(query);
-              }
-            });
-          }
-
-          return vm.queryList.removeQuery(query);
-        };
-
-        vm.addQuery = function () {
-          var q = new ZermeloQuery();
-          q.afterSecondsInQueue = _.last(vm.queryList.queries).afterSecondsInQueue + 1;
-          vm.queryList.addQuery(q);
-        };
-
-        vm.advancedQueryChanged = function () {
-          var ednQuery = ZermeloQueryList.fromEdn(vm.advancedQuery);
-
-          if(ednQuery) {
-            if(!vm.initialAdvancedQuery ) {
-              vm.initialAdvancedQuery = ednQuery;
-            }
-
-            $scope.queryString = ednQuery.toEdn().ednEncode();
-          }
-        };
-
-        vm.advancedMode = function () {
-          vm.advancedQuery = vm.queryList.toEdn(true).ednEncode();
-          vm.initialAdvancedQuery = vm.advancedQuery;
-          vm.isAdvancedMode = true;
-        };
-
-        vm.basicMode = function () {
-          var query = null;
-
-          try {
-            query = ZermeloQueryList.fromEdn(vm.advancedQuery);
-          } catch (e) {}
-
-          if(!query) {
-            return Modal.showConfirm(
-              {
-                message: $translate.instant('queue.details.version.query.basic.invalid'),
-                okCallback: function () {
-                  vm.initQueryList(ZermeloQueryList.fromEdn(vm.initialAdvancedQuery));
-                  vm.isAdvancedMode = false;
-                }
-              }
-            );
-          }
-
-          vm.initQueryList(query);
-          vm.isAdvancedMode = false;
-        };
-
-        vm.initQueryList = function (queryList) {
-          vm.queryList = queryList || new ZermeloQueryList();
-        };
-    }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .directive('queryListCreator', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/queryList/queryListCreator.html',
-        controller: 'QueryListCreatorController as qlc',
-        scope: {
-          queryString: '='
-        }
-      };
-    });
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .controller('ReadonlyQueryController', ['$scope', 'ZermeloQueryList',
-      function ($scope, ZermeloQueryList) {
+    .controller('ReadonlyQueryController', ['$scope', 'ZermeloEscalationList',
+      function ($scope, ZermeloEscalationList) {
         $scope.$watch('query', function (nv) {
-          $scope.ednQuery = ZermeloQueryList.fromEdn(nv);
+          $scope.ednQuery = ZermeloEscalationList.fromEdn(nv);
           $scope.showBasicQuery = !!$scope.ednQuery;
         });
       }]);
@@ -4341,6 +4509,86 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock'])
+  .service('mockGroups', function(Group) {
+    return [new Group({
+      'id': 'groupId1',
+      'name': 'groupName1',
+      'tenantId': 'tenant-id'
+    }), new Group({
+      'id': 'groupId2',
+      'name': 'groupName2',
+      'tenantId': 'tenant-id'
+    }), new Group({
+      'id': 'groupId3',
+      'name': 'groupName3',
+      'tenantId': 'tenant-id'
+    }), new Group({
+      'id': 'groupId100',
+      'name': 'groupName100',
+      'description': 'Does not exist yet!',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockGroups',
+    function($httpBackend, apiHostname, mockGroups) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1').respond({
+        'result': mockGroups[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2').respond({
+        'result': mockGroups[1]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3').respond({
+        'result': mockGroups[2]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups').respond({
+        'result': [mockGroups[0], mockGroups[1], mockGroups[2]]
+      });
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups').respond({
+        'result': mockGroups[3]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/groups/groupId0').respond(404);
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Group', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+
+      var Group = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:id',
+        resourceName: 'Group',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'owner'
+        }, {
+          name: 'active',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Group.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Group;
+    }
+  ]);
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'])
   .service('mockFlows', function(Flow){
     return [new Flow({
@@ -4471,86 +4719,6 @@ angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPane
     }
   ]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock'])
-  .service('mockGroups', function(Group) {
-    return [new Group({
-      'id': 'groupId1',
-      'name': 'groupName1',
-      'tenantId': 'tenant-id'
-    }), new Group({
-      'id': 'groupId2',
-      'name': 'groupName2',
-      'tenantId': 'tenant-id'
-    }), new Group({
-      'id': 'groupId3',
-      'name': 'groupName3',
-      'tenantId': 'tenant-id'
-    }), new Group({
-      'id': 'groupId100',
-      'name': 'groupName100',
-      'description': 'Does not exist yet!',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockGroups',
-    function($httpBackend, apiHostname, mockGroups) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1').respond({
-        'result': mockGroups[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2').respond({
-        'result': mockGroups[1]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3').respond({
-        'result': mockGroups[2]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups').respond({
-        'result': [mockGroups[0], mockGroups[1], mockGroups[2]]
-      });
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups').respond({
-        'result': mockGroups[3]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/groups/groupId0').respond(404);
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Group', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
-
-      var Group = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:id',
-        resourceName: 'Group',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'owner'
-        }, {
-          name: 'active',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Group.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return Group;
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -4886,6 +5054,149 @@ angular.module('liveopsConfigPanel.tenant.queue.mock', ['liveopsConfigPanel.mock
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
+  .service('mockSkills', function(Skill) {
+    return [new Skill({
+      'id': 'skillId1',
+      'name': 'skillName1',
+      'tenantId': 'tenant-id',
+      'hasProficiency': true
+    }), new Skill({
+      'id': 'skillId2',
+      'name': 'skillName2',
+      'tenantId': 'tenant-id',
+      'hasProficiency': false
+    }), new Skill({
+      'id': 'skillId3',
+      'name': 'skillName3',
+      'description': 'Does not exist yet!',
+      'tenantId': 'tenant-id',
+      'hasProficiency': false
+    })];
+  })
+  .service('mockUserSkills', function(TenantUserSkill) {
+    return [new TenantUserSkill({
+      'skillId': 'skillId1',
+      'tenantId': 'tenant-id',
+      'userId': 'userId1',
+      'proficiency': 0
+    }), new TenantUserSkill({
+      'skillId': 'skillId1',
+      'tenantId': 'tenant-id',
+      'userId': 'userId2',
+      'proficiency': 5
+    }), new TenantUserSkill({
+      'skillId': 'skillId2',
+      'tenantId': 'tenant-id',
+      'userId': 'userId1',
+      'proficiency': 8
+    }), new TenantUserSkill({
+      'skillId': 'skillId3',
+      'tenantId': 'tenant-id',
+      'userId': 'userId2',
+      'proficiency': 10
+    })];
+  })
+  .service('mockSkillUsers', function(TenantSkillUser) {
+    return [new TenantSkillUser({
+      'userId': 'userId1',
+      'proficiency': 0
+    }), new TenantSkillUser({
+      'userId': 'userId2',
+      'proficiency': 5
+    }), new TenantSkillUser({
+      'userId': 'userId1',
+      'proficiency': 8
+    }), new TenantSkillUser({
+      'userId': 'userId2',
+      'proficiency': 10
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockSkills', 'mockUserSkills', 'mockSkillUsers',
+    function($httpBackend, apiHostname, mockSkills, mockUserSkills, mockSkillUsers) {
+      //GET tenants/skills
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills').respond({
+        'result': [mockSkills[0], mockSkills[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1').respond({
+        'result': mockSkills[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2').respond({
+        'result': mockSkills[1]
+      });
+
+      //GET tenants/user/skills
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
+        'result': [mockUserSkills[0], mockUserSkills[2]]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/skills').respond({
+        'result': [mockUserSkills[1]]
+      });
+
+      //GET tenants/skills/user
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1/users').respond({
+        'result': [mockSkillUsers[0], mockSkillUsers[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2/users').respond({
+        'result': [mockSkillUsers[2]]
+      });
+
+      //POST tenants/skills
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/skills').respond({
+        'result': mockSkills[2]
+      });
+
+      //POST tenants/users/skills
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
+        'result': mockUserSkills[2]
+      });
+
+      //DELETE tenants/users/skills
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond(200);
+
+      //PUT tenants/users/skills
+      $httpBackend.when('PUT', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond({
+        'result': mockUserSkills[0]
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+      var Skill = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
+        resourceName: 'Skill',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'hasProficiency'
+        }, {
+          name: 'active',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Skill.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Skill;
+    }
+  ]);
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.permission.mock', ['liveopsConfigPanel.mock'])
   .service('mockTenantPermissions', function(TenantPermission) {
     return [new TenantPermission({
@@ -5116,149 +5427,6 @@ angular.module('liveopsConfigPanel.shared.services')
     }
   ]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
-  .service('mockSkills', function(Skill) {
-    return [new Skill({
-      'id': 'skillId1',
-      'name': 'skillName1',
-      'tenantId': 'tenant-id',
-      'hasProficiency': true
-    }), new Skill({
-      'id': 'skillId2',
-      'name': 'skillName2',
-      'tenantId': 'tenant-id',
-      'hasProficiency': false
-    }), new Skill({
-      'id': 'skillId3',
-      'name': 'skillName3',
-      'description': 'Does not exist yet!',
-      'tenantId': 'tenant-id',
-      'hasProficiency': false
-    })];
-  })
-  .service('mockUserSkills', function(TenantUserSkill) {
-    return [new TenantUserSkill({
-      'skillId': 'skillId1',
-      'tenantId': 'tenant-id',
-      'userId': 'userId1',
-      'proficiency': 0
-    }), new TenantUserSkill({
-      'skillId': 'skillId1',
-      'tenantId': 'tenant-id',
-      'userId': 'userId2',
-      'proficiency': 5
-    }), new TenantUserSkill({
-      'skillId': 'skillId2',
-      'tenantId': 'tenant-id',
-      'userId': 'userId1',
-      'proficiency': 8
-    }), new TenantUserSkill({
-      'skillId': 'skillId3',
-      'tenantId': 'tenant-id',
-      'userId': 'userId2',
-      'proficiency': 10
-    })];
-  })
-  .service('mockSkillUsers', function(TenantSkillUser) {
-    return [new TenantSkillUser({
-      'userId': 'userId1',
-      'proficiency': 0
-    }), new TenantSkillUser({
-      'userId': 'userId2',
-      'proficiency': 5
-    }), new TenantSkillUser({
-      'userId': 'userId1',
-      'proficiency': 8
-    }), new TenantSkillUser({
-      'userId': 'userId2',
-      'proficiency': 10
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockSkills', 'mockUserSkills', 'mockSkillUsers',
-    function($httpBackend, apiHostname, mockSkills, mockUserSkills, mockSkillUsers) {
-      //GET tenants/skills
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills').respond({
-        'result': [mockSkills[0], mockSkills[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1').respond({
-        'result': mockSkills[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2').respond({
-        'result': mockSkills[1]
-      });
-
-      //GET tenants/user/skills
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
-        'result': [mockUserSkills[0], mockUserSkills[2]]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/skills').respond({
-        'result': [mockUserSkills[1]]
-      });
-
-      //GET tenants/skills/user
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1/users').respond({
-        'result': [mockSkillUsers[0], mockSkillUsers[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2/users').respond({
-        'result': [mockSkillUsers[2]]
-      });
-
-      //POST tenants/skills
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/skills').respond({
-        'result': mockSkills[2]
-      });
-
-      //POST tenants/users/skills
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
-        'result': mockUserSkills[2]
-      });
-
-      //DELETE tenants/users/skills
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond(200);
-
-      //PUT tenants/users/skills
-      $httpBackend.when('PUT', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond({
-        'result': mockUserSkills[0]
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
-      var Skill = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
-        resourceName: 'Skill',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'hasProficiency'
-        }, {
-          name: 'active',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Skill.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return Skill;
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  describe('ZermeloQuery', function () {
+  xdescribe('ZermeloQuery', function () {
     var jsedn,
         ZermeloQuery,
         ZermeloQueryList;

@@ -1,20 +1,27 @@
 (function () {
   'use strict';
 
+  /**
+
+    DEPRECATED:
+
+    This class exists to support the old version of queue queries that existed
+    before escalation queries were implemented.
+
+  **/
+
   angular
     .module('liveopsConfigPanel.shared.services')
     .factory('ZermeloQuery', ['_', 'ZermeloObjectGroup', 'jsedn',
       function (_, ZermeloObjectGroup, jsedn) {
 
-        var ALLOWED_KEYS = [':groups', ':skills'],
-            ASIQ_KEY = ':after-seconds-in-queue';
+        var ALLOWED_KEYS = [':groups', ':skills'];
 
         function Query() {
           this.groups = [];
           this.afterSecondsInQueue = 0;
         }
 
-        Query.ASIQ_KEY = ASIQ_KEY;
         Query.ALLOWED_GROUP_KEYS = ALLOWED_KEYS;
 
         Query.prototype.hasConditions = function () {
@@ -47,8 +54,6 @@
         Query.prototype.toEdn = function (allowEmpty) {
           var map = new jsedn.Map([]);
 
-          map.set(new jsedn.Keyword(ASIQ_KEY), this.afterSecondsInQueue);
-
           for (var i = 0; i < this.groups.length; i++) {
             var group = this.groups[i],
                 key = group.key,
@@ -68,19 +73,13 @@
             var query = new Query(),
                 keys = map.keys;
 
-            if(!angular.isNumber(map.at(new jsedn.Keyword(ASIQ_KEY)))) {
-              throw ASIQ_KEY + ' must be defined and must be a number';
-            }
-
             for(var i = 0; i < keys.length; i++) {
               var key = keys[i];
 
-              if(key.val === ASIQ_KEY) {
-                query.afterSecondsInQueue = map.at(key);
-              } else if (_.includes(ALLOWED_KEYS, key.val)) {
+              if (_.includes(ALLOWED_KEYS, key.val)) {
                 query.setGroup(key.val, ZermeloObjectGroup.fromEdn(map.at(key)));
               } else {
-                throw 'invalid key in query; must be ' + ASIQ_KEY + ' OR in ' + angular.toJson(ALLOWED_KEYS);
+                throw 'invalid key in query; must be in ' + angular.toJson(ALLOWED_KEYS);
               }
             }
 

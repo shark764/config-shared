@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('QueryListCreatorController', ['$scope', 'ZermeloQueryList', 'ZermeloQuery', 'Modal', '$translate', '_',
-      function ($scope, ZermeloQueryList, ZermeloQuery, Modal, $translate, _) {
+    .controller('EscalationListEditorController', ['$scope', 'ZermeloEscalationList', 'ZermeloEscalation', 'Modal', '$translate', '_',
+      function ($scope, ZermeloEscalationList, ZermeloEscalation, Modal, $translate, _) {
 
         var vm = this;
 
@@ -11,14 +11,14 @@
           return $scope.queryString;
 
         }, function (nv) {
-          if(!vm.queryList || (nv && nv !== vm.queryList.toEdn().ednEncode())) {
+          if(!vm.escalationList || (nv && nv !== vm.escalationList.toEdn().ednEncode())) {
 
             vm.advancedQuery = nv;
 
-            var ednQuery = ZermeloQueryList.fromEdn(nv);
+            var ednQuery = ZermeloEscalationList.fromEdn(nv);
 
             if(ednQuery) {
-              return vm.initQueryList(ednQuery);
+              return vm.initEscalationList(ednQuery);
             }
 
             vm.isAdvancedMode = true;
@@ -27,7 +27,7 @@
         });
 
         $scope.$watch(function () {
-          return vm.queryList;
+          return vm.escalationList;
         }, function (nv) {
           if(nv) {
             var edn = nv.toEdn();
@@ -44,33 +44,33 @@
 
         vm.minSecondsForQuery = function (i) {
           if(i > 0) {
-            return vm.queryList.queries[i - 1].afterSecondsInQueue + 1;
+            return vm.escalationList.escalations[i - 1].afterSecondsInQueue + 1;
           }
 
           return 0;
         };
 
-        vm.removeQuery = function (query) {
-          if(query.hasConditions()) {
+        vm.removeEscalation = function (escalation) {
+          if(escalation.hasConditions()) {
             return Modal.showConfirm({
               message : $translate.instant('queue.query.escalation.level.remove.confirm'),
               okCallback: function () {
-                vm.queryList.removeQuery(query);
+                vm.escalationList.removeEscalation(escalation);
               }
             });
           }
 
-          return vm.queryList.removeQuery(query);
+          return vm.escalationList.removeEscalation(escalation);
         };
 
-        vm.addQuery = function () {
-          var q = new ZermeloQuery();
-          q.afterSecondsInQueue = _.last(vm.queryList.queries).afterSecondsInQueue + 1;
-          vm.queryList.addQuery(q);
+        vm.addEscalation = function () {
+          var q = new ZermeloEscalation();
+          q.afterSecondsInQueue = _.last(vm.escalationList.escalations).afterSecondsInQueue + 1;
+          vm.escalationList.addEscalation(q);
         };
 
         vm.advancedQueryChanged = function () {
-          var ednQuery = ZermeloQueryList.fromEdn(vm.advancedQuery);
+          var ednQuery = ZermeloEscalationList.fromEdn(vm.advancedQuery);
 
           if(ednQuery) {
             if(!vm.initialAdvancedQuery ) {
@@ -82,7 +82,7 @@
         };
 
         vm.advancedMode = function () {
-          vm.advancedQuery = vm.queryList.toEdn(true).ednEncode();
+          vm.advancedQuery = vm.escalationList.toEdn(true).ednEncode();
           vm.initialAdvancedQuery = vm.advancedQuery;
           vm.isAdvancedMode = true;
         };
@@ -91,7 +91,7 @@
           var query = null;
 
           try {
-            query = ZermeloQueryList.fromEdn(vm.advancedQuery);
+            query = ZermeloEscalationList.fromEdn(vm.advancedQuery);
           } catch (e) {}
 
           if(!query) {
@@ -99,19 +99,19 @@
               {
                 message: $translate.instant('queue.details.version.query.basic.invalid'),
                 okCallback: function () {
-                  vm.initQueryList(ZermeloQueryList.fromEdn(vm.initialAdvancedQuery));
+                  vm.initEscalationList(ZermeloEscalationList.fromEdn(vm.initialAdvancedQuery));
                   vm.isAdvancedMode = false;
                 }
               }
             );
           }
 
-          vm.initQueryList(query);
+          vm.initEscalationList(query);
           vm.isAdvancedMode = false;
         };
 
-        vm.initQueryList = function (queryList) {
-          vm.queryList = queryList || new ZermeloQueryList();
+        vm.initEscalationList = function (escalationList) {
+          vm.escalationList = escalationList || new ZermeloEscalationList();
         };
     }]);
 

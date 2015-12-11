@@ -5,8 +5,8 @@
     .directive('queryListCreator', function () {
       return {
         restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/queryList/queryListCreator.html',
-        controller: 'QueryListCreatorController as qlc',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html',
+        controller: 'EscalationListEditorController as qlc',
         scope: {
           queryString: '='
         }

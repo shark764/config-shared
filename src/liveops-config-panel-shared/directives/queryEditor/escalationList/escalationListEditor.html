@@ -14,7 +14,7 @@
 <ng-form name="qlc.forms.advancedQueryForm">
   <div class="input-group" ng-if="qlc.isAdvancedMode">
     <label class="textarea-label">{{'value.details.query' | translate}}</label>
-    <textarea zermelo-query-list-validator id="advanced-query-field"
+    <textarea zermelo-escalation-list-validator id="advanced-query-field"
       ng-required="true" type="text" ng-model="qlc.advancedQuery" name="query"
      ng-change="qlc.advancedQueryChanged()"></textarea>
      <form-error field="qlc.forms.advancedQueryForm.query"
@@ -26,28 +26,28 @@
 
 
 
-<div ng-if="!qlc.isAdvancedMode" class="query-component" ng-repeat="query in qlc.queryList.queries">
+<div ng-if="!qlc.isAdvancedMode" class="query-component" ng-repeat="escalation in qlc.escalationList.escalations">
   <div ng-class="{'detail-group': $index !== 0 }">
     <div class="divider-header" ng-if="$index !== 0">
       <h4>{{ 'queue.query.escalation.level' | translate:{level: $index} }}</h4>
-      <a class="pull-right" ng-click="qlc.removeQuery(query)">{{ 'queue.query.escalation.level.remove'| translate}}</a>
+      <a class="pull-right" ng-click="qlc.removeEscalation(escalation)">{{ 'queue.query.escalation.level.remove'| translate}}</a>
     </div>
 
-    <query-creator
-      query="query"
+    <escalation-editor
+      escalation="escalation"
       min-seconds="qlc.minSecondsForQuery($index)"
-      previous-query="::qlc.queryList.queries[$index-1]">
-    </query-creator>
+      previous-escalation="::qlc.escalationList.escalations[$index-1]">
+    </escalation-editor>
 
     <div >
       <div class="divider-header" ng-if="$index === 0">
         <h4>{{ 'queue.query.escalation' | translate}}</h4>
       </div>
 
-      <div ng-if="!qlc.queryList.queries[$index + 1]" class="add-query detail-group">
+      <div ng-if="!qlc.escalationList.escalations[$index + 1]" class="add-query detail-group">
         <h4>{{ 'queue.query.add.escalation.level' | translate:{level: ($index+1)} }}</h4>
         <div class="add-group-button">
-          <button class="add btn" type="button" ng-click="qlc.addQuery()">
+          <button class="add btn" type="button" ng-click="qlc.addEscalation()">
             <i id="add-filter-btn" class="fa fa-plus"></i>
           </button>
         </div>
