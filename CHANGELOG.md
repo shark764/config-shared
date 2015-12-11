@@ -14,3 +14,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 12/11/15 - 1.0.10
 - removed constants that were duplicated from config-ui
   
+## 12/11/15 - 1.0.11
+- Fix version tagging
