@@ -1233,25 +1233,6 @@ fieldset {
     padding: 8px;
   }
 }
-$help-icon-width: 2em;
-$help-icon-height: $help-icon-width;
-
-help-icon {
-  display: inline-block;
-  position: relative;
-  height: $help-icon-height;
-  width: $help-icon-width;
-}
-
-.help-icon {
-  color: $light-grey;
-  text-align: center;
-}
-
-.help-icon:hover {
-  color: $accent1;
-  cursor: pointer;
-}
 lo-multibox {
   display: block;
   margin-bottom: 5px;
@@ -1312,6 +1293,25 @@ lo-multibox {
   type-ahead ul {
     position: static !important;
   }
+}
+$help-icon-width: 2em;
+$help-icon-height: $help-icon-width;
+
+help-icon {
+  display: inline-block;
+  position: relative;
+  height: $help-icon-height;
+  width: $help-icon-width;
+}
+
+.help-icon {
+  color: $light-grey;
+  text-align: center;
+}
+
+.help-icon:hover {
+  color: $accent1;
+  cursor: pointer;
 }
 .loading {
   color: $grey;
