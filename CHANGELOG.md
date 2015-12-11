@@ -10,3 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - fixed bug in liveopsResourceFactory which broke PUT transformers
 - added logic to tenantUser which remove status when it is a new tenant user,
   or when the status is unchanged.
+
+## 12/11/15 - 1.0.10
+- removed constants that were duplicated from config-ui
+  
