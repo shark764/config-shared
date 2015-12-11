@@ -16,6 +16,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'active'
         }, {
           name: 'adminUserId'
+        }, {
+          name: 'timezone'
         }],
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
