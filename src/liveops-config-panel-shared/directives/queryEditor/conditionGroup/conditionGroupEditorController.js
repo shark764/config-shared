@@ -56,7 +56,7 @@
         };
 
         vm.conditionsFilter = function (item) {
-          return !_.includes(vm.conditionGroup.getConditionIdentifiers(), item.id) && item.active;
+          return !_.includes(vm.conditionGroup.getConditionIdentifiers(), item.id) && (item.active || !angular.isDefined(item.active));
         };
 
       }]);

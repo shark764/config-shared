@@ -15,7 +15,7 @@
     .factory('ZermeloQuery', ['_', 'ZermeloObjectGroup', 'jsedn',
       function (_, ZermeloObjectGroup, jsedn) {
 
-        var ALLOWED_KEYS = [':groups', ':skills'];
+        var ALLOWED_KEYS = [':groups', ':skills', ':id'];
 
         function Query() {
           this.groups = [];

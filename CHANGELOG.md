@@ -33,3 +33,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - zermelo escalation query now throws an error when key is not :groups or :skills
 - requiring a form name to be passed in to the escalation-list-editor; this is
 not ideal but will have to do for now.
+
+# 12/14/15 - 1.0.20
+- added support for selecting a tenant user as the filter condition

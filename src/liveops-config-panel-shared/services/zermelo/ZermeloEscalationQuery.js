@@ -12,7 +12,8 @@
 
         EscalationQuery.ALLOWED_KEYS = [
           ':skills',
-          ':groups'
+          ':groups',
+          ':id'
         ];
 
         EscalationQuery.prototype.hasConditions = function () {
@@ -60,7 +61,7 @@
 
             edn.map(function (val, key) {
               if (!_.includes(EscalationQuery.ALLOWED_KEYS, key.val)) {
-                throw 'group key must be :skills or :groups';
+                throw 'group key must be in ' + angular.toJson(EscalationQuery.ALLOWED_KEYS);
               }
 
               eq.setGroup(key.val, ZermeloObjectGroup.fromEdn(val));
