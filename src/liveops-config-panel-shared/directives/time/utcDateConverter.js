@@ -12,7 +12,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               return value;
             }
             
-            return $moment.utc([value.getFullYear(), value.getMonth(), value.getDate()]);
+            return $moment.utc(value);
           });
           
           ngModel.$formatters.push(function(value) {
