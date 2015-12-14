@@ -20,9 +20,7 @@
             if(ednQuery) {
               return vm.initEscalationList(ednQuery);
             }
-
             vm.isAdvancedMode = true;
-            vm.forms.advancedQueryForm.query.$setTouched();
           }
         });
 
@@ -70,14 +68,13 @@
         };
 
         vm.advancedQueryChanged = function () {
-          var ednQuery = ZermeloEscalationList.fromEdn(vm.advancedQuery);
+          $scope.queryString = vm.advancedQuery;
+          var ednQuery = ZermeloEscalationList.fromEdn($scope.queryString);
 
           if(ednQuery) {
             if(!vm.initialAdvancedQuery ) {
               vm.initialAdvancedQuery = ednQuery;
             }
-
-            $scope.queryString = ednQuery.toEdn().ednEncode();
           }
         };
 
