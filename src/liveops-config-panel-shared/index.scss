@@ -2,17 +2,6 @@
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  min-width: $min-body-width;
-  overflow-y: hidden; /*Required to prevent tooltips from (occasionally) briefly creating a scrollbar */
-  overflow-x: auto; /*Required to show scrollbar on small windows */
-}
-
-body > .ng-view {
-  height: calc(100% - #{$navbar-height});
-}
-
 body {
   margin: 0;
   font-family: $main-font;

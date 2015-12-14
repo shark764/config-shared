@@ -3,6 +3,17 @@
 angular.module('liveopsConfigPanel.shared.services')
   .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor',
     function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor) {
+
+      var tenantUserStatusUpdateTransformer = function (obj) {
+        var cpy = angular.copy(obj);
+
+        if(obj.$original && obj.status === obj.$original.status) { 
+          delete cpy.status;
+        }
+
+        return cpy;
+      };
+
       var TenantUser = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/users/:id',
         resourceName: 'TenantUser',
@@ -13,6 +24,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'extensions'
         }],
+        putRequestTransformer: tenantUserStatusUpdateTransformer,
+        postRequestTransformer: tenantUserStatusUpdateTransformer,
         getInterceptor: tenantUserInterceptor,
         queryInterceptor: tenantUserQueryInterceptor,
         saveInterceptor: [tenantUserInterceptor, cacheAddInterceptor],
@@ -29,14 +42,14 @@ angular.module('liveopsConfigPanel.shared.services')
 
       TenantUser.prototype.reset = function () {
         reset.call(this);
-        
+
         this.$user.reset();
       };
-      
+
       TenantUser.prototype.isNew = function() {
         return !this.id;
       };
-      
+
       return TenantUser;
     }
   ]);

@@ -8,7 +8,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         require: ['ngResource', 'form', '^loDetailsPanel'],
         controller: function($scope) {
           var self = this;
-          //TODO: Use loFormReset instead.
+          //TODO: Consider loReset instead. This one introduces too much coupling.
           this.resetForm = function () {
             //Workaround for fields with invalid text in them not being cleared when the model is updated to undefined
             //E.g. http://stackoverflow.com/questions/18874019/angularjs-set-the-model-to-be-again-doesnt-clear-out-input-type-url

@@ -1,16 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash',
-    function($http, $resource, $q, queryCache, _) {
-      function parseResponseResultTransformer(value) {
-        if (value.result) {
-          return value.result;
-        }
-
-        return value;
-      }
-
+  .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash', 'resultTransformer',
+    function($http, $resource, $q, queryCache, _, resultTransformer) {
       function createJsonReplacer(key, value) {
         if (_.startsWith(key, '$')) {
           return undefined;
@@ -73,7 +65,7 @@ angular.module('liveopsConfigPanel.shared.services')
           function defaultSaveRequestTransformer(data) {
             return JSON.stringify(data, createJsonReplacer);
           }
-          
+
           params.requestUrlFields = angular.isDefined(params.requestUrlFields) ? params.requestUrlFields : {
             id: '@id',
             tenantId: '@tenantId',
@@ -83,43 +75,43 @@ angular.module('liveopsConfigPanel.shared.services')
             userId: '@userId',
             memberId: '@memberId'
           };
-          
+
           var defaultResponseTransformer =
-            Array.prototype.concat($http.defaults.transformResponse, parseResponseResultTransformer);
-          
+            Array.prototype.concat($http.defaults.transformResponse, resultTransformer);
+
           var getRequestTransformer = params.getRequestTransformer;
           var getResponseTransformer = params.getResponseTransformer ?
             Array.prototype.concat(params.getResponseTransformer, defaultResponseTransformer) :
             defaultResponseTransformer;
-            
+
           var queryRequestTransformer = params.queryRequestTransformer;
           var queryResponseTransformer = params.queryResponseTransformer ?
             Array.prototype.concat(params.queryResponseTransformer, defaultResponseTransformer) :
             defaultResponseTransformer;
-            
+
           var putRequestTransformer = params.putRequestTransformer ?
             Array.prototype.concat(params.putRequestTransformer, defaultUpdateRequestTransformer) :
             defaultUpdateRequestTransformer;
           var putResponseTransformer = params.putResponseTransformer ?
-            Array.prototype.concat(params.putRequestTransformer, defaultResponseTransformer) :
+            Array.prototype.concat(params.putResponseTransformer, defaultResponseTransformer) :
             defaultResponseTransformer;
-            
+
           var postRequestTransformer = params.postRequestTransformer ?
             Array.prototype.concat(params.postRequestTransformer, defaultSaveRequestTransformer) :
             defaultSaveRequestTransformer;
           var postResponseTransformer = params.postResponseTransformer ?
             Array.prototype.concat(params.postResponseTransformer, defaultResponseTransformer) :
             defaultResponseTransformer;
-            
+
           var deleteRequestTransformer = params.deleteRequestTransformer;
           var deleteResponseTransformer = params.deleteResponseTransformer ?
             Array.prototype.concat(params.deleteResponseTransformer, defaultResponseTransformer) :
             defaultResponseTransformer;
-          
+
           var defaultHeaders = {
             'Content-Type': 'application/json'
           };
-          
+
           var Resource = $resource(params.endpoint, params.requestUrlFields, {
             query: {
               method: 'GET',
@@ -129,7 +121,7 @@ angular.module('liveopsConfigPanel.shared.services')
               transformResponse: queryResponseTransformer,
               interceptor: getInterceptor(params.queryInterceptor)
             },
-            
+
             get: {
               method: 'GET',
               headers: defaultHeaders,
@@ -164,7 +156,7 @@ angular.module('liveopsConfigPanel.shared.services')
           });
 
           Resource.prototype.resourceName = params.resourceName;
-          
+
           Resource.prototype.$$backupSudoProperties = function() {
             var backup = {};
             angular.forEach(this, function(value, key) {
@@ -174,10 +166,10 @@ angular.module('liveopsConfigPanel.shared.services')
                 backup[key] = value;
               }
             });
-            
+
             return backup;
           };
-          
+
           Resource.prototype.$$restoreSudoProperties = function(result, backup) {
             angular.forEach(backup, function(value, key) {
               //if the key is already present, don't overwrite it.
@@ -188,7 +180,7 @@ angular.module('liveopsConfigPanel.shared.services')
               }
             });
           };
-          
+
           var proxyGet = Resource.get;
 
           Resource.get = function(params, success, failure) {
@@ -233,13 +225,25 @@ angular.module('liveopsConfigPanel.shared.services')
           var proxyUpdate = Resource.prototype.$update;
           Resource.prototype.$update = function(queryParams, success, failure) {
             var promise = proxyUpdate.call(this, queryParams, success, failure);
-            
+
             promise.then(function(result) {
               result.$original = angular.copy(result);
               return result;
             });
 
             return promise;
+          };
+
+          Resource.hasItem = function(params, cacheKey) {
+            var key = cacheKey ? cacheKey : this.prototype.resourceName;
+            var cache = queryCache.get(key);
+
+            if(!cache) {
+              return false;
+            }
+
+            var item = _.find(cache, params);
+            return !!item;
           };
 
           Resource.cachedGet = function(params, cacheKey, invalidate) {
@@ -262,6 +266,7 @@ angular.module('liveopsConfigPanel.shared.services')
               }
 
               cache.push(item);
+              cache.$promise = item.$promise;
             }
 
             return item;
@@ -283,7 +288,7 @@ angular.module('liveopsConfigPanel.shared.services')
                 action = this.isNew() ? this.$save : this.$update;
 
             self.$busy = true;
-            
+
             //backup sudo properties such as $user, $groups
             var backup = this.$$backupSudoProperties();
 
@@ -294,10 +299,10 @@ angular.module('liveopsConfigPanel.shared.services')
                   //Prevent the object from keeping a history, if $original is present on result
                   delete self.$original.$original;
                 }
-                
+
                 //restore backed-up sudo properties
                 self.$$restoreSudoProperties(result, backup);
-                
+
                 return result;
               }).finally(function() {
                 self.$busy = false;

@@ -1,28 +1,32 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('ListType', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
+  .factory('List', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor', 'itemBackupInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor, itemBackupInterceptor) {
 
-      var ListType = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/list-types/:id',
-        resourceName: 'ListType',
+      var List = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/lists/:id',
+        resourceName: 'List',
         updateFields: [{
           name: 'name'
         }, {
           name: 'description',
           optional: true
-        }, , {
+        }, {
           name: 'items'
+        }, {
+          name: 'active'
         }],
-        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
+        getInterceptor: itemBackupInterceptor,
+        queryInterceptor: itemBackupInterceptor,
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor, itemBackupInterceptor],
+        updateInterceptor: [emitInterceptor, itemBackupInterceptor]
       });
 
-      ListType.prototype.getDisplay = function () {
+      List.prototype.getDisplay = function () {
         return this.name;
       };
       
-      return ListType;
+      return List;
     }
   ]);

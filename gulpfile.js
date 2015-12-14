@@ -40,7 +40,7 @@ var sourceFiles = [
   // Then add all JavaScript files
   path.join(sourceDirectory, '/**/*.js'),
 
-  path.join('!', sourceDirectory, '/**/*.spec.js'),
+  path.join('!' + sourceDirectory, '/**/*.spec.js')
 ];
 
 var lintFiles = [
@@ -71,24 +71,8 @@ gulp.task('styles', function () {
       gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
       this.emit('end');
     };
-  };
+  }
 
-  var injectOptions = {
-    transform: function (filePath) {
-      return '@import \'' + filePath + '\';';
-    },
-    starttag: '// injector',
-    endtag: '// endinjector',
-    addRootSlash: false
-  };
-
-  var injectFiles = gulp.src([
-    'src/**/*.scss',
-    '!src/liveops-config-panel-shared/index.scss'
-  ], {
-    read: false
-  });
-  
   var styleFiles = gulp.src([
     'src/liveops-config-panel-shared/sass/_constants.scss',
     'src/liveops-config-panel-shared/sass/_mixins.scss',

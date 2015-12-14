@@ -30,9 +30,9 @@ angular.module('liveopsConfigPanel.shared.directives')
         return true;
       };
 
-      BulkAction.prototype.doesQualify = function doesQualify (item) {
+      BulkAction.prototype.doesQualify = function doesQualify () {
         return true;
-      }
+      };
 
       return BulkAction;
     }

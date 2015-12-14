@@ -51,35 +51,42 @@ describe('filterDropdown directive', function(){
     var newStatuses = {filters : [{display: 'Disabled', value: 'false', checked: false}, {display: 'Enabled', value : 'true', checked: false}]};
     $scope.newStatuses = newStatuses;
 
-    element = $compile('<filter-dropdown label="Some Label" items="newStatuses"></filter-dropdown>')($scope);
+    element = $compile('<filter-dropdown label="Some Label" options="newStatuses"></filter-dropdown>')($scope);
     $scope.$digest();
 
     var allContainer = element[0].querySelectorAll('.all');
     expect(allContainer.length).toEqual(0);
   }));
 
-  it('should uncheck the "all" value when a filter is enabled', inject(function() {
+  it('should uncheck the "all" value when a filter is disabled', inject(function() {
+    statuses = [{display: 'Disabled', value: 'false', checked: true}, {display: 'Enabled', value : 'true', checked: true}];
+    $scope.statuses = statuses;
+    $scope.$digest();
+    
     expect($childScope.all.checked).toBe(true);
 
-    $scope.statuses[0].checked = true;
+    $scope.statuses[0].checked = false;
     $scope.$digest();
 
-    // expect($scope.all.checked).toBe(false);
+    expect($childScope.all.checked).toBe(false);
   }));
 
   it('should check the other filters when "all" is checked', inject(function() {
-    statuses = [{display: 'Disabled', value: 'false', checked: true}];
+    statuses = [{display: 'Disabled', value: 'false', checked: false}];
     $scope.statuses = statuses;
 
-    element = $compile('<filter-dropdown show-all="true" label="Some Label" items="statuses"></filter-dropdown>')($scope);
+    element = $compile('<filter-dropdown show-all="true" label="Some Label" options="statuses"></filter-dropdown>')($scope);
     $scope.$digest();
-    $childScope.all.checked = false;
-    expect($childScope.all.checked).toBeFalsy(false);
-    // expect($scope.statuses[0].checked).toBeFalsy(false);
+    $childScope = element.isolateScope();
+
+    expect($childScope.all.checked).toBeFalsy();
+    expect($scope.statuses[0].checked).toBeFalsy();
 
     $childScope.all.checked = true;
-    expect($childScope.all.checked).toBeTruthy(false);
-    expect($scope.statuses[0].checked).toBeTruthy(true);
+    $scope.$digest();
+    
+    expect($childScope.all.checked).toBeTruthy();
+    //expect($scope.statuses[0].checked).toBeTruthy();
   }));
 
   it('should keep the dropdown hidden by default', inject(function() {

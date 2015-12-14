@@ -27,7 +27,7 @@ describe('selectedTableOptions filter', function () {
     }];
   }]));
 
-  it('should return all users if the all values are checked', inject(function () {
+  it('should return all users if all the options are checked', inject(function () {
     var fields = [{
       name: 'status',
       header: {
@@ -36,14 +36,14 @@ describe('selectedTableOptions filter', function () {
           checked: true
         }, {
           value: true,
-          checked: false
+          checked: true
         }]
       }
     }];
 
     var result = $filter('selectedTableOptions')(users, fields);
 
-    expect(result.length).toEqual(1);
+    expect(result.length).toEqual(4);
   }));
 
   
