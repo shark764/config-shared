@@ -11,18 +11,17 @@
 </div>
 
 
-<ng-form name="qlc.forms.advancedQueryForm">
-  <div class="input-group" ng-if="qlc.isAdvancedMode">
-    <label class="textarea-label">{{'value.details.query' | translate}}</label>
-    <textarea zermelo-escalation-list-validator id="advanced-query-field"
-      ng-required="true" type="text" ng-model="qlc.advancedQuery" name="query"
-     ng-change="qlc.advancedQueryChanged()"></textarea>
-     <form-error field="qlc.forms.advancedQueryForm.query"
-       error-type-required="{{'queue.details.queue.error' | translate}}"
-       error-type-zermelo="{{'queue.query.build.zermelo.invalid' | translate}}">
-     </form-error>
-  </div>
-</ng-form>
+<div class="input-group" ng-if="qlc.isAdvancedMode">
+  <label class="textarea-label">{{'value.details.query' | translate}}</label>
+  <textarea id="advanced-query-field"
+    ng-required="true" type="text" ng-model="qlc.advancedQuery" name="query"
+   ng-change="qlc.advancedQueryChanged()"></textarea>
+   <form-error field="form['query']"
+     error-type-required="{{'queue.details.queue.error' | translate}}"
+     error-type-zermelo="{{'queue.query.build.zermelo.invalid' | translate}}"
+     error-type-api>
+   </form-error>
+</div>
 
 
 

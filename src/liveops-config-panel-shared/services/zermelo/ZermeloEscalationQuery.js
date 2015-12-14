@@ -59,9 +59,11 @@
           if(edn instanceof jsedn.Map) {
 
             edn.map(function (val, key) {
-              if(_.includes(EscalationQuery.ALLOWED_KEYS, key.val)) {
-                eq.setGroup(key.val, ZermeloObjectGroup.fromEdn(val));
+              if (!_.includes(EscalationQuery.ALLOWED_KEYS, key.val)) {
+                throw 'group key must be :skills or :groups';
               }
+
+              eq.setGroup(key.val, ZermeloObjectGroup.fromEdn(val));
             });
 
             return eq;

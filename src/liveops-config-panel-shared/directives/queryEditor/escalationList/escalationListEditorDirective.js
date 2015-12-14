@@ -8,7 +8,8 @@
         templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html',
         controller: 'EscalationListEditorController as qlc',
         scope: {
-          queryString: '='
+          queryString: '=',
+          form: '='
         }
       };
     });

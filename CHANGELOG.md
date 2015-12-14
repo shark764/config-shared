@@ -28,3 +28,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 12/11/15 - 1.0.18
 - Support for custom color themes, and added default theme
+
+# 12/14/15 - 1.0.19
+- zermelo escalation query now throws an error when key is not :groups or :skills
+- requiring a form name to be passed in to the escalation-list-editor; this is
+not ideal but will have to do for now.
