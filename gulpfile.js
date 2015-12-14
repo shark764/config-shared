@@ -80,6 +80,7 @@ gulp.task('styles', function () {
     'src/liveops-config-panel-shared/sass/_components.scss',
     'src/liveops-config-panel-shared/sass/_inputs.scss',
     'src/liveops-config-panel-shared/sass/_layout.scss',
+    'src/liveops-config-panel-shared/sass/_default_theme.scss',
     'src/liveops-config-panel-shared/index.scss',
     'src/liveops-config-panel-shared/directives/**/*.scss',
     'src/liveops-config-panel-shared/filters/**/*.scss',

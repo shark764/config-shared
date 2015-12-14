@@ -13,8 +13,8 @@
         <li id="{{item.id}}"
           ng-repeat="item in items | orderBy:orderBy"
           ng-click="optionClick(item.onClick)">
-            <span ng-if="! item.stateLink"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</span>
-            <a ng-if="item.stateLink" ui-sref="{{item.stateLink}}({{item.stateLinkParams}})"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</a>
+            <span class="lo-hover-highlight lo-accent-hover-border" ng-if="! item.stateLink"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</span>
+            <a class="lo-hover-highlight lo-accent-hover-border" ng-if="item.stateLink" ui-sref="{{item.stateLink}}({{item.stateLinkParams}})"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</a>
         </li>
       </ul>
     </div>

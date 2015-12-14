@@ -39,10 +39,6 @@
     li {
       padding: 10px;
       cursor: pointer;
-
-      &:hover, &.highlight {
-        background-color: $accent-light;
-      }
     }
   }
 }

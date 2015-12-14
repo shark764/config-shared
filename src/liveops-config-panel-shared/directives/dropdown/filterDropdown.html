@@ -9,12 +9,12 @@
 
 <div class="dropdown-container">
   <div class="dropdown filter-dropdown" ng-hide="! showDrop || options.length === 0">
-    <div class="all" ng-if="showAll" ng-click="toggleAll()">
+    <div class="all lo-accent-hover-box-border lo-hover-highlight" ng-if="showAll" ng-click="toggleAll()">
       <input type="checkbox" ng-checked="all.checked"/>
       <label>All</label>
     </div>
     <div ng-repeat="option in options | orderBy:orderBy"
-      class="dropdown-option" ng-click="checkItem(option)" >
+      class="dropdown-option lo-accent-hover-box-border lo-hover-highlight" ng-click="checkItem(option)" >
       <input name="{{option | parse:valuePath | invoke:option}}" type="checkbox" ng-checked="option.checked"/>
       <label for="{{option | parse:valuePath | invoke:option}}">
         {{option | parse:displayPath | invoke:option}}

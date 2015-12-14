@@ -252,10 +252,7 @@ $fontRobotoCondensed: 'Roboto Condensed';
 @import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600);
 
 .lo-alert {
-  background-color: $accent-light;
-  border: 2px solid darken($accent-light, 5);
   @include border-radius();
-  color: $main-color;
   margin: 10px 0;
   padding: 10px;
   width: 100%;
@@ -374,7 +371,6 @@ input[type=password], input[type=text], input[type=email], input[type=tel], inpu
   }
 
   &:not([readonly]):focus{
-    border-color: $accent1;
     outline: 0;
     @include box-shadow-2(inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px $input-border-shadow);
   }
@@ -798,6 +794,83 @@ div[disable-contents] + .input-group, .input-group + div[disable-contents] {
   }
 }
 
+.lo-accent-text, a {
+  color: $accent1;
+}
+
+a:hover {
+  color: $main-color;
+}
+
+.lo-main-text, .btn:not(.btn-primary){
+  color: $main-color;
+}
+
+.lo-main-bg, .btn-primary {
+  background-color: $main-color !important;
+}
+
+.lo-highlight {
+  background-color: $accent-light;
+}
+
+.lo-hover-highlight:hover {
+  background-color: $accent-light !important;
+}
+
+.lo-highlight-border {
+  border-color: $accent-light;
+}
+
+.lo-accent-bg {
+  background-color: $accent1 !important;
+}
+
+.lo-accent-border {
+  border-color: $accent1 !important;
+}
+
+.lo-accent-hover:hover {
+  color: $accent1;
+}
+
+.lo-accent-hover-border:hover {
+  border-color: $accent1 !important;
+}
+
+.lo-accent-hover-box-border:hover {
+  box-shadow: inset 4px 0px 0px 0px $accent1;
+}
+
+.lo-alert {
+  color: $main-color;
+  background-color: $accent-light;
+  border: 2px solid $accent1;
+}
+
+.table tbody tr:hover {
+  background-color: $accent-light;
+}
+
+.help-tooltip.left .tooltip-arrow:before {
+    border-left-color: $accent1;
+}
+
+.help-tooltip.right .tooltip-arrow:before {
+   border-right-color: $accent1;
+}
+
+.help-tooltip.bottom.center .tooltip-arrow:before {
+  border-bottom-color: $accent1;
+}
+
+.help-tooltip.top.center .tooltip-arrow:before {
+  border-top-color: $accent1;
+}
+
+input:not([readonly]):focus {
+  border-color: $accent1;
+}
 * {
   box-sizing: border-box;
 }
@@ -814,12 +887,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 a {
-  color: $accent1;
   text-decoration: none;
-}
-
-a:hover {
-  color: $main-color;
 }
 
 [ng-click] {
@@ -830,23 +898,32 @@ a:hover {
   background-color: #F9F9F9;
   border: 1px solid $light-grey;
   border-radius: 4px;
-  color: $main-color;
   cursor: pointer;
   display: inline-block;
   font-size: 14px;
   padding: 3px 10px;
+  position: relative;
   text-align: center;
   vertical-align: middle;
 }
 
 .btn-primary {
-  background-color: $main-color;
   color: #FFFFFF;
   margin: 0;
 }
 
 .btn-primary:hover {
   color: #ffffff;
+}
+
+.btn-primary:hover:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .btn:hover {
@@ -865,10 +942,20 @@ a:hover {
   &:hover {
     @include box-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.15));
   }
+}
 
-  .btn-primary {
-    color: darken($main-color, 20%);
-  }
+.btn.disabled:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+input[disabled].btn { /* inputs can't use :before pseudo element" */
+  opacity: 0.8;
 }
 
 label[disabled], label.disabled {
@@ -975,10 +1062,6 @@ fieldset {
     li {
       padding: 10px;
       cursor: pointer;
-
-      &:hover, &.highlight {
-        background-color: $accent-light;
-      }
     }
   }
 }
@@ -1054,47 +1137,6 @@ fieldset {
         }
       }
     }
-  }
-}
-.edit-field {
-  margin-bottom: 15px;
-  color: $darkest-grey;
-  .input-toggle {
-    div {
-      cursor: pointer;
-      margin-top: 5px;
-      display: block;
-      border: $lightest-grey 1px solid;
-      @include border-radius(4px);
-      label {
-        display: inline-block;
-        margin: 10px;
-      }
-      .placeholder {
-        color: $grey;
-      }
-      i {
-        margin-top: 3px;
-        display: inline-block;
-        float: right;
-        height: 39px;
-        width: 38px;
-        vertical-align: middle;
-        font-size: 28px;
-        text-align: center;
-      }
-    }
-    div:hover {
-      border: $grey 1px solid;
-    }
-  }
-  input,
-  select {
-    display: block;
-    margin-top: 5px;
-    border: 1px solid $grey;
-    @include border-radius(4px);
-    padding: 8px;
   }
 }
 .dropdown-container {
@@ -1187,8 +1229,6 @@ fieldset {
     
     li span:hover, li a:hover {
       color: $dark-grey;
-      background: $accent-light;
-      border-left: 5px solid $accent1
     }
   }
 }
@@ -1221,8 +1261,6 @@ fieldset {
   }
 
   div:hover {
-    background-color: $accent-light;
-    @include box-shadow(inset 4px 0px 0px 0px $accent1);
     cursor: pointer;
   }
 }
@@ -1233,6 +1271,47 @@ fieldset {
   padding-bottom: 10px;
 }
 
+.edit-field {
+  margin-bottom: 15px;
+  color: $darkest-grey;
+  .input-toggle {
+    div {
+      cursor: pointer;
+      margin-top: 5px;
+      display: block;
+      border: $lightest-grey 1px solid;
+      @include border-radius(4px);
+      label {
+        display: inline-block;
+        margin: 10px;
+      }
+      .placeholder {
+        color: $grey;
+      }
+      i {
+        margin-top: 3px;
+        display: inline-block;
+        float: right;
+        height: 39px;
+        width: 38px;
+        vertical-align: middle;
+        font-size: 28px;
+        text-align: center;
+      }
+    }
+    div:hover {
+      border: $grey 1px solid;
+    }
+  }
+  input,
+  select {
+    display: block;
+    margin-top: 5px;
+    border: 1px solid $grey;
+    @include border-radius(4px);
+    padding: 8px;
+  }
+}
 $help-icon-width: 2em;
 $help-icon-height: $help-icon-width;
 
@@ -1249,7 +1328,6 @@ help-icon {
 }
 
 .help-icon:hover {
-  color: $accent1;
   cursor: pointer;
 }
 lo-multibox {
@@ -1475,7 +1553,6 @@ query-list-creator {
 }
 
 .resizable-handle {
-  color: $accent1;
   font-size: 1.4em;
   font-weight: normal;
   cursor: col-resize;
@@ -1526,163 +1603,6 @@ query-list-creator {
     }
   }
 }
-$tooltip-color: $accent1;
-
-tooltip {
-  display: block;
-  position: absolute;
-  z-index: 30;
-  color: #ffffff;
-}
-
-.help-tooltip {
-
-  p:first-child {
-    margin-top: 0;
-  }
-
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  .tooltip-content {
-    background-color: $tooltip-color;
-    @include border-radius();
-    @include drop-shadow();
-    padding: 10px;
-    max-width: 200px;
-    max-height: 200px;
-    text-align: left;
-  }
-
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-  }
-
-  .tooltip-arrow:after {
-	border-width: 10px;
-  }
-  .tooltip-arrow:before {
-	border-width: 13px;
-  }
-}
-
-.help-tooltip.left {
-  .tooltip-arrow:after {
-    margin-top: -10px;
-    left: 100%;
-  }
-
-  .tooltip-arrow:before {
-    border-left-color: $tooltip-color;
-    margin-top: -13px;
-    left: 100%;
-  }
-}
-
-.help-tooltip.top.left {
-  .tooltip-content {
-    border-bottom-right-radius: 0;
-  }
-
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    bottom: 0;
-  }
-}
-
-.help-tooltip.center.left {
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    top: 50%;
-  }
-}
-
-.help-tooltip.bottom.left {
-  .tooltip-content {
-    border-top-right-radius: 0;
-  }
-
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    top: 13px;
-  }
-}
-
-.help-tooltip.right {
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    right: 100%;
-  }
-
-  .tooltip-arrow:before {
-    border-right-color: $tooltip-color;
-    margin-top: -13px;
-  }
-}
-
-.help-tooltip.top.right {
-  .tooltip-content {
-    border-bottom-left-radius: 0;
-  }
-
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    bottom: 0;
-  }
-}
-
-.help-tooltip.center.right {
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    top: 50%;
-  }
-}
-
-.help-tooltip.bottom.right {
-  .tooltip-content {
-    border-top-left-radius: 0;
-  }
-
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    right: 100%;
-    top: 13px;
-  }
-}
-
-.help-tooltip.bottom.center {
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    bottom: 100%;
-    left: 50%;
-  }
-
-  .tooltip-arrow:before {
-    border-bottom-color: $tooltip-color;
-    margin-left: -13px;
-  }
-}
-
-.help-tooltip.top.center {
-  .tooltip-arrow:after,
-  .tooltip-arrow:before {
-    top: 100%;
-    left: 50%;
-  }
-
-  .tooltip-arrow:before {
-    border-top-color: $tooltip-color;
-    margin-left: -13px;
-  }
-}
-
 $switchTransition: all 150ms cubic-bezier(0.250, 0.250, 0.500, 0.500);
 $switchHandleSize: 28px;
 
@@ -1782,6 +1702,156 @@ toggle[disabled] .switch {
   pointer-events: none;
 }
 
+tooltip {
+  display: block;
+  position: absolute;
+  z-index: 30;
+  color: #ffffff;
+}
+
+.help-tooltip {
+
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  .tooltip-content {
+    @include border-radius();
+    @include drop-shadow();
+    padding: 10px;
+    max-width: 200px;
+    max-height: 200px;
+    text-align: left;
+  }
+
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+  }
+
+  .tooltip-arrow:after {
+	border-width: 10px;
+  }
+  .tooltip-arrow:before {
+	border-width: 13px;
+  }
+}
+
+.help-tooltip.left {
+  .tooltip-arrow:after {
+    margin-top: -10px;
+    left: 100%;
+  }
+
+  .tooltip-arrow:before {
+    margin-top: -13px;
+    left: 100%;
+  }
+}
+
+.help-tooltip.top.left {
+  .tooltip-content {
+    border-bottom-right-radius: 0;
+  }
+
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    bottom: 0;
+  }
+}
+
+.help-tooltip.center.left {
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    top: 50%;
+  }
+}
+
+.help-tooltip.bottom.left {
+  .tooltip-content {
+    border-top-right-radius: 0;
+  }
+
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    top: 13px;
+  }
+}
+
+.help-tooltip.right {
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    right: 100%;
+  }
+
+  .tooltip-arrow:before {
+    margin-top: -13px;
+  }
+}
+
+.help-tooltip.top.right {
+  .tooltip-content {
+    border-bottom-left-radius: 0;
+  }
+
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    bottom: 0;
+  }
+}
+
+.help-tooltip.center.right {
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    top: 50%;
+  }
+}
+
+.help-tooltip.bottom.right {
+  .tooltip-content {
+    border-top-left-radius: 0;
+  }
+
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    right: 100%;
+    top: 13px;
+  }
+}
+
+.help-tooltip.bottom.center {
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    bottom: 100%;
+    left: 50%;
+  }
+
+  .tooltip-arrow:before {
+    margin-left: -13px;
+  }
+}
+
+.help-tooltip.top.center {
+  .tooltip-arrow:after,
+  .tooltip-arrow:before {
+    top: 100%;
+    left: 50%;
+  }
+
+  .tooltip-arrow:before {
+    margin-left: -13px;
+  }
+}
+
 .typeahead-container {
   position:relative;
   width: 100%;
@@ -1823,10 +1893,6 @@ toggle[disabled] .switch {
     li {
       padding: 10px;
       cursor: pointer;
-
-      &:hover, &.highlight {
-        background-color: $accent-light;
-      }
     }
   }
 }

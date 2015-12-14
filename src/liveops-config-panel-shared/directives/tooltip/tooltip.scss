@@ -1,5 +1,3 @@
-$tooltip-color: $accent1;
-
 tooltip {
   display: block;
   position: absolute;
@@ -18,7 +16,6 @@ tooltip {
   }
 
   .tooltip-content {
-    background-color: $tooltip-color;
     @include border-radius();
     @include drop-shadow();
     padding: 10px;
@@ -52,7 +49,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-left-color: $tooltip-color;
     margin-top: -13px;
     left: 100%;
   }
@@ -94,7 +90,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-right-color: $tooltip-color;
     margin-top: -13px;
   }
 }
@@ -137,7 +132,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-bottom-color: $tooltip-color;
     margin-left: -13px;
   }
 }
@@ -150,7 +144,6 @@ tooltip {
   }
 
   .tooltip-arrow:before {
-    border-top-color: $tooltip-color;
     margin-left: -13px;
   }
 }

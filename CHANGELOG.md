@@ -25,3 +25,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 12/11/15 - 1.0.15
 - fixed escalation query time error handling
+
+## 12/11/15 - 1.0.18
+- Support for custom color themes, and added default theme
