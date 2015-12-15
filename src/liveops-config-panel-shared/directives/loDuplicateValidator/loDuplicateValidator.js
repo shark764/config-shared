@@ -7,19 +7,17 @@ angular.module('liveopsConfigPanel.shared.directives')
       require: 'ngModel',
       scope: {
         loDuplicateValidatorItems: '=',
-        loDuplicateValidatorField: '=',
-        loDuplicateValidatorValueTransfomer: '&'
+        loDuplicateValidatorOptions: '='
       },
       link: function ($scope, elem, attr, ngModelCtrl) {
         ngModelCtrl.$validators.duplicate = function (modelValue, viewValue) {
-          var value = modelValue,
-              items = $scope.loDuplicateValidatorItems;
+          var comparer = $scope.loDuplicateValidatorOptions.comparer || function(item) {
+            return item === value;
+          };
 
-          if(attr.loDuplicateValidatorField) {
-            items = _.pluck(items, attr.loDuplicateValidatorField);
-          }
+          var value = modelValue;
 
-          return _.includes(items, $scope.loDuplicateValidatorValueTransfomer(value));
+          return _.filter($scope.loDuplicateValidatorItems, comparer).length === 0 ;
         };
       }
     };

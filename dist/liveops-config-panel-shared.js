@@ -213,45 +213,6 @@ if (!String.prototype.contains) {
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('auditText', ['$filter', 'TenantUser', 'Session',
-    function ($filter, TenantUser, Session) {
-      return {
-        restrict: 'AE',
-        scope: {
-          translation: '@',
-          userId: '=',
-          date: '='
-        },
-        template: '{{get()}}',
-        link: function ($scope) {
-          $scope.get = function () {
-            if (!$scope.userId) {
-              return  $filter('translate')($scope.translation, {
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            var user = TenantUser.cachedGet({
-              id: $scope.userId,
-              tenantId: Session.tenant.tenantId
-            }, 'AuditTextUsers');
-
-            if(user.$resolved) {
-              $scope.text = $filter('translate')($scope.translation, {
-                displayName: user.getDisplay(),
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            return $scope.text;
-          };
-        }
-      };
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('autocomplete', ['filterFilter', '$timeout', function(filterFilter, $timeout) {
     return {
       restrict: 'E',
@@ -300,6 +261,45 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('auditText', ['$filter', 'TenantUser', 'Session',
+    function ($filter, TenantUser, Session) {
+      return {
+        restrict: 'AE',
+        scope: {
+          translation: '@',
+          userId: '=',
+          date: '='
+        },
+        template: '{{get()}}',
+        link: function ($scope) {
+          $scope.get = function () {
+            if (!$scope.userId) {
+              return  $filter('translate')($scope.translation, {
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            var user = TenantUser.cachedGet({
+              id: $scope.userId,
+              tenantId: Session.tenant.tenantId
+            }, 'AuditTextUsers');
+
+            if(user.$resolved) {
+              $scope.text = $filter('translate')($scope.translation, {
+                displayName: user.getDisplay(),
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            return $scope.text;
+          };
+        }
+      };
+    }
+  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -577,6 +577,195 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }
   ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .controller('DropdownController', ['$scope', '$document', '$element', function ($scope, $document, $element) {
+    var self= this;
+    $scope.showDrop = false;
+    this.setShowDrop = function(val){ //Used by the dropdownDirective
+      $scope.showDrop = val;
+    };
+
+    //Only bother listening for the click event when a dropdown is open
+    $scope.$watch('showDrop',
+      function (newValue, oldValue) {
+        $document.off('click', self.onClick);
+
+        if (newValue && !oldValue) {
+          $document.on('click', self.onClick);
+        }
+    });
+
+    this.onClick = function(event) {
+      //Hide the dropdown when user clicks outside of it
+      var clickedInDropdown = $element.find(event.target).length > 0;
+      if (clickedInDropdown) {
+        return;
+      }
+
+      $scope.$apply(function () {
+        $scope.showDrop = false;
+        $scope.hovering = false;
+      });
+
+      $document.off('click', self.onClick);
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('dropdown', [function() {
+    return {
+      scope : {
+        items : '=',
+        label : '@',
+        valuePath: '@',
+        displayPath: '@',
+        collapseIcon: '@',
+        expandIcon: '@',
+        orderBy: '@',
+        hovering: '=?',
+        hoverTracker: '=?',
+        showOnHover: '='
+      },
+      templateUrl : 'liveops-config-panel-shared/directives/dropdown/dropdown.html',
+      controller : 'DropdownController',
+      link : function(scope, element, attrs, controller) {
+        scope.valuePath = scope.valuePath ? scope.valuePath : 'value';
+        scope.displayPath = scope.displayPath ? scope.displayPath : 'label';
+        
+        if (typeof scope.hovering !== 'undefined' && scope.hoverTracker){
+          scope.hoverTracker.push(controller);
+        }
+
+        scope.clearOtherHovers = function(){
+          angular.forEach(scope.hoverTracker, function(hoverCtrl){
+            if (hoverCtrl !== controller){
+              hoverCtrl.setShowDrop(false);
+            }
+          });
+        };
+
+        if (!scope.orderBy){
+          scope.orderBy = 'label';
+        }
+
+        scope.optionClick = function(func){
+          scope.showDrop = false;
+          scope.hovering = false;
+          
+          if (angular.isFunction(func)){
+            func();
+          }
+        };
+
+        if(! scope.collapseIcon){
+          scope.collapseIcon = 'fa fa-caret-up';
+        }
+
+        if (! scope.expandIcon){
+          scope.expandIcon = 'fa fa-caret-down';
+        }
+
+        scope.mouseIn = function(){
+          if (scope.hovering || scope.showOnHover){
+            scope.showDrop = true;
+            scope.clearOtherHovers();
+          }
+        };
+
+        scope.dropClick = function(){
+          scope.showDrop = ! scope.showDrop;
+          scope.hovering = ! scope.hovering;
+        };
+      }
+    };
+   }])
+;
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('filterDropdown', ['$filter', function ($filter) {
+    return {
+      scope: {
+        id: '@',
+        options: '=',
+        valuePath: '@',
+        displayPath: '@',
+        label: '@',
+        showAll: '@',
+        orderBy: '@'
+      },
+      templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
+      controller: 'DropdownController',
+      link: function ($scope, element) {
+        element.parent().css('overflow', 'visible');
+
+        $scope.valuePath = $scope.valuePath ? $scope.valuePath : 'value';
+        $scope.displayPath = $scope.displayPath ? $scope.displayPath : 'display';
+        
+        $scope.checkItem = function (option) {
+          option.checked = !option.checked;
+
+          $scope.$emit('dropdown:item:checked', option);
+        };
+
+        if ($scope.showAll) {
+
+          // If 'all' was checked but some other option has been unchecked, uncheck 'all' option
+          // If 'all' was unchecked but all other options are checked, check 'all' option
+          $scope.$watch('options', function (newList, oldList) {
+            var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
+            
+            if ($scope.all.checked && (newList.length > oldList.length)){
+              // If a new item was added to the options list, while the 'All' option is selected,
+              // we make sure it is checked
+              checkAll();
+            } else if (checkedOptions.length === $scope.options.length ) {
+              $scope.all.checked = true;
+            } else {
+              $scope.all.checked = false;
+            }
+          }, true);
+          
+          $scope.toggleAll = function(){
+            $scope.all.checked = !$scope.all.checked;
+            
+            if ($scope.all.checked) {
+              checkAll();
+            }
+          };
+          
+          var checkAll = function(){
+            angular.forEach($scope.options, function (option) {
+              option.checked = true;
+            });
+          };
+          
+          var checkAllByDefault = true;
+          angular.forEach($scope.options, function (option) {
+            checkAllByDefault = checkAllByDefault && (typeof option.checked === 'undefined' ? true : option.checked);
+          });
+          $scope.all = {
+            checked: checkAllByDefault
+          };
+          if (checkAllByDefault){
+            checkAll();
+          }
+          
+        } else {
+          $scope.$watch('options', function () {
+            angular.forEach($scope.options, function (option) {
+              option.checked = (typeof option.checked === 'undefined' ? true : option.checked);
+            });
+          });
+        }
+      }
+    };
+  }]);
 
 'use strict';
 
@@ -884,139 +1073,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-/**
-  Taken from a stackoverflow.com post reply
-
-  http://stackoverflow.com/a/25822878
-**/
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('disableContents', [function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        var inputNames = 'input, button, select, textarea, label';
-
-        var inputs = tElem.find(inputNames);
-        angular.forEach(inputs, function(el){
-          el = angular.element(el);
-          var prevVal = el.attr('ng-disabled');
-          prevVal = prevVal ? prevVal +  ' || ': '';
-          prevVal += tAttrs.disableContents;
-          el.attr('ng-disabled', prevVal);
-        });
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .controller('DropdownController', ['$scope', '$document', '$element', function ($scope, $document, $element) {
-    var self= this;
-    $scope.showDrop = false;
-    this.setShowDrop = function(val){ //Used by the dropdownDirective
-      $scope.showDrop = val;
-    };
-
-    //Only bother listening for the click event when a dropdown is open
-    $scope.$watch('showDrop',
-      function (newValue, oldValue) {
-        $document.off('click', self.onClick);
-
-        if (newValue && !oldValue) {
-          $document.on('click', self.onClick);
-        }
-    });
-
-    this.onClick = function(event) {
-      //Hide the dropdown when user clicks outside of it
-      var clickedInDropdown = $element.find(event.target).length > 0;
-      if (clickedInDropdown) {
-        return;
-      }
-
-      $scope.$apply(function () {
-        $scope.showDrop = false;
-        $scope.hovering = false;
-      });
-
-      $document.off('click', self.onClick);
-    };
-  }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('dropdown', [function() {
-    return {
-      scope : {
-        items : '=',
-        label : '@',
-        valuePath: '@',
-        displayPath: '@',
-        collapseIcon: '@',
-        expandIcon: '@',
-        orderBy: '@',
-        hovering: '=?',
-        hoverTracker: '=?',
-        showOnHover: '='
-      },
-      templateUrl : 'liveops-config-panel-shared/directives/dropdown/dropdown.html',
-      controller : 'DropdownController',
-      link : function(scope, element, attrs, controller) {
-        scope.valuePath = scope.valuePath ? scope.valuePath : 'value';
-        scope.displayPath = scope.displayPath ? scope.displayPath : 'label';
-        
-        if (typeof scope.hovering !== 'undefined' && scope.hoverTracker){
-          scope.hoverTracker.push(controller);
-        }
-
-        scope.clearOtherHovers = function(){
-          angular.forEach(scope.hoverTracker, function(hoverCtrl){
-            if (hoverCtrl !== controller){
-              hoverCtrl.setShowDrop(false);
-            }
-          });
-        };
-
-        if (!scope.orderBy){
-          scope.orderBy = 'label';
-        }
-
-        scope.optionClick = function(func){
-          scope.showDrop = false;
-          scope.hovering = false;
-          
-          if (angular.isFunction(func)){
-            func();
-          }
-        };
-
-        if(! scope.collapseIcon){
-          scope.collapseIcon = 'fa fa-caret-up';
-        }
-
-        if (! scope.expandIcon){
-          scope.expandIcon = 'fa fa-caret-down';
-        }
-
-        scope.mouseIn = function(){
-          if (scope.hovering || scope.showOnHover){
-            scope.showDrop = true;
-            scope.clearOtherHovers();
-          }
-        };
-
-        scope.dropClick = function(){
-          scope.showDrop = ! scope.showDrop;
-          scope.hovering = ! scope.hovering;
-        };
-      }
-    };
-   }])
-;
-
 angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
 $templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    name=\"{{nameField}}\"\r\n    ng-required=\"isRequired\"\r\n    type=\"text\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"\r\n    placeholder=\"{{placeholder}}\"\r\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\r\n      <li class=\"lo-hover-highlight\" ng-class=\"{\'highlight\' : selectedItem == item, \'lo-highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\r\n    </ul>\r\n</div>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\r\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\r\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\r\n    <filter-dropdown\r\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\r\n      options=\"selectedItems()\"\r\n      display-path=\"getDisplay\"\r\n      value-path=\"id\">\r\n    </filter-dropdown>\r\n  </div>\r\n\r\n  <div class=\"detail-body\">\r\n    <!-- bulkAction elements injected here -->\r\n  </div>\r\n\r\n  <div class=\"detail-controls\">\r\n    <input id=\"cancel-bulk-actions-btn\"\r\n      type=\"button\"\r\n      class=\"btn\"\r\n      ng-click=\"cancel()\"\r\n      value=\"{{\'value.cancel\' | translate}}\">\r\n    </input>\r\n    <input id=\"submit-bulk-actions-btn\"\r\n      ng-disabled=\"!canExecute()\"\r\n      type=\"button\"\r\n      class=\"btn btn-primary\"\r\n      ng-click=\"confirmExecute()\"\r\n      value=\"{{\'value.submit\' | translate}}\">\r\n  </div>\r\n</form>\r\n");
@@ -1046,88 +1102,6 @@ $templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficien
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('filterDropdown', ['$filter', function ($filter) {
-    return {
-      scope: {
-        id: '@',
-        options: '=',
-        valuePath: '@',
-        displayPath: '@',
-        label: '@',
-        showAll: '@',
-        orderBy: '@'
-      },
-      templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
-      controller: 'DropdownController',
-      link: function ($scope, element) {
-        element.parent().css('overflow', 'visible');
-
-        $scope.valuePath = $scope.valuePath ? $scope.valuePath : 'value';
-        $scope.displayPath = $scope.displayPath ? $scope.displayPath : 'display';
-        
-        $scope.checkItem = function (option) {
-          option.checked = !option.checked;
-
-          $scope.$emit('dropdown:item:checked', option);
-        };
-
-        if ($scope.showAll) {
-
-          // If 'all' was checked but some other option has been unchecked, uncheck 'all' option
-          // If 'all' was unchecked but all other options are checked, check 'all' option
-          $scope.$watch('options', function (newList, oldList) {
-            var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
-            
-            if ($scope.all.checked && (newList.length > oldList.length)){
-              // If a new item was added to the options list, while the 'All' option is selected,
-              // we make sure it is checked
-              checkAll();
-            } else if (checkedOptions.length === $scope.options.length ) {
-              $scope.all.checked = true;
-            } else {
-              $scope.all.checked = false;
-            }
-          }, true);
-          
-          $scope.toggleAll = function(){
-            $scope.all.checked = !$scope.all.checked;
-            
-            if ($scope.all.checked) {
-              checkAll();
-            }
-          };
-          
-          var checkAll = function(){
-            angular.forEach($scope.options, function (option) {
-              option.checked = true;
-            });
-          };
-          
-          var checkAllByDefault = true;
-          angular.forEach($scope.options, function (option) {
-            checkAllByDefault = checkAllByDefault && (typeof option.checked === 'undefined' ? true : option.checked);
-          });
-          $scope.all = {
-            checked: checkAllByDefault
-          };
-          if (checkAllByDefault){
-            checkAll();
-          }
-          
-        } else {
-          $scope.$watch('options', function () {
-            angular.forEach($scope.options, function (option) {
-              option.checked = (typeof option.checked === 'undefined' ? true : option.checked);
-            });
-          });
-        }
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
 
   .controller('EditFieldController', function ($scope) {
 
@@ -1149,6 +1123,32 @@ angular.module('liveopsConfigPanel.shared.directives')
 
   });
 
+
+'use strict';
+
+/**
+  Taken from a stackoverflow.com post reply
+
+  http://stackoverflow.com/a/25822878
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('disableContents', [function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        var inputNames = 'input, button, select, textarea, label';
+
+        var inputs = tElem.find(inputNames);
+        angular.forEach(inputs, function(el){
+          el = angular.element(el);
+          var prevVal = el.attr('ng-disabled');
+          prevVal = prevVal ? prevVal +  ' || ': '';
+          prevVal += tAttrs.disableContents;
+          el.attr('ng-disabled', prevVal);
+        });
+      }
+    };
+  }]);
 
 'use strict';
 
@@ -1269,19 +1269,17 @@ angular.module('liveopsConfigPanel.shared.directives')
       require: 'ngModel',
       scope: {
         loDuplicateValidatorItems: '=',
-        loDuplicateValidatorField: '=',
-        loDuplicateValidatorValueTransfomer: '&'
+        loDuplicateValidatorOptions: '='
       },
       link: function ($scope, elem, attr, ngModelCtrl) {
         ngModelCtrl.$validators.duplicate = function (modelValue, viewValue) {
-          var value = modelValue,
-              items = $scope.loDuplicateValidatorItems;
+          var comparer = $scope.loDuplicateValidatorOptions.comparer || function(item) {
+            return item === value;
+          };
 
-          if(attr.loDuplicateValidatorField) {
-            items = _.pluck(items, attr.loDuplicateValidatorField);
-          }
+          var value = modelValue;
 
-          return _.includes(items, $scope.loDuplicateValidatorValueTransfomer(value));
+          return _.filter($scope.loDuplicateValidatorItems, comparer).length === 0 ;
         };
       }
     };
@@ -2231,6 +2229,18 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+  .filter('hasPermission', ['UserPermissions', function (UserPermissions) {
+    return function (permissions) {
+      if (! angular.isArray(permissions)){
+        permissions = [permissions];
+      }
+      
+      return UserPermissions.hasPermissionInList(permissions);
+    };
+  }]);
 (function() {
   'use strict';
 
@@ -2293,18 +2303,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 })();
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-  .filter('hasPermission', ['UserPermissions', function (UserPermissions) {
-    return function (permissions) {
-      if (! angular.isArray(permissions)){
-        permissions = [permissions];
-      }
-      
-      return UserPermissions.hasPermissionInList(permissions);
-    };
-  }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
@@ -2381,28 +2379,6 @@ angular.module('liveopsConfigPanel.shared.filters')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
-  .filter('invoke', [function() {
-    return function(target, param) {
-      if (angular.isFunction(target)) {
-        return target.call(param);
-      } else {
-        return target;
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-  .filter('parse', ['$parse', function($parse) {
-    return function(target, param) {
-      return $parse(param)(target);
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
   .filter('search', ['$parse', function ($parse) {
     return function (items, fields, query) {
       if (!fields || !query) {
@@ -2455,6 +2431,28 @@ angular.module('liveopsConfigPanel.shared.filters')
       return filtered;
     };
   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+  .filter('invoke', [function() {
+    return function(target, param) {
+      if (angular.isFunction(target)) {
+        return target.call(param);
+      } else {
+        return target;
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+  .filter('parse', ['$parse', function($parse) {
+    return function(target, param) {
+      return $parse(param)(target);
+    };
+  }]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
@@ -4323,6 +4321,55 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
+    function($resource, $http, apiHostname, resultTransformer) {
+      return $resource(apiHostname + '/v1/timezones', {}, {
+        query: {
+          method: 'GET',
+          isArray: true,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
+          cache: true
+        },
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTimezones', function () {
+    return [
+      'America/Edmonton',
+      'America/Eirunepe',
+      'America/El_Salvador',
+      'America/Ensenada',
+      'America/Fort_Wayne',
+      'America/Fortaleza',
+      'America/Glace_Bay',
+      'America/Godthab',
+      'America/Goose_Bay',
+      'America/Grand_Turk',
+      'America/Grenada',
+      'America/Guadeloupe',
+      'America/Guatemala',
+      'America/Guayaquil',
+      'America/Guyana',
+      'America/Halifax'
+    ];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
+    function ($httpBackend, apiHostname, mockTimezones) {
+      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
+        'result': mockTimezones
+      });
+    }
+  ]);
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
   .service('mockTenants', function (Tenant) {
     return [new Tenant({
@@ -4397,55 +4444,6 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       return Tenant;
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
-    function($resource, $http, apiHostname, resultTransformer) {
-      return $resource(apiHostname + '/v1/timezones', {}, {
-        query: {
-          method: 'GET',
-          isArray: true,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
-          cache: true
-        },
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
-  .service('mockTimezones', function () {
-    return [
-      'America/Edmonton',
-      'America/Eirunepe',
-      'America/El_Salvador',
-      'America/Ensenada',
-      'America/Fort_Wayne',
-      'America/Fortaleza',
-      'America/Glace_Bay',
-      'America/Godthab',
-      'America/Goose_Bay',
-      'America/Grand_Turk',
-      'America/Grenada',
-      'America/Guadeloupe',
-      'America/Guatemala',
-      'America/Guayaquil',
-      'America/Guyana',
-      'America/Halifax'
-    ];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
-    function ($httpBackend, apiHostname, mockTimezones) {
-      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
-        'result': mockTimezones
-      });
     }
   ]);
 'use strict';
@@ -4793,81 +4791,6 @@ angular.module('liveopsConfigPanel.shared.services')
   ]);
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'])
-  .service('mockFlows', function(Flow){
-    return [new Flow({
-      name: 'f1',
-      tenantId: 'tenant-id',
-      description: 'A pretty good flow',
-      id: 'flowId1'
-    }), new Flow({
-      name: 'f2',
-      tenantId: 'tenant-id',
-      description: 'Not as cool as the other flow',
-      id: 'flowId2'
-    }), new Flow({
-      name: 'f3',
-      tenantId: 'tenant-id',
-      description: 'Das flow',
-      id: 'flowId3'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockFlows', 'Session',
-    function ($httpBackend, apiHostname, mockFlows, Session) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id).respond({
-        'result': mockFlows[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[1].id).respond({
-        'result': mockFlows[1]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
-        'result': mockFlows
-      });
-      
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
-        'result': mockFlows[2]
-      });
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
-
-      var Flow = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:id',
-        resourceName: 'Flow',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'activeVersion'
-        }, {
-          name: 'channelType',
-          optional: true
-        }, {
-          name: 'type'
-        }, {
-          name: 'active'
-        }],
-        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Flow.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return Flow;
-    }
-  ]);
-'use strict';
-
 angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock'])
   .service('mockGroups', function(Group) {
     return [new Group({
@@ -4944,6 +4867,81 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       return Group;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'])
+  .service('mockFlows', function(Flow){
+    return [new Flow({
+      name: 'f1',
+      tenantId: 'tenant-id',
+      description: 'A pretty good flow',
+      id: 'flowId1'
+    }), new Flow({
+      name: 'f2',
+      tenantId: 'tenant-id',
+      description: 'Not as cool as the other flow',
+      id: 'flowId2'
+    }), new Flow({
+      name: 'f3',
+      tenantId: 'tenant-id',
+      description: 'Das flow',
+      id: 'flowId3'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockFlows', 'Session',
+    function ($httpBackend, apiHostname, mockFlows, Session) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id).respond({
+        'result': mockFlows[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[1].id).respond({
+        'result': mockFlows[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
+        'result': mockFlows
+      });
+      
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
+        'result': mockFlows[2]
+      });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+
+      var Flow = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:id',
+        resourceName: 'Flow',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'activeVersion'
+        }, {
+          name: 'channelType',
+          optional: true
+        }, {
+          name: 'type'
+        }, {
+          name: 'active'
+        }],
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Flow.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Flow;
     }
   ]);
 'use strict';
@@ -5338,6 +5336,149 @@ angular.module('liveopsConfigPanel.tenant.queue.mock', ['liveopsConfigPanel.mock
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
+  .service('mockSkills', function(Skill) {
+    return [new Skill({
+      'id': 'skillId1',
+      'name': 'skillName1',
+      'tenantId': 'tenant-id',
+      'hasProficiency': true
+    }), new Skill({
+      'id': 'skillId2',
+      'name': 'skillName2',
+      'tenantId': 'tenant-id',
+      'hasProficiency': false
+    }), new Skill({
+      'id': 'skillId3',
+      'name': 'skillName3',
+      'description': 'Does not exist yet!',
+      'tenantId': 'tenant-id',
+      'hasProficiency': false
+    })];
+  })
+  .service('mockUserSkills', function(TenantUserSkill) {
+    return [new TenantUserSkill({
+      'skillId': 'skillId1',
+      'tenantId': 'tenant-id',
+      'userId': 'userId1',
+      'proficiency': 0
+    }), new TenantUserSkill({
+      'skillId': 'skillId1',
+      'tenantId': 'tenant-id',
+      'userId': 'userId2',
+      'proficiency': 5
+    }), new TenantUserSkill({
+      'skillId': 'skillId2',
+      'tenantId': 'tenant-id',
+      'userId': 'userId1',
+      'proficiency': 8
+    }), new TenantUserSkill({
+      'skillId': 'skillId3',
+      'tenantId': 'tenant-id',
+      'userId': 'userId2',
+      'proficiency': 10
+    })];
+  })
+  .service('mockSkillUsers', function(TenantSkillUser) {
+    return [new TenantSkillUser({
+      'userId': 'userId1',
+      'proficiency': 0
+    }), new TenantSkillUser({
+      'userId': 'userId2',
+      'proficiency': 5
+    }), new TenantSkillUser({
+      'userId': 'userId1',
+      'proficiency': 8
+    }), new TenantSkillUser({
+      'userId': 'userId2',
+      'proficiency': 10
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockSkills', 'mockUserSkills', 'mockSkillUsers',
+    function($httpBackend, apiHostname, mockSkills, mockUserSkills, mockSkillUsers) {
+      //GET tenants/skills
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills').respond({
+        'result': [mockSkills[0], mockSkills[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1').respond({
+        'result': mockSkills[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2').respond({
+        'result': mockSkills[1]
+      });
+
+      //GET tenants/user/skills
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
+        'result': [mockUserSkills[0], mockUserSkills[2]]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/skills').respond({
+        'result': [mockUserSkills[1]]
+      });
+
+      //GET tenants/skills/user
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1/users').respond({
+        'result': [mockSkillUsers[0], mockSkillUsers[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2/users').respond({
+        'result': [mockSkillUsers[2]]
+      });
+
+      //POST tenants/skills
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/skills').respond({
+        'result': mockSkills[2]
+      });
+
+      //POST tenants/users/skills
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
+        'result': mockUserSkills[2]
+      });
+
+      //DELETE tenants/users/skills
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond(200);
+
+      //PUT tenants/users/skills
+      $httpBackend.when('PUT', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond({
+        'result': mockUserSkills[0]
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+      var Skill = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
+        resourceName: 'Skill',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'hasProficiency'
+        }, {
+          name: 'active',
+          optional: true
+        }],
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Skill.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Skill;
+    }
+  ]);
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.permission.mock', ['liveopsConfigPanel.mock'])
   .service('mockTenantPermissions', function(TenantPermission) {
     return [new TenantPermission({
@@ -5568,149 +5709,6 @@ angular.module('liveopsConfigPanel.shared.services')
     }
   ]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
-  .service('mockSkills', function(Skill) {
-    return [new Skill({
-      'id': 'skillId1',
-      'name': 'skillName1',
-      'tenantId': 'tenant-id',
-      'hasProficiency': true
-    }), new Skill({
-      'id': 'skillId2',
-      'name': 'skillName2',
-      'tenantId': 'tenant-id',
-      'hasProficiency': false
-    }), new Skill({
-      'id': 'skillId3',
-      'name': 'skillName3',
-      'description': 'Does not exist yet!',
-      'tenantId': 'tenant-id',
-      'hasProficiency': false
-    })];
-  })
-  .service('mockUserSkills', function(TenantUserSkill) {
-    return [new TenantUserSkill({
-      'skillId': 'skillId1',
-      'tenantId': 'tenant-id',
-      'userId': 'userId1',
-      'proficiency': 0
-    }), new TenantUserSkill({
-      'skillId': 'skillId1',
-      'tenantId': 'tenant-id',
-      'userId': 'userId2',
-      'proficiency': 5
-    }), new TenantUserSkill({
-      'skillId': 'skillId2',
-      'tenantId': 'tenant-id',
-      'userId': 'userId1',
-      'proficiency': 8
-    }), new TenantUserSkill({
-      'skillId': 'skillId3',
-      'tenantId': 'tenant-id',
-      'userId': 'userId2',
-      'proficiency': 10
-    })];
-  })
-  .service('mockSkillUsers', function(TenantSkillUser) {
-    return [new TenantSkillUser({
-      'userId': 'userId1',
-      'proficiency': 0
-    }), new TenantSkillUser({
-      'userId': 'userId2',
-      'proficiency': 5
-    }), new TenantSkillUser({
-      'userId': 'userId1',
-      'proficiency': 8
-    }), new TenantSkillUser({
-      'userId': 'userId2',
-      'proficiency': 10
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockSkills', 'mockUserSkills', 'mockSkillUsers',
-    function($httpBackend, apiHostname, mockSkills, mockUserSkills, mockSkillUsers) {
-      //GET tenants/skills
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills').respond({
-        'result': [mockSkills[0], mockSkills[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1').respond({
-        'result': mockSkills[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2').respond({
-        'result': mockSkills[1]
-      });
-
-      //GET tenants/user/skills
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
-        'result': [mockUserSkills[0], mockUserSkills[2]]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/skills').respond({
-        'result': [mockUserSkills[1]]
-      });
-
-      //GET tenants/skills/user
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId1/users').respond({
-        'result': [mockSkillUsers[0], mockSkillUsers[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/skills/skillId2/users').respond({
-        'result': [mockSkillUsers[2]]
-      });
-
-      //POST tenants/skills
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/skills').respond({
-        'result': mockSkills[2]
-      });
-
-      //POST tenants/users/skills
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills').respond({
-        'result': mockUserSkills[2]
-      });
-
-      //DELETE tenants/users/skills
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond(200);
-
-      //PUT tenants/users/skills
-      $httpBackend.when('PUT', apiHostname + '/v1/tenants/tenant-id/users/userId1/skills/skillId1').respond({
-        'result': mockUserSkills[0]
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
-      var Skill = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
-        resourceName: 'Skill',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'hasProficiency'
-        }, {
-          name: 'active',
-          optional: true
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Skill.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return Skill;
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -5964,6 +5962,94 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
+  .factory('FlowVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+
+      var FlowVersion = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:flowId/versions/:version',
+        resourceName: 'FlowVersion',
+        updateFields: [{
+          name: 'tenantId'
+        }, {
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'flowId'
+        }, {
+          name: 'flow'
+        }],
+        saveInterceptor: emitInterceptor,
+        updateInterceptor: emitInterceptor
+      });
+
+      FlowVersion.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return FlowVersion;
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.flow.version.mock', [
+    'liveopsConfigPanel.mock',
+    'liveopsConfigPanel.tenant.flow.mock'
+  ])
+  .value('mockFlowVersions', [{
+    name: 'v1',
+    version: 'flowVersionId1',
+    flowId: 'flowId1',
+    tenantId: 'tenant-id',
+    flow: '[]'
+  }, {
+    name: 'v2',
+    version: 'flowVersionId2',
+    flowId: 'flowId1',
+    tenantId: 'tenant-id',
+    flow: '[]'
+  }, {
+    name: 'v3',
+    version: 'flowVersionId3',
+    flowId: 'flowId2',
+    tenantId: 'tenant-id',
+    flow: '[]'
+  }, {
+    name: 'v4',
+    version: 'flowVersionId4',
+    flowId: 'flowId3',
+    tenantId: 'tenant-id',
+    flow: '[]'
+  }])
+  .run(['$httpBackend', 'apiHostname', 'mockFlows', 'mockFlowVersions', 'Session',
+    function ($httpBackend, apiHostname, mockFlows, mockFlowVersions, Session) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id + '/versions/' + mockFlowVersions[0].id).respond({
+        'result': mockFlowVersions[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id + '/versions/' + mockFlowVersions[1].id).respond({
+        'result': mockFlowVersions[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[1].id + '/versions/' + mockFlowVersions[2].id).respond({
+        'result': mockFlowVersions[2]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id + '/versions').respond({
+        'result': [mockFlowVersions[0], mockFlowVersions[1]]
+      });
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[2].id + '/versions').respond({
+        'result': mockFlowVersions[3]
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
   .factory('FlowDraft', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', '$http',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, $http) {
 
@@ -6068,94 +6154,6 @@ angular.module('liveopsConfigPanel.tenant.flow.draft.mock', [
 
 'use strict';
 
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('FlowVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
-
-      var FlowVersion = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:flowId/versions/:version',
-        resourceName: 'FlowVersion',
-        updateFields: [{
-          name: 'tenantId'
-        }, {
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'flowId'
-        }, {
-          name: 'flow'
-        }],
-        saveInterceptor: emitInterceptor,
-        updateInterceptor: emitInterceptor
-      });
-
-      FlowVersion.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return FlowVersion;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.flow.version.mock', [
-    'liveopsConfigPanel.mock',
-    'liveopsConfigPanel.tenant.flow.mock'
-  ])
-  .value('mockFlowVersions', [{
-    name: 'v1',
-    version: 'flowVersionId1',
-    flowId: 'flowId1',
-    tenantId: 'tenant-id',
-    flow: '[]'
-  }, {
-    name: 'v2',
-    version: 'flowVersionId2',
-    flowId: 'flowId1',
-    tenantId: 'tenant-id',
-    flow: '[]'
-  }, {
-    name: 'v3',
-    version: 'flowVersionId3',
-    flowId: 'flowId2',
-    tenantId: 'tenant-id',
-    flow: '[]'
-  }, {
-    name: 'v4',
-    version: 'flowVersionId4',
-    flowId: 'flowId3',
-    tenantId: 'tenant-id',
-    flow: '[]'
-  }])
-  .run(['$httpBackend', 'apiHostname', 'mockFlows', 'mockFlowVersions', 'Session',
-    function ($httpBackend, apiHostname, mockFlows, mockFlowVersions, Session) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id + '/versions/' + mockFlowVersions[0].id).respond({
-        'result': mockFlowVersions[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id + '/versions/' + mockFlowVersions[1].id).respond({
-        'result': mockFlowVersions[1]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[1].id + '/versions/' + mockFlowVersions[2].id).respond({
-        'result': mockFlowVersions[2]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id + '/versions').respond({
-        'result': [mockFlowVersions[0], mockFlowVersions[1]]
-      });
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[2].id + '/versions').respond({
-        'result': mockFlowVersions[3]
-      });
-    }
-  ]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.tenant.queue.version.mock', ['liveopsConfigPanel.mock'])
   .service('mockQueueVersions', ['QueueVersion', function(QueueVersion) {
     return [new QueueVersion({
@@ -6217,113 +6215,6 @@ angular.module('liveopsConfigPanel.shared.services')
       return QueueVersion;
     }
   ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
-      return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
-        resourceName: 'TenantGroupUser',
-        requestUrlFields: {
-          tenantId: '@tenantId',
-          groupId: '@groupId',
-          memberId: '@memberId'
-        }
-      });
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
-
-      return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
-        resourceName: 'TenantUserGroup',
-        requestUrlFields: {
-          tenantId: '@tenantId',
-          memberId: '@memberId'
-        }
-      });
-
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.user.group.mock', [
-  'liveopsConfigPanel.mock'])
-  .service('mockGroupUsers', function(TenantGroupUsers) {
-    return [new TenantGroupUsers({
-      'groupId': 'groupId1',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantGroupUsers({
-      'groupId': 'groupId2',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantGroupUsers({
-      'groupId': 'groupId1',
-      'memberId': 'userId2',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .service('mockUserGroups', function(TenantUserGroups) {
-    return [new TenantUserGroups({
-      'groupId': 'groupId1',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantUserGroups({
-      'groupId': 'groupId2',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantUserGroups({
-      'groupId': 'groupId1',
-      'memberId': 'userId2',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockGroups', 'mockGroupUsers', 'mockUserGroups', 'Session',
-    function($httpBackend, apiHostname, mockGroups, mockGroupUsers, mockUserGroups, Session) {
-      Session.tenant.tenantId = 'tenant-id';
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users', {
-        userId: 'userId1'
-      }).respond(200, mockUserGroups[1]);
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users', {
-        userId: 'userId1'
-      }).respond(200, mockUserGroups[1]);
-
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId1')
-        .respond(200);
-
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId2')
-        .respond(200);
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/groups').respond({
-        'result': [mockUserGroups[0], mockUserGroups[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/groups').respond({
-        'result': [mockUserGroups[2]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users').respond({
-        'result': [mockGroupUsers[0], mockGroupUsers[2]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users').respond({
-        'result': [mockGroupUsers[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3/users').respond({
-        'result': []
-      });
-    }
-  ]);
-
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -6438,5 +6329,112 @@ angular.module('liveopsConfigPanel.shared.services')
 
         return response.resource;
       };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname',
+    function (LiveopsResourceFactory, apiHostname) {
+      return LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
+        resourceName: 'TenantGroupUser',
+        requestUrlFields: {
+          tenantId: '@tenantId',
+          groupId: '@groupId',
+          memberId: '@memberId'
+        }
+      });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname',
+    function (LiveopsResourceFactory, apiHostname) {
+
+      return LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
+        resourceName: 'TenantUserGroup',
+        requestUrlFields: {
+          tenantId: '@tenantId',
+          memberId: '@memberId'
+        }
+      });
+
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.user.group.mock', [
+  'liveopsConfigPanel.mock'])
+  .service('mockGroupUsers', function(TenantGroupUsers) {
+    return [new TenantGroupUsers({
+      'groupId': 'groupId1',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantGroupUsers({
+      'groupId': 'groupId2',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantGroupUsers({
+      'groupId': 'groupId1',
+      'memberId': 'userId2',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .service('mockUserGroups', function(TenantUserGroups) {
+    return [new TenantUserGroups({
+      'groupId': 'groupId1',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantUserGroups({
+      'groupId': 'groupId2',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantUserGroups({
+      'groupId': 'groupId1',
+      'memberId': 'userId2',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockGroups', 'mockGroupUsers', 'mockUserGroups', 'Session',
+    function($httpBackend, apiHostname, mockGroups, mockGroupUsers, mockUserGroups, Session) {
+      Session.tenant.tenantId = 'tenant-id';
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users', {
+        userId: 'userId1'
+      }).respond(200, mockUserGroups[1]);
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users', {
+        userId: 'userId1'
+      }).respond(200, mockUserGroups[1]);
+
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId1')
+        .respond(200);
+
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId2')
+        .respond(200);
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/groups').respond({
+        'result': [mockUserGroups[0], mockUserGroups[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/groups').respond({
+        'result': [mockUserGroups[2]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users').respond({
+        'result': [mockGroupUsers[0], mockGroupUsers[2]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users').respond({
+        'result': [mockGroupUsers[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3/users').respond({
+        'result': []
+      });
     }
   ]);
