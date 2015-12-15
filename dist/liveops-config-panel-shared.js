@@ -213,6 +213,45 @@ if (!String.prototype.contains) {
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('auditText', ['$filter', 'TenantUser', 'Session',
+    function ($filter, TenantUser, Session) {
+      return {
+        restrict: 'AE',
+        scope: {
+          translation: '@',
+          userId: '=',
+          date: '='
+        },
+        template: '{{get()}}',
+        link: function ($scope) {
+          $scope.get = function () {
+            if (!$scope.userId) {
+              return  $filter('translate')($scope.translation, {
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            var user = TenantUser.cachedGet({
+              id: $scope.userId,
+              tenantId: Session.tenant.tenantId
+            }, 'AuditTextUsers');
+
+            if(user.$resolved) {
+              $scope.text = $filter('translate')($scope.translation, {
+                displayName: user.getDisplay(),
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            return $scope.text;
+          };
+        }
+      };
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('autocomplete', ['filterFilter', '$timeout', function(filterFilter, $timeout) {
     return {
       restrict: 'E',
@@ -261,45 +300,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('auditText', ['$filter', 'TenantUser', 'Session',
-    function ($filter, TenantUser, Session) {
-      return {
-        restrict: 'AE',
-        scope: {
-          translation: '@',
-          userId: '=',
-          date: '='
-        },
-        template: '{{get()}}',
-        link: function ($scope) {
-          $scope.get = function () {
-            if (!$scope.userId) {
-              return  $filter('translate')($scope.translation, {
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            var user = TenantUser.cachedGet({
-              id: $scope.userId,
-              tenantId: Session.tenant.tenantId
-            }, 'AuditTextUsers');
-
-            if(user.$resolved) {
-              $scope.text = $filter('translate')($scope.translation, {
-                displayName: user.getDisplay(),
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            return $scope.text;
-          };
-        }
-      };
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1122,8 +1122,8 @@ $templateCache.put("liveops-config-panel-shared/directives/editField/input/editF
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\r\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\r\n    {{ cqe.sectionLabel }}\r\n  </label>\r\n\r\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\r\n    <div>\r\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\r\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\r\n      </type-ahead>\r\n\r\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\r\n    </div>\r\n\r\n    <button class=\"add btn\" type=\"button\"\r\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\r\n      <i class=\"fa fa-plus\"></i>\r\n    </button>\r\n  </div>\r\n\r\n  <div class=\"tag-wrapper clear\">\r\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\r\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\r\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\r\n    </div> \r\n  </div>\r\n</div>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\r\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\r\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\r\n    <input ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\r\n    <select ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\r\n    </select>\r\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\r\n      error-type-required=\"Time in queue is required\"\r\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\r\n    </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\r\n  <h4>{{\'value.details.query\' | translate}}</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\r\n      {{\'queue.details.version.query.advanced.link\' | translate}}\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\r\n      {{\'queue.details.version.query.basic.link\' | translate}}\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\r\n  <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n  <textarea id=\"advanced-query-field\"\r\n    ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\r\n    ng-change=\"qlc.advancedQueryChanged()\"></textarea>\r\n   <form-error field=\"form[\'query\']\"\r\n     error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n     error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\"\r\n     error-type-api>\r\n   </form-error>\r\n</div>\r\n\r\n\r\n\r\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\r\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\r\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\r\n      <h4>{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\r\n      <a class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\r\n    </div>\r\n\r\n    <escalation-editor\r\n      escalation=\"escalation\"\r\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\r\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\r\n    </escalation-editor>\r\n\r\n    <div >\r\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\r\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\r\n      </div>\r\n\r\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\r\n        <h4>{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\r\n        <div class=\"add-group-button\">\r\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\r\n            <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n          </button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\r\n<div class=\"input-group\" id=\"add-query-filter\">\r\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\r\n    <select id=\"select-filter-dropdown\"\r\n      ng-model=\"eqc.currentGroup\">\r\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n    </select>\r\n    <div class=\"add-group-button\">\r\n      <button class=\"add btn\" type=\"button\"\r\n        ng-disabled=\"!eqc.currentGroup\"\r\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\r\n\r\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n      </button>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\r\n\r\n  <div class=\"query-component\">\r\n    <div class=\"divider-header\">\r\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n      <a class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\r\n        {{\'queue.query.filter.remove\' | translate}}\r\n      </a>\r\n    </div>\r\n    <object-group-editor\r\n      object-group=\"item.objectGroup\"\r\n      key=\"item.key\">\r\n    </object-group-editor>\r\n  </div>\r\n\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");}]);
 'use strict';
 
@@ -3536,18 +3536,20 @@ angular.module('liveopsConfigPanel.shared.services')
 
   angular
     .module('liveopsConfigPanel.shared.services')
-    .factory('ZermeloEscalationQuery', ['_', 'jsedn', 'ZermeloObjectGroup',
-      function (_, jsedn, ZermeloObjectGroup) {
+    .factory('ZermeloEscalationQuery', ['_', 'jsedn', 'ZermeloObjectGroup', 'Skill', 'Group', 'TenantUser',
+      function (_, jsedn, ZermeloObjectGroup, Skill, Group, TenantUser) {
 
         function EscalationQuery() {
           this.groups = [];
         }
 
-        EscalationQuery.ALLOWED_KEYS = [
-          ':skills',
-          ':groups',
-          ':user-id'
-        ];
+        EscalationQuery.KEY_OBJECTS = {
+          ':skills'  : Skill,
+          ':groups'  : Group,
+          ':user-id' : TenantUser
+        };
+
+        EscalationQuery.ALLOWED_KEYS = _.keys(EscalationQuery.KEY_OBJECTS);
 
         EscalationQuery.prototype.hasConditions = function () {
           for(var i = 0; i < this.groups.length; i++) {
@@ -4131,56 +4133,6 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('ObjectGroupEditorController', ['$scope', '$translate', 'Session', 'Skill', 'Group', 'TenantUser',
-      function ($scope, $translate, Session, Skill, Group, TenantUser) {
-      var vm = this;
-
-      vm.objectGroup = $scope.objectGroup;
-      vm.key = $scope.key;
-      vm.placeholderText = $translate.instant('queue.query.builder.' + vm.key + '.placeholder');
-      vm.readonly = $scope.readonly;
-
-      switch (vm.key) {
-        case ':skills':
-          vm.modelType = Skill;
-          break;
-        case ':groups':
-          vm.modelType = Group;
-          break;
-        case ':id':
-          vm.modelType = TenantUser;
-          break;
-      }
-
-      vm.items = vm.modelType.cachedQuery({
-          tenantId: Session.tenant.tenantId
-      });
-    }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .directive('objectGroupEditor', function() {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html',
-        controller: 'ObjectGroupEditorController as oge',
-        scope: {
-          objectGroup: '=',
-          key: '=',
-          readonly: '='
-        }
-      };
-    });
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
     .controller('EscalationQueryEditorController', ['$scope', 'ZermeloEscalationQuery', 'ZermeloObjectGroup',
        '_', '$translate', 'Modal', function ($scope, ZermeloEscalationQuery, ZermeloObjectGroup, _, $translate, Modal) {
 
@@ -4234,6 +4186,44 @@ angular.module('liveopsConfigPanel.shared.directives')
       };
     });
 
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .controller('ObjectGroupEditorController', ['$scope', '$translate', 'Session', 'Skill', 'Group', 'TenantUser', 'ZermeloEscalationQuery',
+      function ($scope, $translate, Session, Skill, Group, TenantUser, ZermeloEscalationQuery) {
+      var vm = this;
+
+      vm.objectGroup = $scope.objectGroup;
+      vm.key = $scope.key;
+      vm.placeholderText = $translate.instant('queue.query.builder.' + vm.key + '.placeholder');
+      vm.readonly = $scope.readonly;
+      vm.modelType = ZermeloEscalationQuery.KEY_OBJECTS[vm.key]; 
+      vm.items = vm.modelType.cachedQuery({
+          tenantId: Session.tenant.tenantId
+      });
+    }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('objectGroupEditor', function() {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html',
+        controller: 'ObjectGroupEditorController as oge',
+        scope: {
+          objectGroup: '=',
+          key: '=',
+          readonly: '='
+        }
+      };
+    });
 })();
 
 (function () {

@@ -3,18 +3,20 @@
 
   angular
     .module('liveopsConfigPanel.shared.services')
-    .factory('ZermeloEscalationQuery', ['_', 'jsedn', 'ZermeloObjectGroup',
-      function (_, jsedn, ZermeloObjectGroup) {
+    .factory('ZermeloEscalationQuery', ['_', 'jsedn', 'ZermeloObjectGroup', 'Skill', 'Group', 'TenantUser',
+      function (_, jsedn, ZermeloObjectGroup, Skill, Group, TenantUser) {
 
         function EscalationQuery() {
           this.groups = [];
         }
 
-        EscalationQuery.ALLOWED_KEYS = [
-          ':skills',
-          ':groups',
-          ':user-id'
-        ];
+        EscalationQuery.KEY_OBJECTS = {
+          ':skills'  : Skill,
+          ':groups'  : Group,
+          ':user-id' : TenantUser
+        };
+
+        EscalationQuery.ALLOWED_KEYS = _.keys(EscalationQuery.KEY_OBJECTS);
 
         EscalationQuery.prototype.hasConditions = function () {
           for(var i = 0; i < this.groups.length; i++) {
