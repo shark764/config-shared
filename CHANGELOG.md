@@ -36,3 +36,6 @@ not ideal but will have to do for now.
 
 # 12/14/15 - 1.0.20
 - added support for selecting a tenant user as the filter condition
+
+# 12/14/15 - 1.0.21
+- update user filter to use :user-id instead of :id
