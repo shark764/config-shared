@@ -24,7 +24,7 @@
   <div class="query-component">
     <div class="divider-header">
       <h4>{{ 'queues.query.builder.' + item.key + '.title' | translate }}</h4>
-      <a class="pull-right" ng-click="eqc.verifyRemoveGroup(item.key)">
+      <a id="{{item.key}}-remove" class="pull-right" ng-click="eqc.verifyRemoveGroup(item.key)">
         {{'queue.query.filter.remove' | translate}}
       </a>
     </div>

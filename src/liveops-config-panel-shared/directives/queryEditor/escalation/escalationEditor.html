@@ -1,8 +1,8 @@
 <ng-form name="ec.forms.timeAfterForm">
   <div class="input-group time-input" ng-if="ec.minSecondsRequired > 0">
     <label>{{'queues.query.builder.after.seconds' | translate}}</label>
-    <input ng-required="true" name="amount" type="number" ng-model="ec.timeAmount" ng-change="ec.updateTimeInSeconds()" />
-    <select ng-model="ec.afterSecondsMultiplier" ng-options="option.value as option.label for option in ec.afterTimeOptions" ng-change="ec.updateMultiplier()">
+    <input id="escalation-time-input" ng-required="true" name="amount" type="number" ng-model="ec.timeAmount" ng-change="ec.updateTimeInSeconds()" />
+    <select id="escalation-units-dropdown" ng-model="ec.afterSecondsMultiplier" ng-options="option.value as option.label for option in ec.afterTimeOptions" ng-change="ec.updateMultiplier()">
     </select>
     <form-error field="ec.forms.timeAfterForm.amount"
       error-type-required="Time in queue is required"
