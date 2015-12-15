@@ -28,8 +28,8 @@
 <div ng-if="!qlc.isAdvancedMode" class="query-component" ng-repeat="escalation in qlc.escalationList.escalations">
   <div ng-class="{'detail-group': $index !== 0 }">
     <div class="divider-header" ng-if="$index !== 0">
-      <h4>{{ 'queue.query.escalation.level' | translate:{level: $index} }}</h4>
-      <a class="pull-right" ng-click="qlc.removeEscalation(escalation)">{{ 'queue.query.escalation.level.remove'| translate}}</a>
+      <h4 id="escalation-level-header">{{ 'queue.query.escalation.level' | translate:{level: $index} }}</h4>
+      <a id="remove-escalation-level" class="pull-right" ng-click="qlc.removeEscalation(escalation)">{{ 'queue.query.escalation.level.remove'| translate}}</a>
     </div>
 
     <escalation-editor
@@ -44,10 +44,10 @@
       </div>
 
       <div ng-if="!qlc.escalationList.escalations[$index + 1]" class="add-query detail-group">
-        <h4>{{ 'queue.query.add.escalation.level' | translate:{level: ($index+1)} }}</h4>
+        <h4 id="add-escalation-label">{{ 'queue.query.add.escalation.level' | translate:{level: ($index+1)} }}</h4>
         <div class="add-group-button">
           <button class="add btn" type="button" ng-click="qlc.addEscalation()">
-            <i id="add-filter-btn" class="fa fa-plus"></i>
+            <i id="add-escalation-btn" class="fa fa-plus"></i>
           </button>
         </div>
       </div>
