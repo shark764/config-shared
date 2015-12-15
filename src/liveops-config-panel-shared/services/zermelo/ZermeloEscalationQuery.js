@@ -13,7 +13,7 @@
         EscalationQuery.ALLOWED_KEYS = [
           ':skills',
           ':groups',
-          ':id'
+          ':user-id'
         ];
 
         EscalationQuery.prototype.hasConditions = function () {
