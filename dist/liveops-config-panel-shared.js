@@ -62,47 +62,18 @@ angular.module('liveopsConfigPanel.shared.config')
 
 'use strict';
 
-Array.prototype.removeItem = function (item) {
-  var idx = this.indexOf(item);
-  if (idx > -1){
-    this.splice(idx, 1);
+angular.module('liveopsConfigPanel.shared.config')
+
+.constant('loSharedEvents', {
+  api: {
+    response: {
+      404: 'api:response:404'
+    }
   }
-};
+})
 
-Array.prototype.clear = function() {
-  this.splice(0,this.length);
-};
+;
 
-Array.prototype.shuffle = function() {
-  var i = this.length, j, temp;
-  if ( i === 0 ) { return this; }
-  while ( --i ) {
-     j = Math.floor( Math.random() * ( i + 1 ) );
-     temp = this[i];
-     this[i] = this[j];
-     this[j] = temp;
-  }
-  return this;
-};
-'use strict';
-
-String.prototype.insert = function (index, string) {
-  if (index > 0) {
-    return this.substring(0, index) + string + this.substring(index, this.length);
-  } else {
-    return string + this;
-  }
-};
-
-String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-if (!String.prototype.contains) {
-  String.prototype.contains = function(s) {
-      return this.indexOf(s) > -1;
-  };
-}
 'use strict';
 
 angular.module('liveopsConfigPanel.mock', [])
@@ -210,6 +181,49 @@ angular.module('liveopsConfigPanel.mock', [])
   angular.module('liveopsConfigPanel.shared.services')
   .service('flowSetup', flowSetup);
 })();
+'use strict';
+
+Array.prototype.removeItem = function (item) {
+  var idx = this.indexOf(item);
+  if (idx > -1){
+    this.splice(idx, 1);
+  }
+};
+
+Array.prototype.clear = function() {
+  this.splice(0,this.length);
+};
+
+Array.prototype.shuffle = function() {
+  var i = this.length, j, temp;
+  if ( i === 0 ) { return this; }
+  while ( --i ) {
+     j = Math.floor( Math.random() * ( i + 1 ) );
+     temp = this[i];
+     this[i] = this[j];
+     this[j] = temp;
+  }
+  return this;
+};
+'use strict';
+
+String.prototype.insert = function (index, string) {
+  if (index > 0) {
+    return this.substring(0, index) + string + this.substring(index, this.length);
+  } else {
+    return string + this;
+  }
+};
+
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+if (!String.prototype.contains) {
+  String.prototype.contains = function(s) {
+      return this.indexOf(s) > -1;
+  };
+}
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -580,32 +594,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-/**
-  Taken from a stackoverflow.com post reply
-
-  http://stackoverflow.com/a/25822878
-**/
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('disableContents', [function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        var inputNames = 'input, button, select, textarea, label';
-
-        var inputs = tElem.find(inputNames);
-        angular.forEach(inputs, function(el){
-          el = angular.element(el);
-          var prevVal = el.attr('ng-disabled');
-          prevVal = prevVal ? prevVal +  ' || ': '';
-          prevVal += tAttrs.disableContents;
-          el.attr('ng-disabled', prevVal);
-        });
-      }
-    };
-  }]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('loCancel', ['$q',
     function ($q) {
@@ -956,14 +944,40 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
+'use strict';
+
+/**
+  Taken from a stackoverflow.com post reply
+
+  http://stackoverflow.com/a/25822878
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('disableContents', [function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        var inputNames = 'input, button, select, textarea, label';
+
+        var inputs = tElem.find(inputNames);
+        angular.forEach(inputs, function(el){
+          el = angular.element(el);
+          var prevVal = el.attr('ng-disabled');
+          prevVal = prevVal ? prevVal +  ' || ': '';
+          prevVal += tAttrs.disableContents;
+          el.attr('ng-disabled', prevVal);
+        });
+      }
+    };
+  }]);
+
 angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
 $templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\n  <input\n    autocomplete=\"off\"\n    name=\"{{nameField}}\"\n    ng-required=\"isRequired\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"\n    placeholder=\"{{placeholder}}\"\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\n      <li class=\"lo-hover-highlight\" ng-class=\"{\'highlight\' : selectedItem == item, \'lo-highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\n    </ul>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\n    <filter-dropdown\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\n      options=\"selectedItems()\"\n      display-path=\"getDisplay\"\n      value-path=\"id\">\n    </filter-dropdown>\n  </div>\n\n  <div class=\"detail-body\">\n    <!-- bulkAction elements injected here -->\n  </div>\n\n  <div class=\"detail-controls\">\n    <input id=\"cancel-bulk-actions-btn\"\n      type=\"button\"\n      class=\"btn\"\n      ng-click=\"cancel()\"\n      value=\"{{\'value.cancel\' | translate}}\">\n    </input>\n    <input id=\"submit-bulk-actions-btn\"\n      ng-disabled=\"!canExecute()\"\n      type=\"button\"\n      class=\"btn btn-primary\"\n      ng-click=\"confirmExecute()\"\n      value=\"{{\'value.submit\' | translate}}\">\n  </div>\n</form>\n");
 $templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\n    <div>\n      <span>{{label}}</span>\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\n    </div>\n  </div>\n\n  <div class=\"dropdown-container\">\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\n      <ul>\n        <li id=\"{{item.id}}\"\n          ng-repeat=\"item in items | orderBy:orderBy\"\n          ng-click=\"optionClick(item.onClick)\">\n            <span class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\n            <a class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\n  <span>{{label}}</span>\n  <div ng-if=\"showAll\" class=\"all-label\">\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\n  </div>\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\n</div>\n\n<div class=\"dropdown-container\">\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\n    <div class=\"all lo-accent-hover-box-border lo-hover-highlight\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\n      <label>All</label>\n    </div>\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\n      class=\"dropdown-option lo-accent-hover-box-border lo-hover-highlight\" ng-click=\"checkItem(option)\" >\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\n        {{option | parse:displayPath | invoke:option}}\n      </label>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\n  <div ng-repeat=\"(error, value) in field.$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon lo-accent-hover\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\n  <i class=\"fa fa-info fa-stack-1x\"></i>\n</span>");
 $templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\n  ng-messages=\"form[fieldName].$error\">\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon lo-accent-hover\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\n  <i class=\"fa fa-info fa-stack-1x\"></i>\n</span>");
 $templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\n      readonly=\"true\" border=\"0\"  class=\"label\"\n      ng-required=\"true\"\n      ng-model=\"display\" />\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\n  </div>\n\n  <div class=\"edit-box\" ng-show=\"showDrop\">\n    <type-ahead\n      items=\"items\"\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\n      on-select=\"onSelect(selectedItem)\"\n      keep-expanded=\"true\"\n      selected-item=\"selectedItem\"></type-ahead>\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\n      ng-click=\"createItem()\" \n      value=\"{{\'multibox.create.btn\' | translate}}\" />\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\n\n</div>");
@@ -1229,31 +1243,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
-    return {
-      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
-      scope : {
-        text : '@',
-        translateValue: '@'
-      },
-      link: function($scope, element){
-        $scope.target = element;
-        var tooltipElement;
-
-        $scope.showTooltip = function(){
-          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
-          $document.find('body').append(tooltipElement);
-        };
-
-        $scope.destroyTooltip = function(){
-          tooltipElement.remove();
-        };
-      }
-    };
-   }]);
-'use strict';
-
 /*
   formFieldValidationMessage is basically a clone of formError with a couple o
   key differences:
@@ -1291,6 +1280,31 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
    });
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
+      scope : {
+        text : '@',
+        translateValue: '@'
+      },
+      link: function($scope, element){
+        $scope.target = element;
+        var tooltipElement;
+
+        $scope.showTooltip = function(){
+          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
+          $document.find('body').append(tooltipElement);
+        };
+
+        $scope.destroyTooltip = function(){
+          tooltipElement.remove();
+        };
+      }
+    };
+   }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1819,62 +1833,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('confirmToggle', ['Modal', function(Modal) {
-    return {
-      require: ['ngModel', '^toggle'],
-      link: function ($scope, $element, $attrs, controllers) {
-        controllers[0].$parsers.push(function (newValue) {
-          return $scope.onToggle(newValue);
-        });
-
-        $scope.onToggle = function(newValue){
-          $scope.$evalAsync(function(){ //For display until confirm dialog value is resolved
-            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
-          });
-
-          return Modal.showConfirm({
-            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
-          }).then(function(){
-            $scope.$parent.ngModel = newValue;
-          });
-        };
-      }
-    };
-   }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('toggle', [function() {
-    return {
-      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
-      scope : {
-        ngModel : '=',
-        ngDisabled : '=',
-        name: '@',
-        trueValue: '@',
-        falseValue: '@',
-        confirmEnableMessage: '@',
-        confirmDisableMessage: '@'
-      },
-      controller: function ($scope) {
-        if (angular.isUndefined($scope.trueValue)){
-          $scope.trueValue = true;
-        }
-
-        if(angular.isUndefined($scope.falseValue)) {
-          $scope.falseValue = false;
-        }
-
-        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
-          $scope.confirmOnToggle = true;
-        }
-      }
-    };
-   }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .controller('dateToMinuteConverterController', [function() {
     this.format = function (value) {
       if(value === -1) {
@@ -1937,6 +1895,62 @@ angular.module('liveopsConfigPanel.shared.directives')
     }
   ]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('confirmToggle', ['Modal', function(Modal) {
+    return {
+      require: ['ngModel', '^toggle'],
+      link: function ($scope, $element, $attrs, controllers) {
+        controllers[0].$parsers.push(function (newValue) {
+          return $scope.onToggle(newValue);
+        });
+
+        $scope.onToggle = function(newValue){
+          $scope.$evalAsync(function(){ //For display until confirm dialog value is resolved
+            $scope.$parent.ngModel = (newValue === $scope.trueValue ? $scope.falseValue : $scope.trueValue);
+          });
+
+          return Modal.showConfirm({
+            message: (newValue === $scope.trueValue ? $scope.confirmEnableMessage : $scope.confirmDisableMessage)
+          }).then(function(){
+            $scope.$parent.ngModel = newValue;
+          });
+        };
+      }
+    };
+   }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('toggle', [function() {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
+      scope : {
+        ngModel : '=',
+        ngDisabled : '=',
+        name: '@',
+        trueValue: '@',
+        falseValue: '@',
+        confirmEnableMessage: '@',
+        confirmDisableMessage: '@'
+      },
+      controller: function ($scope) {
+        if (angular.isUndefined($scope.trueValue)){
+          $scope.trueValue = true;
+        }
+
+        if(angular.isUndefined($scope.falseValue)) {
+          $scope.falseValue = false;
+        }
+
+        if (angular.isDefined($scope.confirmEnableMessage) && angular.isDefined($scope.confirmDisableMessage)){
+          $scope.confirmOnToggle = true;
+        }
+      }
+    };
+   }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -2573,6 +2587,21 @@ angular.module('liveopsConfigPanel.shared.filters')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
+  .filter('localToUtcDate', ['$moment', function ($moment) {
+      return function (date) {
+        if(!date) {
+          return date;
+        }
+        
+        return $moment.utc(date);
+      };
+    }
+]);
+
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
   .filter('minutesToTime', ['$moment', function ($moment) {
       return function (minutes) {
         if(!angular.isNumber(minutes) || minutes < 0) {
@@ -2588,6 +2617,14 @@ angular.module('liveopsConfigPanel.shared.filters')
     }
 ]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+  .filter('moment', ['$moment', function ($moment) {
+    return function (dateString, format) {
+      return $moment(dateString).format(format);
+    };
+  }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
