@@ -13,14 +13,15 @@ angular.module('liveopsConfigPanel.shared.directives')
         keepExpanded: '=',
         onEnter: '&',
         filters: '=?',
-        selectedItem: '=?'
+        selectedItem: '=?',
+        disabled: '@'
       },
 
       templateUrl: 'liveops-config-panel-shared/directives/typeAhead/typeAhead.html',
 
       controller: function($scope) {
         var self = this;
-
+        console.log($scope);
         $scope.currentText = $scope.prefill || '';
 
         this.defaultTextFilter = function defaultTextFilter(item, text) {
