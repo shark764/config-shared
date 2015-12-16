@@ -21,7 +21,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
       controller: function($scope) {
         var self = this;
-        console.log($scope);
         $scope.currentText = $scope.prefill || '';
 
         this.defaultTextFilter = function defaultTextFilter(item, text) {
