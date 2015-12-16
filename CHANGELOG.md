@@ -39,3 +39,11 @@ not ideal but will have to do for now.
 
 # 12/14/15 - 1.0.21
 - update user filter to use :user-id instead of :id
+
+# 12/16/15 - 1.0.24
+- added loDuplicateValidator
+- loDuplicateValidator accepts two parameters: loDuplicateValidatorOptions and loDuplicateValidatorItems
+- loDuplicateValidatorOptions is an object with a comparer key
+- the comparer must be a function that returns true or false; it has one argument which is an item in the loDuplicateValidatorItems
+- if the function returns true, the validator will count that as a duplicate
+- loDuplicateValidatorItems is the list of items that will be validated against the ngModel
