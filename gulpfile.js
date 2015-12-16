@@ -100,7 +100,14 @@ gulp.task('styles', function () {
 });
 
 /**
- * Process
+ * Process build
+ */
+gulp.task('process-build', function (done) {
+  runSequence('jshint', 'build', done);
+});
+
+/**
+ * Process all
  */
 gulp.task('process-all', function (done) {
   runSequence('jshint', 'test', 'build', done);
@@ -110,6 +117,15 @@ gulp.task('process-all', function (done) {
  * Watch task
  */
 gulp.task('watch', function () {
+
+  // Watch JavaScript files
+  gulp.watch(sourceFiles, ['process-build']);
+});
+
+/**
+ * Watch task with test
+ */
+gulp.task('watch:test', function () {
 
   // Watch JavaScript files
   gulp.watch(sourceFiles, ['process-all']);
