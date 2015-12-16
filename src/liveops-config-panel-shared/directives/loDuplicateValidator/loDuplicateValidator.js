@@ -12,12 +12,15 @@ angular.module('liveopsConfigPanel.shared.directives')
       link: function ($scope, elem, attr, ngModelCtrl) {
         ngModelCtrl.$validators.duplicate = function (modelValue, viewValue) {
           var comparer = $scope.loDuplicateValidatorOptions.comparer || function(item) {
-            return item === value;
+            return item === modelValue;
           };
 
-          var value = modelValue;
+          var obj = {
+            modelValue: modelValue,
+            viewValue: viewValue
+          };
 
-          return _.filter($scope.loDuplicateValidatorItems, comparer).length === 0 ;
+          return _.filter($scope.loDuplicateValidatorItems, comparer, obj).length === 0 ;
         };
       }
     };
