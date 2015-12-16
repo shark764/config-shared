@@ -39,3 +39,6 @@ not ideal but will have to do for now.
 
 # 12/14/15 - 1.0.21
 - update user filter to use :user-id instead of :id
+
+# 12/16/15 - 1.0.24
+- update dropdown directive to use ui-sref-options to pass state options to ui-router
