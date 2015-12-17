@@ -55,7 +55,7 @@ $fontRobotoCondensed: 'Roboto Condensed';
 @mixin calc($property, $expression) {
   #{$property}: -webkit-calc(#{$expression});
   #{$property}: calc(#{$expression});
-} 
+}
 
 @mixin display-flex(){
   display: -webkit-box;
@@ -63,7 +63,6 @@ $fontRobotoCondensed: 'Roboto Condensed';
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  display: -ms-flex;
 }
 
 @mixin flex($one, $two, $three){

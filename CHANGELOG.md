@@ -47,3 +47,6 @@ not ideal but will have to do for now.
 - the comparer must be a function that returns true or false; it has one argument which is an item in the loDuplicateValidatorItems
 - if the function returns true, the validator will count that as a duplicate
 - loDuplicateValidatorItems is the list of items that will be validated against the ngModel
+
+# 12/16/15 - 1.0.25
+- possible fix for ie10 flexbox
