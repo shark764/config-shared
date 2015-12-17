@@ -15,14 +15,31 @@ angular.module('liveopsConfigPanel.shared.services')
         if (angular.isArray(interceptorParam)) {
           var interceptorFunc = function(response) {
             angular.forEach(interceptorParam, function(interceptor) {
+              if(!interceptor.response) {
+                return;
+              }
+              
               interceptor.response(response);
             });
 
             return response.resource;
           };
+          
+          var interceptorErrorFunc = function(error) {
+            angular.forEach(interceptorParam, function(interceptor) {
+              if(!interceptor.responseError) {
+                return;
+              }
+              
+              interceptor.responseError(error);
+            });
+
+            return error;
+          };
 
           var interceptor = {
-            response: interceptorFunc
+            response: interceptorFunc,
+            responseError: interceptorErrorFunc
           };
 
           return interceptor;

@@ -62,6 +62,27 @@ angular.module('liveopsConfigPanel.shared.config')
 
 'use strict';
 
+angular.module('liveopsConfigPanel.shared.config')
+
+.constant('loSharedEvents', {
+  api: {
+    response: {
+      '4xx': 'api:response:4xx',
+      '400': 'api:response:400',
+      '401': 'api:response:401',
+      '403': 'api:response:403',
+      '404': 'api:response:404',
+      '5xx': 'api:response:5xx',
+      '500': 'api:response:500',
+      '503': 'api:response:503'
+    }
+  }
+})
+
+;
+
+'use strict';
+
 angular.module('liveopsConfigPanel.mock', [])
   .value('mockRegions', [{
     'id': 'regionId1',
@@ -580,32 +601,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-/**
-  Taken from a stackoverflow.com post reply
-
-  http://stackoverflow.com/a/25822878
-**/
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('disableContents', [function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        var inputNames = 'input, button, select, textarea, label';
-
-        var inputs = tElem.find(inputNames);
-        angular.forEach(inputs, function(el){
-          el = angular.element(el);
-          var prevVal = el.attr('ng-disabled');
-          prevVal = prevVal ? prevVal +  ' || ': '';
-          prevVal += tAttrs.disableContents;
-          el.attr('ng-disabled', prevVal);
-        });
-      }
-    };
-  }]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('loCancel', ['$q',
     function ($q) {
@@ -956,6 +951,58 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
+angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
+$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\n  <input\n    autocomplete=\"off\"\n    name=\"{{nameField}}\"\n    ng-required=\"isRequired\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"\n    placeholder=\"{{placeholder}}\"\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\n      <li class=\"lo-hover-highlight\" ng-class=\"{\'highlight\' : selectedItem == item, \'lo-highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\n    </ul>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\n    <filter-dropdown\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\n      options=\"selectedItems()\"\n      display-path=\"getDisplay\"\n      value-path=\"id\">\n    </filter-dropdown>\n  </div>\n\n  <div class=\"detail-body\">\n    <!-- bulkAction elements injected here -->\n  </div>\n\n  <div class=\"detail-controls\">\n    <input id=\"cancel-bulk-actions-btn\"\n      type=\"button\"\n      class=\"btn\"\n      ng-click=\"cancel()\"\n      value=\"{{\'value.cancel\' | translate}}\">\n    </input>\n    <input id=\"submit-bulk-actions-btn\"\n      ng-disabled=\"!canExecute()\"\n      type=\"button\"\n      class=\"btn btn-primary\"\n      ng-click=\"confirmExecute()\"\n      value=\"{{\'value.submit\' | translate}}\">\n  </div>\n</form>\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\n    <div>\n      <span>{{label}}</span>\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\n    </div>\n  </div>\n\n  <div class=\"dropdown-container\">\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\n      <ul>\n        <li id=\"{{item.id}}\"\n          ng-repeat=\"item in items | orderBy:orderBy\"\n          ng-click=\"optionClick(item.onClick)\">\n            <span class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\n            <a class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\n  <span>{{label}}</span>\n  <div ng-if=\"showAll\" class=\"all-label\">\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\n  </div>\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\n</div>\n\n<div class=\"dropdown-container\">\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\n    <div class=\"all lo-accent-hover-box-border lo-hover-highlight\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\n      <label>All</label>\n    </div>\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\n      class=\"dropdown-option lo-accent-hover-box-border lo-hover-highlight\" ng-click=\"checkItem(option)\" >\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\n        {{option | parse:displayPath | invoke:option}}\n      </label>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\n  <div ng-repeat=\"(error, value) in field.$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\n  ng-messages=\"form[fieldName].$error\">\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon lo-accent-hover\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\n  <i class=\"fa fa-info fa-stack-1x\"></i>\n</span>");
+$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\n      readonly=\"true\" border=\"0\"  class=\"label\"\n      ng-required=\"true\"\n      ng-model=\"display\" />\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\n  </div>\n\n  <div class=\"edit-box\" ng-show=\"showDrop\">\n    <type-ahead\n      items=\"items\"\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\n      on-select=\"onSelect(selectedItem)\"\n      keep-expanded=\"true\"\n      selected-item=\"selectedItem\"></type-ahead>\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\n      ng-click=\"createItem()\" \n      value=\"{{\'multibox.create.btn\' | translate}}\" />\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\n\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
+$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
+$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\n         class=\"lo-hover-highlight\"\n         ng-click=\"select(item)\" >\n           {{item.getDisplay() || item[nameField]}}\n       </li>\n    </ul>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\n    {{ cqe.sectionLabel }}\n  </label>\n\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\n    <div>\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\n      </type-ahead>\n\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\n    </div>\n\n    <button class=\"add btn\" type=\"button\"\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\n      <i class=\"fa fa-plus\"></i>\n    </button>\n  </div>\n\n  <div class=\"tag-wrapper clear\">\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\n    </div> \n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\n    <input id=\"escalation-time-input\" ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\n    <select id=\"escalation-units-dropdown\" ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\n    </select>\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\n      error-type-required=\"Time in queue is required\"\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\n    </form-error>\n  </div>\n</ng-form>\n\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\n  <h4>{{\'value.details.query\' | translate}}</h4>\n  <a class=\"pull-right\">\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\n      {{\'queue.details.version.query.advanced.link\' | translate}}\n    </span>\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\n      {{\'queue.details.version.query.basic.link\' | translate}}\n    </span>\n  </a>\n</div>\n\n\n<div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\n  <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\n  <textarea id=\"advanced-query-field\"\n    ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\n    ng-change=\"qlc.advancedQueryChanged()\"></textarea>\n   <form-error field=\"form[\'query\']\"\n     error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\n     error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\"\n     error-type-api>\n   </form-error>\n</div>\n\n\n\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\n      <h4 id=\"escalation-level-header\">{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\n      <a id=\"remove-escalation-level\" class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\n    </div>\n\n    <escalation-editor\n      escalation=\"escalation\"\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\n    </escalation-editor>\n\n    <div >\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\n      </div>\n\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\n        <h4 id=\"add-escalation-label\">{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\n        <div class=\"add-group-button\">\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\n            <i id=\"add-escalation-btn\" class=\"fa fa-plus\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\n<div class=\"input-group\" id=\"add-query-filter\">\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\n    <select id=\"select-filter-dropdown\"\n      ng-model=\"eqc.currentGroup\">\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\n    </select>\n    <div class=\"add-group-button\">\n      <button class=\"add btn\" type=\"button\"\n        ng-disabled=\"!eqc.currentGroup\"\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\n\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\n      </button>\n    </div>\n  </div>\n</div>\n\n\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\n\n  <div class=\"query-component\">\n    <div class=\"divider-header\">\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\n      <a id=\"{{item.key}}-remove\" class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\n        {{\'queue.query.filter.remove\' | translate}}\n      </a>\n    </div>\n    <object-group-editor\n      object-group=\"item.objectGroup\"\n      key=\"item.key\">\n    </object-group-editor>\n  </div>\n\n</div>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\n  id=\"{{oge.key}}-all\"\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.andConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n\n<condition-group-editor\n  id=\"{{oge.key}}-any\"\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.orConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\n  </select>\n  <number-slider value=\"proficiency\"\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\n  </number-slider>\n</div>\n");}]);
+'use strict';
+
+/**
+  Taken from a stackoverflow.com post reply
+
+  http://stackoverflow.com/a/25822878
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('disableContents', [function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        var inputNames = 'input, button, select, textarea, label';
+
+        var inputs = tElem.find(inputNames);
+        angular.forEach(inputs, function(el){
+          el = angular.element(el);
+          var prevVal = el.attr('ng-disabled');
+          prevVal = prevVal ? prevVal +  ' || ': '';
+          prevVal += tAttrs.disableContents;
+          el.attr('ng-disabled', prevVal);
+        });
+      }
+    };
+  }]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -991,32 +1038,6 @@ angular.module('liveopsConfigPanel.shared.directives')
       $document.off('click', self.onClick);
     };
   }]);
-angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
-$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    name=\"{{nameField}}\"\r\n    ng-required=\"isRequired\"\r\n    type=\"text\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"\r\n    placeholder=\"{{placeholder}}\"\r\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\r\n      <li class=\"lo-hover-highlight\" ng-class=\"{\'highlight\' : selectedItem == item, \'lo-highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\r\n    </ul>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\r\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\r\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\r\n    <filter-dropdown\r\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\r\n      options=\"selectedItems()\"\r\n      display-path=\"getDisplay\"\r\n      value-path=\"id\">\r\n    </filter-dropdown>\r\n  </div>\r\n\r\n  <div class=\"detail-body\">\r\n    <!-- bulkAction elements injected here -->\r\n  </div>\r\n\r\n  <div class=\"detail-controls\">\r\n    <input id=\"cancel-bulk-actions-btn\"\r\n      type=\"button\"\r\n      class=\"btn\"\r\n      ng-click=\"cancel()\"\r\n      value=\"{{\'value.cancel\' | translate}}\">\r\n    </input>\r\n    <input id=\"submit-bulk-actions-btn\"\r\n      ng-disabled=\"!canExecute()\"\r\n      type=\"button\"\r\n      class=\"btn btn-primary\"\r\n      ng-click=\"confirmExecute()\"\r\n      value=\"{{\'value.submit\' | translate}}\">\r\n  </div>\r\n</form>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\r\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\r\n    <div>\r\n      <span>{{label}}</span>\r\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\r\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"dropdown-container\">\r\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\r\n      <ul>\r\n        <li id=\"{{item.id}}\"\r\n          ng-repeat=\"item in items | orderBy:orderBy\"\r\n          ng-click=\"optionClick(item.onClick)\">\r\n            <span class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\r\n            <a class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}({{item.stateLinkParams}})\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\r\n  <span>{{label}}</span>\r\n  <div ng-if=\"showAll\" class=\"all-label\">\r\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\r\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\r\n  </div>\r\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\r\n</div>\r\n\r\n<div class=\"dropdown-container\">\r\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\r\n    <div class=\"all lo-accent-hover-box-border lo-hover-highlight\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\r\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\r\n      <label>All</label>\r\n    </div>\r\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\r\n      class=\"dropdown-option lo-accent-hover-box-border lo-hover-highlight\" ng-click=\"checkItem(option)\" >\r\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\r\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\r\n        {{option | parse:displayPath | invoke:option}}\r\n      </label>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\r\n  <div ng-repeat=\"(error, value) in field.$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\r\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\r\n  ng-messages=\"form[fieldName].$error\">\r\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon lo-accent-hover\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\r\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\r\n  <i class=\"fa fa-info fa-stack-1x\"></i>\r\n</span>");
-$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\r\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\r\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\r\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\r\n      readonly=\"true\" border=\"0\"  class=\"label\"\r\n      ng-required=\"true\"\r\n      ng-model=\"display\" />\r\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\r\n  </div>\r\n\r\n  <div class=\"edit-box\" ng-show=\"showDrop\">\r\n    <type-ahead\r\n      items=\"items\"\r\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\r\n      on-select=\"onSelect(selectedItem)\"\r\n      keep-expanded=\"true\"\r\n      selected-item=\"selectedItem\"></type-ahead>\r\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\r\n      ng-click=\"createItem()\" \r\n      value=\"{{\'multibox.create.btn\' | translate}}\" />\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\r\n\r\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\r\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\r\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\r\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>\r\n\r\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>");
-$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
-$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    placeholder=\"{{placeholder}}\"\r\n    name=\"{{nameField}}\"\r\n    id=\"typeahead-container\"\r\n    type=\"text\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \r\n      ng-mouseover=\"hovering=true\" \r\n      ng-mouseout=\"hovering=false\">\r\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\r\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\r\n         class=\"lo-hover-highlight\"\r\n         ng-click=\"select(item)\" >\r\n           {{item.getDisplay() || item[nameField]}}\r\n       </li>\r\n    </ul>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\r\n<div class=\"confirm\">\r\n  <h3 class=\"header\">{{title}}</h3>\r\n  <p>{{message}}</p>\r\n  \r\n  <div class=\"footer\">\r\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\r\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\r\n  </div>\r\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\r\n  <ng-transclude></ng-transclude>\r\n  <div class=\"input-toggle\">\r\n\r\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\r\n      <option value=\"\">{{defaultText}}</option>\r\n    </select>\r\n\r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\r\n  <label>{{label}}</label>\r\n  <div class=\"input-toggle\">\r\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\r\n    \r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\r\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\r\n    {{ cqe.sectionLabel }}\r\n  </label>\r\n\r\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\r\n    <div>\r\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\r\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\r\n      </type-ahead>\r\n\r\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\r\n    </div>\r\n\r\n    <button class=\"add btn\" type=\"button\"\r\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\r\n      <i class=\"fa fa-plus\"></i>\r\n    </button>\r\n  </div>\r\n\r\n  <div class=\"tag-wrapper clear\">\r\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\r\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\r\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\r\n    </div> \r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\r\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\r\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\r\n    <input id=\"escalation-time-input\" ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\r\n    <select id=\"escalation-units-dropdown\" ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\r\n    </select>\r\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\r\n      error-type-required=\"Time in queue is required\"\r\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\r\n    </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\r\n  <h4>{{\'value.details.query\' | translate}}</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\r\n      {{\'queue.details.version.query.advanced.link\' | translate}}\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\r\n      {{\'queue.details.version.query.basic.link\' | translate}}\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\r\n  <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n  <textarea id=\"advanced-query-field\"\r\n    ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\r\n    ng-change=\"qlc.advancedQueryChanged()\"></textarea>\r\n   <form-error field=\"form[\'query\']\"\r\n     error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n     error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\"\r\n     error-type-api>\r\n   </form-error>\r\n</div>\r\n\r\n\r\n\r\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\r\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\r\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\r\n      <h4 id=\"escalation-level-header\">{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\r\n      <a id=\"remove-escalation-level\" class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\r\n    </div>\r\n\r\n    <escalation-editor\r\n      escalation=\"escalation\"\r\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\r\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\r\n    </escalation-editor>\r\n\r\n    <div >\r\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\r\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\r\n      </div>\r\n\r\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\r\n        <h4 id=\"add-escalation-label\">{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\r\n        <div class=\"add-group-button\">\r\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\r\n            <i id=\"add-escalation-btn\" class=\"fa fa-plus\"></i>\r\n          </button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\r\n<div class=\"input-group\" id=\"add-query-filter\">\r\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\r\n    <select id=\"select-filter-dropdown\"\r\n      ng-model=\"eqc.currentGroup\">\r\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n    </select>\r\n    <div class=\"add-group-button\">\r\n      <button class=\"add btn\" type=\"button\"\r\n        ng-disabled=\"!eqc.currentGroup\"\r\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\r\n\r\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n      </button>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\r\n\r\n  <div class=\"query-component\">\r\n    <div class=\"divider-header\">\r\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n      <a id=\"{{item.key}}-remove\" class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\r\n        {{\'queue.query.filter.remove\' | translate}}\r\n      </a>\r\n    </div>\r\n    <object-group-editor\r\n      object-group=\"item.objectGroup\"\r\n      key=\"item.key\">\r\n    </object-group-editor>\r\n  </div>\r\n\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  id=\"{{oge.key}}-all\"\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  id=\"{{oge.key}}-any\"\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1475,22 +1496,22 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-.directive('modal', [function () {
-  return {
-    restrict: 'E',
-    templateUrl : 'liveops-config-panel-shared/directives/modal/modal.html'
-  };
-}]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('loading', [function() {
     return {
       restrict : 'E',
       templateUrl : 'liveops-config-panel-shared/directives/loading/loading.html'
     };
   }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+.directive('modal', [function () {
+  return {
+    restrict: 'E',
+    templateUrl : 'liveops-config-panel-shared/directives/modal/modal.html'
+  };
+}]);
 
 'use strict';
 
@@ -1775,71 +1796,6 @@ angular.module('liveopsConfigPanel.shared.directives')
   }]);
 
 'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .controller('dateToMinuteConverterController', [function() {
-    this.format = function (value) {
-      if(value === -1) {
-        return null;
-      } else if(angular.isNumber(value)) {
-        return new Date(0,0,0,0,value,0,0);
-      }
-
-      return value;
-    };
-    
-    this.parse = function(value) {
-      if(value === null) {
-        return -1;
-      } else if(!(value instanceof Date)) {
-        return value;
-      }
-
-      return (value.getHours() * 60) + value.getMinutes();
-    };
-  }])
-  .directive('dateToMinuteConverter', [function () {
-    return {
-      require: 'ngModel',
-      controller: 'dateToMinuteConverterController',
-      link: function ($scope, elem, attr, ngModel) {
-        var controller = elem.data('$dateToMinuteConverterController');
-        ngModel.$formatters.push(controller.format);
-        ngModel.$parsers.push(controller.parse);
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('utcDateConverter', ['$moment',
-    function ($moment) {
-      return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function (scope, elem, attr, ngModel) {
-          ngModel.$parsers.push(function(value) {
-            if(!value) {
-              return value;
-            }
-            
-            return $moment.utc(value);
-          });
-          
-          ngModel.$formatters.push(function(value) {
-            if(!value) {
-              return value;
-            }
-            
-            return value.toDate();
-          });
-        }
-      };
-    }
-  ]);
-
-'use strict';
 /*jslint browser:true */
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1908,6 +1864,71 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
   }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .controller('dateToMinuteConverterController', [function() {
+    this.format = function (value) {
+      if(value === -1) {
+        return null;
+      } else if(angular.isNumber(value)) {
+        return new Date(0,0,0,0,value,0,0);
+      }
+
+      return value;
+    };
+    
+    this.parse = function(value) {
+      if(value === null) {
+        return -1;
+      } else if(!(value instanceof Date)) {
+        return value;
+      }
+
+      return (value.getHours() * 60) + value.getMinutes();
+    };
+  }])
+  .directive('dateToMinuteConverter', [function () {
+    return {
+      require: 'ngModel',
+      controller: 'dateToMinuteConverterController',
+      link: function ($scope, elem, attr, ngModel) {
+        var controller = elem.data('$dateToMinuteConverterController');
+        ngModel.$formatters.push(controller.format);
+        ngModel.$parsers.push(controller.parse);
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('utcDateConverter', ['$moment',
+    function ($moment) {
+      return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, elem, attr, ngModel) {
+          ngModel.$parsers.push(function(value) {
+            if(!value) {
+              return value;
+            }
+            
+            return $moment.utc(value);
+          });
+          
+          ngModel.$formatters.push(function(value) {
+            if(!value) {
+              return value;
+            }
+            
+            return value.toDate();
+          });
+        }
+      };
+    }
+  ]);
 
 'use strict';
 
@@ -2864,6 +2885,82 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
+  .service('cacheAddInterceptor', ['queryCache',
+    function (queryCache) {
+      this.response = function (response) {
+        var proto = Object.getPrototypeOf(response.resource);
+        var keyName = response.resource.cacheKey ? response.resource.cacheKey() : proto.resourceName;
+        
+        if (!queryCache.get(keyName)) {
+          queryCache.put(keyName, []);
+        }
+        
+        queryCache.get(keyName).push(response.resource);
+
+        return response.resource;
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .service('cacheRemoveInterceptor', ['queryCache',
+    function (queryCache) {
+      this.response = function (response) {
+        var proto = Object.getPrototypeOf(response.resource);
+        var keyName = response.resource.cacheKey ? response.resource.cacheKey() : proto.resourceName;
+
+        if(queryCache.get(keyName)) {
+          queryCache.get(keyName).removeItem(response.resource);
+        }
+
+        return response.resource;
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .service('emitInterceptor', ['$rootScope', '$q', '$location', 'apiHostname', 'emitErrorInterceptor',
+    function ($rootScope, $q, $location, apiHostname, emitErrorInterceptor) {
+      this.response = function (response) {
+        var path = response.config.url.replace(apiHostname + '/v1', '');
+        var eventPath = path.replace(/\//g, ':');
+        
+        var proto = Object.getPrototypeOf(response.resource);
+        
+        if(response.status === 201){
+          $rootScope.$broadcast('created:resource:' + proto.resourceName, response.resource);
+          $rootScope.$broadcast('created:resource' + eventPath, response.resource);
+        } else if(response.status === 200) {
+          eventPath = eventPath.replace(/:[-\w]+$/, '');
+          $rootScope.$broadcast('updated:resource:' + proto.resourceName, response.resource);
+          $rootScope.$broadcast('updated:resource' + eventPath, response.resource);
+        }
+
+        return response.resource;
+      };
+      
+      this.responseError = emitErrorInterceptor.responseError;
+    }
+  ])
+  .service('emitErrorInterceptor', ['$rootScope',
+    function ($rootScope) {  
+      this.responseError = function (error) {
+        if(error.status >= 400 && error.status < 500) {
+          $rootScope.$broadcast('api:response:4xx', error);
+        } else if(error.status >= 500) {
+          $rootScope.$broadcast('api:response:5xx', error);
+        }
+        $rootScope.$broadcast('api:response:' + error.status, error);
+      };
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
   .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash', 'resultTransformer',
     function($http, $resource, $q, queryCache, _, resultTransformer) {
       function createJsonReplacer(key, value) {
@@ -2878,14 +2975,31 @@ angular.module('liveopsConfigPanel.shared.services')
         if (angular.isArray(interceptorParam)) {
           var interceptorFunc = function(response) {
             angular.forEach(interceptorParam, function(interceptor) {
+              if(!interceptor.response) {
+                return;
+              }
+              
               interceptor.response(response);
             });
 
             return response.resource;
           };
+          
+          var interceptorErrorFunc = function(error) {
+            angular.forEach(interceptorParam, function(interceptor) {
+              if(!interceptor.responseError) {
+                return;
+              }
+              
+              interceptor.responseError(error);
+            });
+
+            return error;
+          };
 
           var interceptor = {
-            response: interceptorFunc
+            response: interceptorFunc,
+            responseError: interceptorErrorFunc
           };
 
           return interceptor;
@@ -3218,68 +3332,6 @@ angular.module('liveopsConfigPanel.shared.services')
         return value;
       };
     }]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .service('cacheAddInterceptor', ['queryCache',
-    function (queryCache) {
-      this.response = function (response) {
-        var proto = Object.getPrototypeOf(response.resource);
-        var keyName = response.resource.cacheKey ? response.resource.cacheKey() : proto.resourceName;
-        
-        if (!queryCache.get(keyName)) {
-          queryCache.put(keyName, []);
-        }
-        
-        queryCache.get(keyName).push(response.resource);
-
-        return response.resource;
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .service('cacheRemoveInterceptor', ['queryCache',
-    function (queryCache) {
-      this.response = function (response) {
-        var proto = Object.getPrototypeOf(response.resource);
-        var keyName = response.resource.cacheKey ? response.resource.cacheKey() : proto.resourceName;
-
-        if(queryCache.get(keyName)) {
-          queryCache.get(keyName).removeItem(response.resource);
-        }
-
-        return response.resource;
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .service('emitInterceptor', ['$rootScope', '$q', '$location', 'apiHostname',
-    function ($rootScope, $q, $location, apiHostname) {
-      this.response = function (response) {
-        var path = response.config.url.replace(apiHostname + '/v1', '');
-        var eventPath = path.replace(/\//g, ':');
-        
-        var proto = Object.getPrototypeOf(response.resource);
-
-        if(response.status === 201){
-          $rootScope.$broadcast('created:resource:' + proto.resourceName, response.resource);
-          $rootScope.$broadcast('created:resource' + eventPath, response.resource);
-        } else if(response.status === 200) {
-          eventPath = eventPath.replace(/:[-\w]+$/, '');
-          $rootScope.$broadcast('updated:resource:' + proto.resourceName, response.resource);
-          $rootScope.$broadcast('updated:resource' + eventPath, response.resource);
-        }
-
-        return response.resource;
-      };
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -4421,8 +4473,8 @@ angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
+  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'queryCache', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, queryCache, cacheAddInterceptor) {
 
       var Tenant = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:id',
@@ -4439,6 +4491,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'timezone'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -4520,8 +4574,8 @@ angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'userUpdateTransformer',
-    function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, userUpdateTransformer) {
+  .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor', 'userUpdateTransformer',
+    function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor, userUpdateTransformer) {
       var User = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/users/:id',
         resourceName: 'User',
@@ -4540,6 +4594,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'personalTelephone',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor,
         putRequestTransformer: userUpdateTransformer
@@ -4750,8 +4806,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('BusinessHour', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor', 'businessHourInterceptor', 'businessHourQueryInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, businessHourInterceptor, businessHourQueryInterceptor) {
+  .factory('BusinessHour', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'businessHourInterceptor', 'businessHourQueryInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, businessHourInterceptor, businessHourQueryInterceptor) {
 
       var BusinessHours = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:id',
@@ -4805,8 +4861,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'satEndTimeMinutes',
           optional: true
         }],
-        getInterceptor: businessHourInterceptor,
-        queryInterceptor: businessHourQueryInterceptor,
+        getInterceptor: [businessHourInterceptor, emitErrorInterceptor],
+        queryInterceptor: [businessHourQueryInterceptor, emitErrorInterceptor],
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -4822,8 +4878,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('DispatchMapping', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+  .factory('DispatchMapping', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
 
       var DispatchMapping = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/dispatch-mappings/:id',
@@ -4849,6 +4905,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'active',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -4903,8 +4961,8 @@ angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+  .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, emitErrorInterceptor) {
 
       var Flow = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:id',
@@ -4924,6 +4982,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -4987,8 +5047,8 @@ angular.module('liveopsConfigPanel.tenant.group.mock', ['liveopsConfigPanel.mock
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Group', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+  .factory('Group', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
 
       var Group = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:id',
@@ -5004,8 +5064,10 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'active',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: emitInterceptor
+        updateInterceptor: [emitInterceptor]
       });
 
       Group.prototype.getDisplay = function () {
@@ -5018,8 +5080,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor) {
 
       var Integration = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
@@ -5035,6 +5097,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: emitInterceptor,
         updateInterceptor: emitInterceptor
       });
 
@@ -5130,8 +5195,8 @@ angular.module('liveopsConfigPanel.tenant.list.mock', ['liveopsConfigPanel.mock'
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('List', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor', 'itemBackupInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor, itemBackupInterceptor) {
+  .factory('List', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'queryCache', 'cacheAddInterceptor', 'itemBackupInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, queryCache, cacheAddInterceptor, itemBackupInterceptor) {
 
       var List = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/lists/:id',
@@ -5146,8 +5211,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
-        getInterceptor: itemBackupInterceptor,
-        queryInterceptor: itemBackupInterceptor,
+        getInterceptor: [itemBackupInterceptor, emitErrorInterceptor],
+        queryInterceptor: [itemBackupInterceptor, emitErrorInterceptor],
         saveInterceptor: [emitInterceptor, cacheAddInterceptor, itemBackupInterceptor],
         updateInterceptor: [emitInterceptor, itemBackupInterceptor]
       });
@@ -5211,8 +5276,8 @@ angular.module('liveopsConfigPanel.tenant.listType.mock', ['liveopsConfigPanel.m
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('ListType', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor) {
+  .factory('ListType', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'queryCache', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, queryCache, cacheAddInterceptor) {
 
       var List = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/list-types/:id',
@@ -5223,6 +5288,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'description',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -5250,8 +5317,8 @@ angular.module('liveopsConfigPanel.tenant.media.mock', ['liveopsConfigPanel.mock
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
 
       var Media = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/media/:id',
@@ -5266,7 +5333,10 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'properties',
           optional: true
         }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
       });
 
        Media.prototype.getDisplay = function (){
@@ -5308,8 +5378,8 @@ angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfig
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('MediaCollection', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'mediaCollectionMapCleanTransformer',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, mediaCollectionMapCleanTransformer) {
+  .factory('MediaCollection', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor', 'mediaCollectionMapCleanTransformer',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor, mediaCollectionMapCleanTransformer) {
 
       var MediaCollection = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/media-collections/:id',
@@ -5326,6 +5396,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'defaultMediaKey',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         putRequestTransformer: mediaCollectionMapCleanTransformer
       });
@@ -5337,8 +5409,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Queue', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+  .factory('Queue', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
 
       var Queue = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/queues/:id',
@@ -5354,6 +5426,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -5405,238 +5479,6 @@ angular.module('liveopsConfigPanel.tenant.queue.mock', ['liveopsConfigPanel.mock
       });
     }
   ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.permission.mock', ['liveopsConfigPanel.mock'])
-  .service('mockTenantPermissions', function(TenantPermission) {
-    return [new TenantPermission({
-      'id': 'permissionId1',
-      'name': 'PERMISSION_1',
-      'tenantId': 'tenant-id'
-    }), new TenantPermission({
-      'id': 'permissionId2',
-      'name': 'PERMISSION_2',
-      'tenantId': 'tenant-id'
-    }), new TenantPermission({
-      'id': 'permissionId3',
-      'name': 'PERMISSION_3',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockTenantPermissions',
-    function($httpBackend, apiHostname, mockTenantPermissions) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissions').respond({
-        'result': [mockTenantPermissions[0], mockTenantPermissions[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissionId1').respond({
-        'result': mockTenantPermissions[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissionId2').respond({
-        'result': mockTenantPermissions[1]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissionId3').respond({
-        'result': mockTenantPermissions[2]
-      });
-    }
-  ])
-  .service('mockPlatformPermissions', function(PlatformPermission) {
-    return [new PlatformPermission({
-      'id': 'permissionId1',
-      'name': 'PLATFORM_PERMISSION_1'
-    }), new PlatformPermission({
-      'id': 'permissionId2',
-      'name': 'PLATFORM_PERMISSION_1'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockPlatformPermissions',
-    function($httpBackend, apiHostname, mockPlatformPermissions) {
-      $httpBackend.when('GET', apiHostname + '/v1/permissions').respond({
-        'result': [mockPlatformPermissions[0], mockPlatformPermissions[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/permissions/permissionId1').respond({
-        'result': mockPlatformPermissions[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/permissions/permissionId2').respond({
-        'result': mockPlatformPermissions[1]
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('PlatformPermission', ['LiveopsResourceFactory', 'apiHostname',
-    function(LiveopsResourceFactory, apiHostname) {
-      var PlatformPermission = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/permissions/:id',
-        resourceName: 'PlatformPermission',
-        updateFields: []
-      });
-
-      PlatformPermission.prototype.getDisplay = function() {
-        return this.name;
-      };
-
-      return PlatformPermission;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('PlatformRole', ['LiveopsResourceFactory', 'apiHostname',
-    function(LiveopsResourceFactory, apiHostname) {
-      var PlatformRole = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/roles:id',
-        resourceName: 'PlatformRole',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'permissions',
-          optional: true
-        }]
-      });
-
-      PlatformRole.prototype.getDisplay = function() {
-        return this.name;
-      };
-
-      PlatformRole.getName = function(roleId) {
-        return PlatformRole.cachedGet({
-          id: roleId
-        }).name;
-      };
-
-      return PlatformRole;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.role.mock', ['liveopsConfigPanel.mock'])
-  .service('mockRoles', function(TenantRole) {
-    return [new TenantRole({
-      'id': 'roleId1',
-      'name': 'roleName1',
-      'tenantId': 'tenant-id',
-      'permissions': []
-    }), new TenantRole({
-      'id': 'roleId2',
-      'name': 'roleName2',
-      'tenantId': 'tenant-id',
-      'permissions': []
-    }), new TenantRole({
-      'id': 'roleId3',
-      'name': 'roleName3',
-      'description': 'Does not exist yet!',
-      'tenantId': 'tenant-id',
-      'permissions': []
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockRoles',
-    function($httpBackend, apiHostname, mockRoles) {
-      //GET tenants/roles
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/roles').respond({
-        'result': [mockRoles[0], mockRoles[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/roles/roleId1').respond({
-        'result': mockRoles[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/roles/roleId2').respond({
-        'result': mockRoles[1]
-      });
-    }
-  ])
-  .service('mockPlatformRoles', function(PlatformRole) {
-    return [new PlatformRole({
-      'id': 'roleId1',
-      'name': 'roleName1',
-      'permissions': []
-    }), new PlatformRole({
-      'id': 'roleId2',
-      'name': 'roleName2',
-      'permissions': []
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockPlatformRoles',
-    function($httpBackend, apiHostname, mockPlatformRoles) {
-      $httpBackend.when('GET', apiHostname + '/v1/roles').respond({
-        'result': [mockPlatformRoles[0], mockPlatformRoles[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/roles/roleId1').respond({
-        'result': mockPlatformRoles[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/roles/roleId2').respond({
-        'result': mockPlatformRoles[1]
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantPermission', ['LiveopsResourceFactory', 'apiHostname',
-    function(LiveopsResourceFactory, apiHostname) {
-      var TenantPermission = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/permissions/:id',
-        resourceName: 'TenantPermission',
-        updateFields: []
-      });
-
-      TenantPermission.prototype.getDisplay = function() {
-        return this.name;
-      };
-
-      return TenantPermission;
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantRole', ['LiveopsResourceFactory', 'apiHostname', 'Session', 'cacheAddInterceptor', 'emitInterceptor',
-    function(LiveopsResourceFactory, apiHostname, Session, cacheAddInterceptor, emitInterceptor) {
-      var TenantRole = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/roles/:id',
-        resourceName: 'TenantRole',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'permissions'
-        }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
-      });
-
-      TenantRole.prototype.getDisplay = function() {
-        return this.name;
-      };
-
-      TenantRole.getName = function(roleId) {
-        return TenantRole.cachedGet({
-          tenantId: Session.tenant.tenantId,
-          id: roleId
-        }).name;
-      };
-
-      return TenantRole;
-    }
-  ]);
-
 'use strict';
 
 angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock'])
@@ -5753,8 +5595,8 @@ angular.module('liveopsConfigPanel.tenant.skill.mock', ['liveopsConfigPanel.mock
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+  .factory('Skill', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
       var Skill = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:id',
         resourceName: 'Skill',
@@ -5769,6 +5611,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'active',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -5855,8 +5699,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor) {
+  .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor, emitErrorInterceptor) {
 
       var tenantUserStatusUpdateTransformer = function (obj) {
         var cpy = angular.copy(obj);
@@ -5880,8 +5724,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,
-        getInterceptor: tenantUserInterceptor,
-        queryInterceptor: tenantUserQueryInterceptor,
+        getInterceptor: [tenantUserInterceptor, emitErrorInterceptor],
+        queryInterceptor: [tenantUserQueryInterceptor, emitErrorInterceptor],
         saveInterceptor: [tenantUserInterceptor, cacheAddInterceptor],
         updateInterceptor: tenantUserInterceptor
       });
@@ -6005,9 +5849,250 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
 
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.permission.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTenantPermissions', function(TenantPermission) {
+    return [new TenantPermission({
+      'id': 'permissionId1',
+      'name': 'PERMISSION_1',
+      'tenantId': 'tenant-id'
+    }), new TenantPermission({
+      'id': 'permissionId2',
+      'name': 'PERMISSION_2',
+      'tenantId': 'tenant-id'
+    }), new TenantPermission({
+      'id': 'permissionId3',
+      'name': 'PERMISSION_3',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTenantPermissions',
+    function($httpBackend, apiHostname, mockTenantPermissions) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissions').respond({
+        'result': [mockTenantPermissions[0], mockTenantPermissions[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissionId1').respond({
+        'result': mockTenantPermissions[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissionId2').respond({
+        'result': mockTenantPermissions[1]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/permissionId3').respond({
+        'result': mockTenantPermissions[2]
+      });
+    }
+  ])
+  .service('mockPlatformPermissions', function(PlatformPermission) {
+    return [new PlatformPermission({
+      'id': 'permissionId1',
+      'name': 'PLATFORM_PERMISSION_1'
+    }), new PlatformPermission({
+      'id': 'permissionId2',
+      'name': 'PLATFORM_PERMISSION_1'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockPlatformPermissions',
+    function($httpBackend, apiHostname, mockPlatformPermissions) {
+      $httpBackend.when('GET', apiHostname + '/v1/permissions').respond({
+        'result': [mockPlatformPermissions[0], mockPlatformPermissions[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/permissions/permissionId1').respond({
+        'result': mockPlatformPermissions[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/permissions/permissionId2').respond({
+        'result': mockPlatformPermissions[1]
+      });
+    }
+  ]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('BusinessHourException', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+  .factory('PlatformPermission', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function(LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
+      var PlatformPermission = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/permissions/:id',
+        resourceName: 'PlatformPermission',
+        updateFields: [],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
+      });
+
+      PlatformPermission.prototype.getDisplay = function() {
+        return this.name;
+      };
+
+      return PlatformPermission;
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('PlatformRole', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function(LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
+      var PlatformRole = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/roles:id',
+        resourceName: 'PlatformRole',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'permissions',
+          optional: true
+        }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
+      });
+
+      PlatformRole.prototype.getDisplay = function() {
+        return this.name;
+      };
+
+      PlatformRole.getName = function(roleId) {
+        return PlatformRole.cachedGet({
+          id: roleId
+        }).name;
+      };
+
+      return PlatformRole;
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.role.mock', ['liveopsConfigPanel.mock'])
+  .service('mockRoles', function(TenantRole) {
+    return [new TenantRole({
+      'id': 'roleId1',
+      'name': 'roleName1',
+      'tenantId': 'tenant-id',
+      'permissions': []
+    }), new TenantRole({
+      'id': 'roleId2',
+      'name': 'roleName2',
+      'tenantId': 'tenant-id',
+      'permissions': []
+    }), new TenantRole({
+      'id': 'roleId3',
+      'name': 'roleName3',
+      'description': 'Does not exist yet!',
+      'tenantId': 'tenant-id',
+      'permissions': []
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockRoles',
+    function($httpBackend, apiHostname, mockRoles) {
+      //GET tenants/roles
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/roles').respond({
+        'result': [mockRoles[0], mockRoles[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/roles/roleId1').respond({
+        'result': mockRoles[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/roles/roleId2').respond({
+        'result': mockRoles[1]
+      });
+    }
+  ])
+  .service('mockPlatformRoles', function(PlatformRole) {
+    return [new PlatformRole({
+      'id': 'roleId1',
+      'name': 'roleName1',
+      'permissions': []
+    }), new PlatformRole({
+      'id': 'roleId2',
+      'name': 'roleName2',
+      'permissions': []
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockPlatformRoles',
+    function($httpBackend, apiHostname, mockPlatformRoles) {
+      $httpBackend.when('GET', apiHostname + '/v1/roles').respond({
+        'result': [mockPlatformRoles[0], mockPlatformRoles[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/roles/roleId1').respond({
+        'result': mockPlatformRoles[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/roles/roleId2').respond({
+        'result': mockPlatformRoles[1]
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantPermission', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function(LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
+      var TenantPermission = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/permissions/:id',
+        resourceName: 'TenantPermission',
+        updateFields: [],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
+      });
+
+      TenantPermission.prototype.getDisplay = function() {
+        return this.name;
+      };
+
+      return TenantPermission;
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantRole', ['LiveopsResourceFactory', 'apiHostname', 'Session', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function(LiveopsResourceFactory, apiHostname, Session, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
+      var TenantRole = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/roles/:id',
+        resourceName: 'TenantRole',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'permissions'
+        }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitErrorInterceptor
+      });
+
+      TenantRole.prototype.getDisplay = function() {
+        return this.name;
+      };
+
+      TenantRole.getName = function(roleId) {
+        return TenantRole.cachedGet({
+          tenantId: Session.tenant.tenantId,
+          id: roleId
+        }).name;
+      };
+
+      return TenantRole;
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('BusinessHourException', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
 
       var BusinessHours = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:businessHourId/exceptions/:id',
@@ -6017,7 +6102,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'isAllDay'
         }],
-
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -6033,8 +6119,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('FlowDraft', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', '$http',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, $http) {
+  .factory('FlowDraft', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', '$http',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, $http) {
 
       var endpoint = apiHostname + '/v1/tenants/:tenantId/flows/:flowId/drafts/:id';
 
@@ -6055,6 +6141,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'history'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: emitInterceptor,
         updateInterceptor: emitInterceptor
       });
@@ -6138,8 +6226,8 @@ angular.module('liveopsConfigPanel.tenant.flow.draft.mock', [
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('FlowVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+  .factory('FlowVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor) {
 
       var FlowVersion = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:flowId/versions/:version',
@@ -6156,6 +6244,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'flow'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: emitInterceptor,
         updateInterceptor: emitInterceptor
       });
@@ -6255,8 +6345,8 @@ angular.module('liveopsConfigPanel.tenant.queue.version.mock', ['liveopsConfigPa
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('QueueVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+  .factory('QueueVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
 
       var QueueVersion = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/queues/:queueId/versions/:id',
@@ -6271,6 +6361,8 @@ angular.module('liveopsConfigPanel.shared.services')
           {name: 'priorityRate', optional: true},
           {name: 'priorityUnit', optional: true}
         ],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
@@ -6289,8 +6381,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
+  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
       return LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
         resourceName: 'TenantGroupUser',
@@ -6298,15 +6390,17 @@ angular.module('liveopsConfigPanel.shared.services')
           tenantId: '@tenantId',
           groupId: '@groupId',
           memberId: '@memberId'
-        }
+        },
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
       });
     }
   ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
+  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
 
       return LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
@@ -6314,7 +6408,9 @@ angular.module('liveopsConfigPanel.shared.services')
         requestUrlFields: {
           tenantId: '@tenantId',
           memberId: '@memberId'
-        }
+        },
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
       });
 
     }
@@ -6446,12 +6542,14 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantSkillUser', ['LiveopsResourceFactory', 'apiHostname',
-    function (LiveopsResourceFactory, apiHostname) {
+  .factory('TenantSkillUser', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
 
       return LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/skills/:skillId/users/:userId',
-        resourceName: 'TenantSkillUser'
+        resourceName: 'TenantSkillUser',
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
       });
 
     }
@@ -6459,8 +6557,8 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUserSkill', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor', 'userSkillCacheRemoveInterceptor', 'setSkillNameInterceptor', 'removeDefaultProficiencyInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, userSkillCacheRemoveInterceptor, setSkillNameInterceptor, removeDefaultProficiencyInterceptor) {
+  .factory('TenantUserSkill', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'userSkillCacheRemoveInterceptor', 'setSkillNameInterceptor', 'removeDefaultProficiencyInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, userSkillCacheRemoveInterceptor, setSkillNameInterceptor, removeDefaultProficiencyInterceptor) {
 
       var TenantUserSkill =  LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/users/:userId/skills/:skillId',
@@ -6473,6 +6571,8 @@ angular.module('liveopsConfigPanel.shared.services')
           userId: '@userId',
           skillId: '@id' //POST requires skillId in the request, which causes POST requests to go to /skills/:skillId, unless that param is renamed
         },
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, setSkillNameInterceptor, removeDefaultProficiencyInterceptor, cacheAddInterceptor],
         updateInterceptor: [emitInterceptor, setSkillNameInterceptor],
         deleteInterceptor: userSkillCacheRemoveInterceptor

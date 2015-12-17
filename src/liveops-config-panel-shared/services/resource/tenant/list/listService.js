@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('List', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'queryCache', 'cacheAddInterceptor', 'itemBackupInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, queryCache, cacheAddInterceptor, itemBackupInterceptor) {
+  .factory('List', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'queryCache', 'cacheAddInterceptor', 'itemBackupInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, queryCache, cacheAddInterceptor, itemBackupInterceptor) {
 
       var List = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/lists/:id',
@@ -17,8 +17,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
-        getInterceptor: itemBackupInterceptor,
-        queryInterceptor: itemBackupInterceptor,
+        getInterceptor: [itemBackupInterceptor, emitErrorInterceptor],
+        queryInterceptor: [itemBackupInterceptor, emitErrorInterceptor],
         saveInterceptor: [emitInterceptor, cacheAddInterceptor, itemBackupInterceptor],
         updateInterceptor: [emitInterceptor, itemBackupInterceptor]
       });

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('PlatformRole', ['LiveopsResourceFactory', 'apiHostname',
-    function(LiveopsResourceFactory, apiHostname) {
+  .factory('PlatformRole', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function(LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
       var PlatformRole = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/roles:id',
         resourceName: 'PlatformRole',
@@ -14,7 +14,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'permissions',
           optional: true
-        }]
+        }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
       });
 
       PlatformRole.prototype.getDisplay = function() {

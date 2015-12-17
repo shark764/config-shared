@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('FlowVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+  .factory('FlowVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor) {
 
       var FlowVersion = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:flowId/versions/:version',
@@ -19,6 +19,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'flow'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: emitInterceptor,
         updateInterceptor: emitInterceptor
       });
