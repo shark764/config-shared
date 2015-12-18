@@ -12,6 +12,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }, {
+          name: 'description',
+          optional: true
+        }, {
           name: 'timezone'
         }, {
           name: 'sunStartTimeMinutes',

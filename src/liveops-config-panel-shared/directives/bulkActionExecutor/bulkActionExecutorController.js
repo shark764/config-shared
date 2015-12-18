@@ -39,6 +39,7 @@ angular.module('liveopsConfigPanel.shared.directives')
       };
       
       this.execute = function execute() {
+        $scope.executing = true;
         var selectedBulkActions = self.getCheckedItems($scope.bulkActions);
         var itemPromises = [];
         
@@ -49,7 +50,9 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
         });
 
-        return  $q.all(itemPromises);
+        return  $q.all(itemPromises).then(function(){
+          $scope.executing = false;
+        });
       };
       
       this.canExecute = function canExecute () {
