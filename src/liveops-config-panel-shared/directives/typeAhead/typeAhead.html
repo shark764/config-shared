@@ -5,6 +5,7 @@
     name="{{nameField}}"
     id="typeahead-container"
     type="text"
+    ng-disabled="{{disabled}}"
     ng-model="currentText"
     ng-focus="showSuggestions=true"
     ng-blur="onBlur()"></input>

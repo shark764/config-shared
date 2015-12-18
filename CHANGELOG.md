@@ -54,3 +54,6 @@ not ideal but will have to do for now.
 # 12/17/15 - 1.0.26
 
 - update dropdown directive to use ui-sref-options to pass state options to ui-router
+
+# 12/18/15 - 1.0.27
+- added a disabled property to autocomplete and typeahead directives

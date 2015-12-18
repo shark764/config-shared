@@ -13,7 +13,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         placeholder: '@',
         hover: '=',
         keepExpanded: '=',
-        onEnter: '&'
+        onEnter: '&',
+        disabled: '@'
       },
 
       templateUrl: 'liveops-config-panel-shared/directives/autocomplete/autocomplete.html',
