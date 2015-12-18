@@ -60,3 +60,6 @@ not ideal but will have to do for now.
 
 # 12/18/15 - 1.0.28
 - Allow updating business hours description
+
+# 12/18/15 - 1.0.29
+- Add optional key-only params for cachedGet lookup

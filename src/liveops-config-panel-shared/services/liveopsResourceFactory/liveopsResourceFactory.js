@@ -246,9 +246,10 @@ angular.module('liveopsConfigPanel.shared.services')
             return !!item;
           };
 
-          Resource.cachedGet = function(params, cacheKey, invalidate) {
+          Resource.cachedGet = function(params, cacheKey, invalidate, keyParams) {
             var key = cacheKey ? cacheKey : this.prototype.resourceName;
-
+            keyParams = keyParams ? keyParams : params;
+            
             var cache = queryCache.get(key);
 
             if (!cache || invalidate) {
@@ -256,7 +257,7 @@ angular.module('liveopsConfigPanel.shared.services')
               cache = queryCache.get(key);
             }
 
-            var item = _.find(cache, params);
+            var item = _.find(cache, keyParams);
 
             if (!item) {
               item = this.get(params);
