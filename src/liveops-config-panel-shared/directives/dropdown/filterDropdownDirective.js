@@ -10,7 +10,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         displayPath: '@',
         label: '@',
         showAll: '@',
-        orderBy: '@'
+        orderBy: '@',
+        all: '=?'
       },
       templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
       controller: 'DropdownController',
