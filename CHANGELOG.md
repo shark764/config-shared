@@ -57,3 +57,6 @@ not ideal but will have to do for now.
 
 # 12/18/15 - 1.0.27
 - added a disabled property to autocomplete and typeahead directives
+
+# 12/18/15 - 1.0.28
+- Allow updating business hours description
