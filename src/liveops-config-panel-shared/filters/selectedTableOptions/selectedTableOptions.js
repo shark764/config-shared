@@ -23,6 +23,10 @@ angular.module('liveopsConfigPanel.shared.filters')
             if (!$parse('header.options')(field)) {
               continue;
             }
+            
+            if (field.header.all && field.header.all.checked){
+              continue;
+            }
 
             var matchesColumnFilter = true;
             var lookup = field.lookup ? field.lookup : field.name;

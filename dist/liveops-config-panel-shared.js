@@ -213,6 +213,45 @@ if (!String.prototype.contains) {
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('auditText', ['$filter', 'TenantUser', 'Session',
+    function ($filter, TenantUser, Session) {
+      return {
+        restrict: 'AE',
+        scope: {
+          translation: '@',
+          userId: '=',
+          date: '='
+        },
+        template: '{{get()}}',
+        link: function ($scope) {
+          $scope.get = function () {
+            if (!$scope.userId) {
+              return  $filter('translate')($scope.translation, {
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            var user = TenantUser.cachedGet({
+              id: $scope.userId,
+              tenantId: Session.tenant.tenantId
+            }, 'AuditTextUsers');
+
+            if(user.$resolved) {
+              $scope.text = $filter('translate')($scope.translation, {
+                displayName: user.getDisplay(),
+                date: $filter('date')($scope.date, 'medium')
+              });
+            }
+
+            return $scope.text;
+          };
+        }
+      };
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('autocomplete', ['filterFilter', '$timeout', function(filterFilter, $timeout) {
     return {
       restrict: 'E',
@@ -262,45 +301,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('auditText', ['$filter', 'TenantUser', 'Session',
-    function ($filter, TenantUser, Session) {
-      return {
-        restrict: 'AE',
-        scope: {
-          translation: '@',
-          userId: '=',
-          date: '='
-        },
-        template: '{{get()}}',
-        link: function ($scope) {
-          $scope.get = function () {
-            if (!$scope.userId) {
-              return  $filter('translate')($scope.translation, {
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            var user = TenantUser.cachedGet({
-              id: $scope.userId,
-              tenantId: Session.tenant.tenantId
-            }, 'AuditTextUsers');
-
-            if(user.$resolved) {
-              $scope.text = $filter('translate')($scope.translation, {
-                displayName: user.getDisplay(),
-                date: $filter('date')($scope.date, 'medium')
-              });
-            }
-
-            return $scope.text;
-          };
-        }
-      };
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -515,6 +515,32 @@ angular.module('liveopsConfigPanel.shared.directives')
       };
     }
   ]);
+angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
+$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    name=\"{{nameField}}\"\r\n    ng-required=\"isRequired\"\r\n    type=\"text\"\r\n    ng-disabled=\"{{disabled}}\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"\r\n    placeholder=\"{{placeholder}}\"\r\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\r\n      <li class=\"lo-hover-highlight\" ng-class=\"{\'highlight\' : selectedItem == item, \'lo-highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\r\n    </ul>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\r\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\r\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\r\n    <filter-dropdown\r\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\r\n      options=\"selectedItems()\"\r\n      display-path=\"getDisplay\"\r\n      value-path=\"id\">\r\n    </filter-dropdown>\r\n  </div>\r\n\r\n  <div class=\"detail-body\">\r\n    <!-- bulkAction elements injected here -->\r\n  </div>\r\n\r\n  <div class=\"detail-controls\">\r\n    <input id=\"cancel-bulk-actions-btn\"\r\n      type=\"button\"\r\n      class=\"btn\"\r\n      ng-click=\"cancel()\"\r\n      value=\"{{\'value.cancel\' | translate}}\">\r\n    </input>\r\n    <input id=\"submit-bulk-actions-btn\"\r\n      ng-disabled=\"!canExecute()\"\r\n      type=\"button\"\r\n      class=\"btn btn-primary\"\r\n      ng-click=\"confirmExecute()\"\r\n      value=\"{{\'value.submit\' | translate}}\"\r\n      lo-submit-spinner\r\n      lo-submit-spinner-status=\"executing\">\r\n  </div>\r\n</form>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\r\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\r\n    <div>\r\n      <span>{{label}}</span>\r\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\r\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"dropdown-container\">\r\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\r\n      <ul>\r\n        <li id=\"{{item.id}}\"\r\n          ng-repeat=\"item in items | orderBy:orderBy\"\r\n          ng-click=\"optionClick(item.onClick)\">\r\n            <span class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\r\n            <a class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}\" ui-sref-opts=\"{{item.stateLinkParams}}\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\r\n  <span>{{label}}</span>\r\n  <div ng-if=\"showAll\" class=\"all-label\">\r\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\r\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\r\n  </div>\r\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\r\n</div>\r\n\r\n<div class=\"dropdown-container\">\r\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\r\n    <div class=\"all lo-accent-hover-box-border lo-hover-highlight\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\r\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\r\n      <label>All</label>\r\n    </div>\r\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\r\n      class=\"dropdown-option lo-accent-hover-box-border lo-hover-highlight\" ng-click=\"checkItem(option)\" >\r\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\r\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\r\n        {{option | parse:displayPath | invoke:option}}\r\n      </label>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\r\n  <div ng-repeat=\"(error, value) in field.$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\r\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\r\n  ng-messages=\"form[fieldName].$error\">\r\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon lo-accent-hover\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\r\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\r\n  <i class=\"fa fa-info fa-stack-1x\"></i>\r\n</span>");
+$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\r\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\r\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\r\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\r\n      readonly=\"true\" border=\"0\"  class=\"label\"\r\n      ng-required=\"true\"\r\n      ng-model=\"display\" />\r\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\r\n  </div>\r\n\r\n  <div class=\"edit-box\" ng-show=\"showDrop\">\r\n    <type-ahead\r\n      items=\"items\"\r\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\r\n      on-select=\"onSelect(selectedItem)\"\r\n      keep-expanded=\"true\"\r\n      selected-item=\"selectedItem\"></type-ahead>\r\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\r\n      ng-click=\"createItem()\" \r\n      value=\"{{\'multibox.create.btn\' | translate}}\" />\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\r\n\r\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\r\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\r\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\r\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
+$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>\r\n\r\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>");
+$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
+$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    placeholder=\"{{placeholder}}\"\r\n    name=\"{{nameField}}\"\r\n    id=\"typeahead-container\"\r\n    type=\"text\"\r\n    ng-disabled=\"{{disabled}}\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \r\n      ng-mouseover=\"hovering=true\" \r\n      ng-mouseout=\"hovering=false\">\r\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\r\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\r\n         class=\"lo-hover-highlight\"\r\n         ng-click=\"select(item)\" >\r\n           {{item.getDisplay() || item[nameField]}}\r\n       </li>\r\n    </ul>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\r\n<div class=\"confirm\">\r\n  <h3 class=\"header\">{{title}}</h3>\r\n  <p>{{message}}</p>\r\n  \r\n  <div class=\"footer\">\r\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\r\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\r\n  </div>\r\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\r\n  <ng-transclude></ng-transclude>\r\n  <div class=\"input-toggle\">\r\n\r\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\r\n      <option value=\"\">{{defaultText}}</option>\r\n    </select>\r\n\r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>");
+$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\r\n  <label>{{label}}</label>\r\n  <div class=\"input-toggle\">\r\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\r\n    \r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\r\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\r\n    {{ cqe.sectionLabel }}\r\n  </label>\r\n\r\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\r\n    <div>\r\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\r\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\r\n      </type-ahead>\r\n\r\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\r\n    </div>\r\n\r\n    <button class=\"add btn\" type=\"button\"\r\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\r\n      <i class=\"fa fa-plus\"></i>\r\n    </button>\r\n  </div>\r\n\r\n  <div class=\"tag-wrapper clear\">\r\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\r\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\r\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\r\n    </div> \r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\r\n  <h4>{{\'value.details.query\' | translate}}</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\r\n      {{\'queue.details.version.query.advanced.link\' | translate}}\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\r\n      {{\'queue.details.version.query.basic.link\' | translate}}\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\r\n  <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n  <textarea id=\"advanced-query-field\"\r\n    ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\r\n    ng-change=\"qlc.advancedQueryChanged()\"></textarea>\r\n   <form-error field=\"form[\'query\']\"\r\n     error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n     error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\"\r\n     error-type-api>\r\n   </form-error>\r\n</div>\r\n\r\n\r\n\r\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\r\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\r\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\r\n      <h4 id=\"escalation-level-header\">{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\r\n      <a id=\"remove-escalation-level\" class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\r\n    </div>\r\n\r\n    <escalation-editor\r\n      escalation=\"escalation\"\r\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\r\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\r\n    </escalation-editor>\r\n\r\n    <div >\r\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\r\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\r\n      </div>\r\n\r\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\r\n        <h4 id=\"add-escalation-label\">{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\r\n        <div class=\"add-group-button\">\r\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\r\n            <i id=\"add-escalation-btn\" class=\"fa fa-plus\"></i>\r\n          </button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\r\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\r\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\r\n    <input id=\"escalation-time-input\" ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\r\n    <select id=\"escalation-units-dropdown\" ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\r\n    </select>\r\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\r\n      error-type-required=\"Time in queue is required\"\r\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\r\n    </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\r\n<div class=\"input-group\" id=\"add-query-filter\">\r\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\r\n    <select id=\"select-filter-dropdown\"\r\n      ng-model=\"eqc.currentGroup\">\r\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n    </select>\r\n    <div class=\"add-group-button\">\r\n      <button class=\"add btn\" type=\"button\"\r\n        ng-disabled=\"!eqc.currentGroup\"\r\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\r\n\r\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n      </button>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\r\n\r\n  <div class=\"query-component\">\r\n    <div class=\"divider-header\">\r\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n      <a id=\"{{item.key}}-remove\" class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\r\n        {{\'queue.query.filter.remove\' | translate}}\r\n      </a>\r\n    </div>\r\n    <object-group-editor\r\n      object-group=\"item.objectGroup\"\r\n      key=\"item.key\">\r\n    </object-group-editor>\r\n  </div>\r\n\r\n</div>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  id=\"{{oge.key}}-all\"\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  id=\"{{oge.key}}-any\"\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives.bulkAction.mock', ['liveopsConfigPanel.mock'])
@@ -581,6 +607,361 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }
   ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loCancel', ['$q',
+    function ($q) {
+      return {
+        restrict: 'A',
+        require: ['^loFormCancel'],
+        link: function ($scope, $elem, $attrs, $ctrl) {
+          $attrs.event = angular.isDefined($attrs.event) ? $attrs.event : 'click';
+
+          $elem.bind($attrs.event, function () {
+            var promise = $q.when($scope.$eval($attrs.loCancel));
+
+            promise.then(function () {
+              return $ctrl[0].cancel();
+            });
+
+            $scope.$apply();
+          });
+        }
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loFormAlert', ['$parse', 'Alert',
+    function ($parse, Alert) {
+      return {
+        restrict: 'A',
+        require: ['loFormSubmit'],
+        controller: function() {
+          this.alertSuccess = function(resource) {
+            var action = resource.updated ? 'updated' : 'saved';
+            Alert.success('Record ' + action);
+          };
+
+          this.alertFailure = function(resource) {
+            var action = resource.updated ? 'update' : 'save';
+            Alert.error('Record failed to ' + action);
+          };
+        },
+        link: function ($scope, elem) {
+          $scope.$on('form:submit:success', function(event, resource) {
+            var controller = elem.data('$loFormAlertController');
+            controller.alertSuccess(resource);
+          });
+
+          $scope.$on('form:submit:failure', function(event, resource) {
+            var controller = elem.data('$loFormAlertController');
+            controller.alertFailure(resource);
+          });
+        }
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loFormCancel', ['$parse', 'DirtyForms', '$timeout', '$rootScope',
+    function ($parse, DirtyForms, $timeout, $rootScope) {
+      return {
+        restrict: 'A',
+        require: ['ngResource', 'form', '^loDetailsPanel'],
+        controller: function($scope) {
+          var self = this;
+          //TODO: Consider loFormReset loReset instead. This one introduces too much coupling.
+          this.resetForm = function () {
+            //Workaround for fields with invalid text in them not being cleared when the model is updated to undefined
+            //E.g. http://stackoverflow.com/questions/18874019/angularjs-set-the-model-to-be-again-doesnt-clear-out-input-type-url
+            angular.forEach(self.formController, function (value, key) {
+              if (value && value.hasOwnProperty('$modelValue') && value.$invalid) {
+                var displayValue = value.$modelValue;
+                if (displayValue === null) {
+                  displayValue = undefined;
+                }
+
+                self.formController[key].$setViewValue(displayValue);
+                self.formController[key].$rollbackViewValue();
+              }
+            });
+
+            self.formController.$setPristine();
+            self.formController.$setUntouched();
+          };
+
+          this.cancel = function () {
+            var resource = $parse(this.ngResource)($scope);
+            if (resource.isNew() || !this.formController.$dirty) {
+             this.loDetailsPanelController.close();
+            } else {
+              DirtyForms.confirmIfDirty(function () {
+                $rootScope.$broadcast('cancel:resource:' + resource.resourceName);
+                resource.reset();
+                $timeout(function(){
+                  self.resetForm(self.formController);
+                });
+              });
+            }
+          };
+        },
+        link: function ($scope, $elem, $attrs, $ctrl) {
+          $scope.$watch($attrs.ngResource, function(newResource, oldResource) {
+            if(oldResource) {
+              oldResource.reset();
+            }
+
+            var form = $parse($attrs.name)($scope);
+            var controller = $elem.data('$loFormCancelController');
+            controller.resetForm(form);
+          });
+
+          var controller = $elem.data('$loFormCancelController');
+          controller.ngResource = $attrs.ngResource;
+          controller.formController = $ctrl[1];
+          controller.loDetailsPanelController = $ctrl[2];
+        }
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .controller('loFormResetController', ['$scope', '$timeout', 'modelResetService', 'DirtyForms',
+    function ($scope, $timeout, modelResetService, DirtyForms) {
+      var vm = this;
+      vm.resetForm = function () {
+        //Workaround for fields with invalid text in them not being cleared when the model is updated to undefined
+        //E.g. http://stackoverflow.com/questions/18874019/angularjs-set-the-model-to-be-again-doesnt-clear-out-input-type-url
+        angular.forEach(vm.formController, function (value, key) {
+          if (value && value.hasOwnProperty('$modelValue') && value.$invalid) {
+            var displayValue = value.$modelValue;
+            if (displayValue === null) {
+              displayValue = undefined;
+            }
+
+            vm.formController[key].$setViewValue(displayValue);
+            vm.formController[key].$rollbackViewValue();
+          }
+        });
+
+        vm.formController.$setPristine();
+        vm.formController.$setUntouched();
+      };
+      
+      vm.reset = function reset(model) {
+        modelResetService.reset(model);
+        vm.resetForm(vm.formController);
+      };
+      
+      vm.onEvent = function (model) {
+        DirtyForms.confirmIfDirty(function () {
+          return $timeout(function(){
+            return vm.reset(model);
+          });
+        });
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loFormReset', [
+    function () {
+      return {
+        restrict: 'A',
+        require: 'form',
+        controller: 'loFormResetController',
+        link: function (scope, elem, attrs, formController) {
+          var controller = elem.data('$loFormResetController');
+          controller.formController = formController;
+          formController.resetController = controller;
+        }
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loFormResetWatch', [
+    function () {
+      return {
+        restrict: 'A',
+        require: ['loFormResetController', 'ngModel'],
+        controller: 'loFormResetController',
+        link: function (scope, elem, attrs, ctrls) {
+          var formResetController = ctrls[0];
+          
+          scope.$watch(attrs.ngModel, function(newResource, oldResource) {
+            if(oldResource) {
+              formResetController.reset(oldResource);
+            }
+          });
+        }
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loFormSubmit', ['$parse', 'apiErrorKeys',
+    function($parse, apiErrorKeys) {
+      return {
+        restrict: 'A',
+        require: 'form',
+        controller: function($scope) {
+          var self = this;
+          
+          self.errorInputWatchesUnbinds = {};
+          
+          this.populateApiErrors = function(error) {
+            if ($parse('data.error')(error)) {
+              angular.forEach(error.data.error.attribute, function(value, key) {
+                if (angular.isDefined(self.formController[key])){
+                  
+                  //if api error is a hardcoded key like "required", then simply
+                  //set the form field error key to {value: true}
+                  if(apiErrorKeys.indexOf(value) >= 0) {
+                    self.formController[key].$setValidity(value, false);
+                    self.formController[key].$error = {};
+                    self.formController[key].$error[value] = true;
+                  } else {
+                    self.formController[key].$setValidity('api', false);
+                    self.formController[key].$error = {
+                      api: value
+                    };
+                  }
+                  
+                  
+                  self.formController[key].$setTouched();
+                  self.formController[key].$setPristine();
+                  
+                  self.errorInputWatchesUnbinds[key] = $scope.$watch(function(){
+                    return self.formController[key].$dirty;
+                  }, function(dirtyValue){
+                    if (dirtyValue){
+                      self.formController[key].$setValidity('api', true);
+                      self.errorInputWatchesUnbinds[key]();
+                      delete self.errorInputWatchesUnbinds[key];
+                    }
+                  });
+                }
+              });
+            }
+
+            return error;
+          };
+        },
+        link: function($scope, $elem, $attrs, form) {
+          var controller = $elem.data('$loFormSubmitController');
+          controller.formController = form;
+        }
+      };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loReset', ['$q', '$parse',
+    function ($q, $parse) {
+      return {
+        restrict: 'A',
+        require: ['^form', 'ngModel'],
+        controller: 'loFormResetController',
+        link: function (scope, elem, attrs, ctrls) {
+          var controller = elem.data('$loResetController');
+          controller.formController = ctrls[0];
+          controller.ngModel = ctrls[1];
+          
+          if(attrs.name) {
+            $parse(attrs.name).assign(scope, controller);
+          }
+          
+          attrs.event = angular.isDefined(attrs.event) ? attrs.event : 'click';
+          elem.bind(attrs.event, function () {
+            var promise = $q.when(scope.$eval(attrs.loReset));
+
+            promise.then(function (model) {
+              model = model ? model : controller.ngModel.$modelValue;
+              controller.onEvent(model);
+            });
+
+            scope.$apply();
+          });
+        }
+      };
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loSubmit', ['$q', '$parse', function ($q, $parse) {
+    return {
+      restrict: 'A',
+      require: ['^loFormSubmit', '?^loFormCancel', '?^loFormReset', '?^loFormAlert'],
+      link: function ($scope, $elem, $attrs, $ctrl) {
+        $attrs.event = angular.isDefined($attrs.event) ? $attrs.event : 'click';
+
+        var loFormSubmit = $ctrl[0];
+        var loFormCancel = $ctrl[1];
+        var loFormReset = $ctrl[2];
+        var loFormAlert = $ctrl[3];
+
+        $elem.bind($attrs.event, function () {
+          var ngDisabled = $parse($attrs.ngDisabled)($scope);
+          if(!!ngDisabled){
+            return;
+          }
+
+          //TODO check if $attrs.loSubmit is actually a thing that return resource
+          var promise = $q.when($scope.$eval($attrs.loSubmit));
+
+          promise = promise.then(function(resource) {
+            if(loFormCancel) {
+              loFormCancel.resetForm();
+            } else if(loFormReset) {
+              loFormReset.resetForm();
+            }
+
+            return resource;
+          },
+          function(error) {
+            var def = $q.defer();
+            
+            if (loFormSubmit){
+              loFormSubmit.populateApiErrors(error);
+            }
+            
+            def.reject(error);
+            return def.promise;
+          });
+          
+          if (loFormAlert){
+            promise = promise.then(function(resource) {
+              loFormAlert.alertSuccess(resource);
+            }, 
+            function(error) {
+              loFormAlert.alertFailure(error.config.data);
+            });
+          }
+          
+          $scope.$apply();
+        });
+      }
+    };
+  }]);
 
 'use strict';
 
@@ -727,7 +1108,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         displayPath: '@',
         label: '@',
         showAll: '@',
-        orderBy: '@'
+        orderBy: '@',
+        all: '=?'
       },
       templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
       controller: 'DropdownController',
@@ -895,6 +1277,31 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
+    return {
+      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
+      scope : {
+        text : '@',
+        translateValue: '@'
+      },
+      link: function($scope, element){
+        $scope.target = element;
+        var tooltipElement;
+
+        $scope.showTooltip = function(){
+          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
+          $document.find('body').append(tooltipElement);
+        };
+
+        $scope.destroyTooltip = function(){
+          tooltipElement.remove();
+        };
+      }
+    };
+   }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
 .directive('highlightOnClick', ['$window', function ($window) {
   return {
     restrict: 'A',
@@ -935,31 +1342,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('helpIcon', ['$document', '$compile', function($document, $compile) {
-    return {
-      templateUrl : 'liveops-config-panel-shared/directives/helpIcon/helpIcon.html',
-      scope : {
-        text : '@',
-        translateValue: '@'
-      },
-      link: function($scope, element){
-        $scope.target = element;
-        var tooltipElement;
-
-        $scope.showTooltip = function(){
-          tooltipElement = $compile('<tooltip target="target" text="{{text}}" translate-value="{{translateValue}}"></tooltip>')($scope);
-          $document.find('body').append(tooltipElement);
-        };
-
-        $scope.destroyTooltip = function(){
-          tooltipElement.remove();
-        };
-      }
-    };
-   }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1032,32 +1414,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-angular.module("liveopsConfigPanel.shared.directives").run(["$templateCache", function($templateCache) {$templateCache.put("liveops-config-panel-shared/filters/new.html","");
-$templateCache.put("liveops-config-panel-shared/directives/autocomplete/autocomplete.html","<div class=\"autocomplete-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    name=\"{{nameField}}\"\r\n    ng-required=\"isRequired\"\r\n    type=\"text\"\r\n    ng-disabled=\"{{disabled}}\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"\r\n    placeholder=\"{{placeholder}}\"\r\n    ng-keypress=\"($event.which === 13) ? onEnter() : 0\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-class=\"{\'embeded\' : !hover}\" ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" ng-mouseover=\"hovering=true\" ng-mouseout=\"hovering=false\">\r\n      <li class=\"lo-hover-highlight\" ng-class=\"{\'highlight\' : selectedItem == item, \'lo-highlight\' : selectedItem == item}\" ng-click=\"select(item)\" ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:nameField)\">{{item[nameField] || item.getDisplay()}}</li>\r\n    </ul>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/bulkActionExecutor/bulkActionExecutor.html","<form id=\"bulk-action-form\" name=\"bulkActionForm\" class=\"details-pane\" unsaved-changes-warning>\r\n  <i id=\"close-bulk-button\" class=\"fa fa-remove remove\" ng-click=\"closeBulk()\"></i>\r\n  <div id=\"bulk-actions-selected-header\" class=\"detail-header\">\r\n    <filter-dropdown\r\n      label=\"{{\'bulkActions.selected\' | translate}}({{selectedItems().length}})\"\r\n      options=\"selectedItems()\"\r\n      display-path=\"getDisplay\"\r\n      value-path=\"id\">\r\n    </filter-dropdown>\r\n  </div>\r\n\r\n  <div class=\"detail-body\">\r\n    <!-- bulkAction elements injected here -->\r\n  </div>\r\n\r\n  <div class=\"detail-controls\">\r\n    <input id=\"cancel-bulk-actions-btn\"\r\n      type=\"button\"\r\n      class=\"btn\"\r\n      ng-click=\"cancel()\"\r\n      value=\"{{\'value.cancel\' | translate}}\">\r\n    </input>\r\n    <input id=\"submit-bulk-actions-btn\"\r\n      ng-disabled=\"!canExecute()\"\r\n      type=\"button\"\r\n      class=\"btn btn-primary\"\r\n      ng-click=\"confirmExecute()\"\r\n      value=\"{{\'value.submit\' | translate}}\"\r\n      lo-submit-spinner\r\n      lo-submit-spinner-status=\"executing\">\r\n  </div>\r\n</form>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/dropdown.html","<div class=\"dropdown-wrapper\">\r\n  <div class=\"drop-label\" ng-class=\"{\'drop-origin\' : showDrop}\" ng-click=\"dropClick()\" ng-mouseenter=\"mouseIn()\">\r\n    <div>\r\n      <span>{{label}}</span>\r\n      <i id=\"nav-dropdown-down-arrow\" ng-show=\"showDrop\" class=\"{{collapseIcon}} label-icon\"></i>\r\n      <i ng-show=\"! showDrop\" class=\"{{expandIcon}} label-icon\"></i>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"dropdown-container\">\r\n    <div class=\"dropdown\" ng-hide=\"! showDrop\">\r\n      <ul>\r\n        <li id=\"{{item.id}}\"\r\n          ng-repeat=\"item in items | orderBy:orderBy\"\r\n          ng-click=\"optionClick(item.onClick)\">\r\n            <span class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"! item.stateLink\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</span>\r\n            <a class=\"lo-hover-highlight lo-accent-hover-border\" ng-if=\"item.stateLink\" ui-sref=\"{{item.stateLink}}\" ui-sref-opts=\"{{item.stateLinkParams}}\"><i class=\"{{item.iconClass}}\"></i>{{item[displayPath]}}</a>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/dropdown/filterDropdown.html","<div class=\"dropdown-label\" ng-click=\"showDrop = ! showDrop\">\r\n  <span>{{label}}</span>\r\n  <div ng-if=\"showAll\" class=\"all-label\">\r\n    <span ng-if=\"all.checked\"><span ng-if=\"label\">:</span> All</span>\r\n    <span ng-if=\"!all.checked\"><span ng-if=\"label\">:</span> (...)</span>\r\n  </div>\r\n  <span><i class=\"fa\" ng-class=\"{\'fa-caret-up\' : showDrop, \'fa-caret-down\' : ! showDrop}\"></i></span>\r\n</div>\r\n\r\n<div class=\"dropdown-container\">\r\n  <div class=\"dropdown filter-dropdown\" ng-hide=\"! showDrop || options.length === 0\">\r\n    <div class=\"all lo-accent-hover-box-border lo-hover-highlight\" ng-if=\"showAll\" ng-click=\"toggleAll()\">\r\n      <input type=\"checkbox\" ng-checked=\"all.checked\"/>\r\n      <label>All</label>\r\n    </div>\r\n    <div ng-repeat=\"option in options | orderBy:orderBy\"\r\n      class=\"dropdown-option lo-accent-hover-box-border lo-hover-highlight\" ng-click=\"checkItem(option)\" >\r\n      <input name=\"{{option | parse:valuePath | invoke:option}}\" type=\"checkbox\" ng-checked=\"option.checked\"/>\r\n      <label for=\"{{option | parse:valuePath | invoke:option}}\">\r\n        {{option | parse:displayPath | invoke:option}}\r\n      </label>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/formError/formError.html","<div class=\"lo-error\" role=\"alert\" ng-if=\'field.$touched && field.$invalid\' ng-messages=\"field.$error\">\r\n  <div ng-repeat=\"(error, value) in field.$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/formFieldValidationMessage/formFieldValidationMessage.html","<div class=\"lo-error\" role=\"alert\"\r\n  ng-if=\'form[fieldName].$touched && form[fieldName].$invalid\'\r\n  ng-messages=\"form[fieldName].$error\">\r\n  <div ng-repeat=\"(error, value) in form[fieldName].$error\" >\r\n    <span ng-message=\"{{error}}\" ng-if=\"isString(value)\">{{value}}</span>\r\n    <span ng-message=\"{{error}}\" ng-if=\"value === true\">{{errorTypes[error]}}</span>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/helpIcon/helpIcon.html","<span class=\"fa-stack help-icon lo-accent-hover\" ng-mouseenter=\"showTooltip()\" ng-mouseleave=\"destroyTooltip()\">\r\n  <i class=\"fa fa-circle-thin fa-stack-2x\"></i>\r\n  <i class=\"fa fa-info fa-stack-1x\"></i>\r\n</span>");
-$templateCache.put("liveops-config-panel-shared/directives/loMultibox/loMultibox.html","<div ng-class=\"{\'edit\': showDrop === true}\">\r\n  <div class=\"label-container\" ng-click=\"labelClick()\" ng-hide=\"showDrop && !display\">\r\n    <input type=\"text\" name=\"{{name + \'-display\'}}\"\r\n      placeholder=\"{{\'multibox.add.placeholder\' | translate}}\"\r\n      readonly=\"true\" border=\"0\"  class=\"label\"\r\n      ng-required=\"true\"\r\n      ng-model=\"display\" />\r\n    <i class=\"fa\" ng-class=\"{\'fa-caret-down\': !showDrop, \'fa-caret-up\':showDrop}\"></i>\r\n  </div>\r\n\r\n  <div class=\"edit-box\" ng-show=\"showDrop\">\r\n    <type-ahead\r\n      items=\"items\"\r\n      placeholder=\"{{\'multibox.search.placeholder\' | translate}}\"\r\n      on-select=\"onSelect(selectedItem)\"\r\n      keep-expanded=\"true\"\r\n      selected-item=\"selectedItem\"></type-ahead>\r\n    <input id=\"show-create-new-item-btn\" class=\"btn\" type=\"button\"\r\n      ng-click=\"createItem()\" \r\n      value=\"{{\'multibox.create.btn\' | translate}}\" />\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/loading/loading.html","<div class=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> {{\'loading\' | translate}}</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/modal/modal.html","<div id=\"modal\" ng-include=\"modalBody\">\r\n\r\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSlider.html","<div class=\"number-slider inner-addon right\">\r\n  <input type=\"text\" ng-model=\"value\" placeholder=\"{{placeholder}}\"></input>\r\n  <i ng-mousedown=\"increment()\" class=\"fa fa-caret-up top\" ng-class=\"{disabled : value + 1 > maxValue}\"></i>\r\n  <i ng-mousedown=\"decrement()\" class=\"fa fa-caret-down bottom\" ng-class=\"{disabled : value - 1 < minValue}\"></i>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
-$templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>\r\n\r\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\r\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\r\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\r\n  <span class=\"switch-handle\"></span>\r\n</label>");
-$templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
-$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\r\n  <input\r\n    autocomplete=\"off\"\r\n    placeholder=\"{{placeholder}}\"\r\n    name=\"{{nameField}}\"\r\n    id=\"typeahead-container\"\r\n    type=\"text\"\r\n    ng-disabled=\"{{disabled}}\"\r\n    ng-model=\"currentText\"\r\n    ng-focus=\"showSuggestions=true\"\r\n    ng-blur=\"onBlur()\"></input>\r\n    <i class=\"fa fa-search\"></i>\r\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \r\n      ng-mouseover=\"hovering=true\" \r\n      ng-mouseout=\"hovering=false\">\r\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)\"\r\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\r\n         class=\"lo-hover-highlight\"\r\n         ng-click=\"select(item)\" >\r\n           {{item.getDisplay() || item[nameField]}}\r\n       </li>\r\n    </ul>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\r\n<div class=\"confirm\">\r\n  <h3 class=\"header\">{{title}}</h3>\r\n  <p>{{message}}</p>\r\n  \r\n  <div class=\"footer\">\r\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\r\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\r\n  </div>\r\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\r\n  <ng-transclude></ng-transclude>\r\n  <div class=\"input-toggle\">\r\n\r\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\r\n      <option value=\"\">{{defaultText}}</option>\r\n    </select>\r\n\r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>");
-$templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\r\n  <label>{{label}}</label>\r\n  <div class=\"input-toggle\">\r\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\r\n    \r\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\r\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\r\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\r\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\r\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\r\n    {{ cqe.sectionLabel }}\r\n  </label>\r\n\r\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\r\n    <div>\r\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\r\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\r\n      </type-ahead>\r\n\r\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\r\n    </div>\r\n\r\n    <button class=\"add btn\" type=\"button\"\r\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\r\n      <i class=\"fa fa-plus\"></i>\r\n    </button>\r\n  </div>\r\n\r\n  <div class=\"tag-wrapper clear\">\r\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\r\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\r\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\r\n    </div> \r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\r\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\r\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\r\n    <input id=\"escalation-time-input\" ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\r\n    <select id=\"escalation-units-dropdown\" ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\r\n    </select>\r\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\r\n      error-type-required=\"Time in queue is required\"\r\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\r\n    </form-error>\r\n  </div>\r\n</ng-form>\r\n\r\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\r\n  <h4>{{\'value.details.query\' | translate}}</h4>\r\n  <a class=\"pull-right\">\r\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\r\n      {{\'queue.details.version.query.advanced.link\' | translate}}\r\n    </span>\r\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\r\n      {{\'queue.details.version.query.basic.link\' | translate}}\r\n    </span>\r\n  </a>\r\n</div>\r\n\r\n\r\n<div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\r\n  <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\r\n  <textarea id=\"advanced-query-field\"\r\n    ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\r\n    ng-change=\"qlc.advancedQueryChanged()\"></textarea>\r\n   <form-error field=\"form[\'query\']\"\r\n     error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\r\n     error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\"\r\n     error-type-api>\r\n   </form-error>\r\n</div>\r\n\r\n\r\n\r\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\r\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\r\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\r\n      <h4 id=\"escalation-level-header\">{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\r\n      <a id=\"remove-escalation-level\" class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\r\n    </div>\r\n\r\n    <escalation-editor\r\n      escalation=\"escalation\"\r\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\r\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\r\n    </escalation-editor>\r\n\r\n    <div >\r\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\r\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\r\n      </div>\r\n\r\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\r\n        <h4 id=\"add-escalation-label\">{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\r\n        <div class=\"add-group-button\">\r\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\r\n            <i id=\"add-escalation-btn\" class=\"fa fa-plus\"></i>\r\n          </button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\r\n<div class=\"input-group\" id=\"add-query-filter\">\r\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\r\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\r\n    <select id=\"select-filter-dropdown\"\r\n      ng-model=\"eqc.currentGroup\">\r\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\r\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\r\n    </select>\r\n    <div class=\"add-group-button\">\r\n      <button class=\"add btn\" type=\"button\"\r\n        ng-disabled=\"!eqc.currentGroup\"\r\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\r\n\r\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\r\n      </button>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\r\n\r\n  <div class=\"query-component\">\r\n    <div class=\"divider-header\">\r\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\r\n      <a id=\"{{item.key}}-remove\" class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\r\n        {{\'queue.query.filter.remove\' | translate}}\r\n      </a>\r\n    </div>\r\n    <object-group-editor\r\n      object-group=\"item.objectGroup\"\r\n      key=\"item.key\">\r\n    </object-group-editor>\r\n  </div>\r\n\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html","<div>\r\n  <select ng-model=\"operator\" class=\"pull-left proficiency-operator-dropdown\">\r\n    <option value=\">=\">{{ \'queue.query.builder.at.least\' | translate }}</option>\r\n    <option value=\"<=\">{{ \'queue.query.builder.at.most\' | translate }}</option>\r\n    <option value=\"=\">{{ \'queue.query.builder.exactly\' | translate }}</option>\r\n  </select>\r\n  <number-slider value=\"proficiency\"\r\n    min-value=\"1\" max-value=\"100\" class=\"proficiency-value pull-left\">\r\n  </number-slider>\r\n</div>\r\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\r\n  id=\"{{oge.key}}-all\"\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.andConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n\r\n<condition-group-editor\r\n  id=\"{{oge.key}}-any\"\r\n  class=\"details-group\"\r\n  condition-group=\"oge.objectGroup.orConditions\"\r\n  items=\"oge.items\"\r\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\r\n  placeholder-text=\"{{ oge.placeholderText }}\"\r\n  readonly=\"oge.readonly\">\r\n</condition-group-editor>\r\n");}]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -1081,16 +1437,6 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
    }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loading', [function() {
-    return {
-      restrict : 'E',
-      templateUrl : 'liveops-config-panel-shared/directives/loading/loading.html'
-    };
-  }]);
 
 'use strict';
 
@@ -1133,6 +1479,16 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
    }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loading', [function() {
+    return {
+      restrict : 'E',
+      templateUrl : 'liveops-config-panel-shared/directives/loading/loading.html'
+    };
+  }]);
 
 'use strict';
 
@@ -1376,71 +1732,52 @@ angular.module('liveopsConfigPanel.shared.directives')
   }]);
 
 'use strict';
-/*jslint browser:true */
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('singleElementResizeHandle', ['$window', '$document', '$rootScope', 'lodash', function($window, $document, $rootScope, _) {
+  .directive('separateValidation', [function () {
     return {
-      restrict : 'E',
-      scope : {
-        elementId : '@',
-        minWidth: '@',
-        maxWidth: '@'
-      },
-      templateUrl : 'liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html',
-      link : function($scope, $element) {
-        $scope.targetElement = angular.element(document.getElementById($scope.elementId));
+      restrict: 'A',
+      require: '?form',
+      link: function link($scope, element, iAttrs, formController) {
 
-        $element.on('mousedown', function(event) {
-          if (event.button !== 2) {
-            event.preventDefault();
-            $document.on('mousemove', mousemove);
-            $document.on('mouseup', $scope.mouseup);
-          }
-        });
-
-        function mousemove(event) {
-          var elementWidth = $scope.targetElement[0].offsetWidth;
-          var pageX = event.pageX;
-          var windowWidth = $window.innerWidth;
-
-          $scope.resizeElement(elementWidth, windowWidth, pageX);
+        if (! formController) {
+          return;
         }
 
-        $scope.applyClasses = function(width, element){
-          if (width > 700){
-            element.addClass('two-col');
-          } else {
-            element.removeClass('two-col');
-          }
+        // Remove this form from parent controller
+        var parentFormController = element.parent().controller('form');
 
-          if (width < 450){
-            element.addClass('compact-view');
-          } else {
-            element.removeClass('compact-view');
+        if(parentFormController){
+          parentFormController.$removeControl(formController);
+        }
+        
+        // Replace form controller with a "null-controller"
+        var nullFormCtrl = {
+
+          $setValidity: function () {
+            formController.$invalid = false;
+            angular.forEach(element.find('input'), function (ele){
+              if(formController[ele.name] && formController[ele.name].$error) {
+                for (var prop in formController[ele.name].$error){
+                  if(prop && formController[ele.name].$error[prop]) {
+                    formController.$invalid = true;
+                    break;
+                  }
+                }
+              }
+
+            });
+
+          },
+          $setDirty: function () {
+            formController.$dirty = true;
+          },
+          $setPristine: function (value) {
+            formController.$pristine = value;
           }
         };
 
-        $scope.mouseup = function() {
-          $document.unbind('mousemove', mousemove);
-          $document.unbind('mouseup', $scope.mouseup);
-        };
-
-        $scope.sendResizeEvent = _.throttle(function(eventInfo) {
-          $rootScope.$broadcast('resizehandle:resize', eventInfo);
-        }, 500);
-
-        $scope.resizeElement = function(elementWidth, windowWidth, pageX) {
-          var newElementWidth = windowWidth - pageX;
-
-          if (newElementWidth < $scope.minWidth || newElementWidth > $scope.maxWidth) {
-            return;
-          }
-
-          $scope.targetElement.css('width', newElementWidth + 'px');
-          $scope.sendResizeEvent(newElementWidth);
-          $scope.applyClasses(newElementWidth, $scope.targetElement);
-        };
+        angular.extend(formController, nullFormCtrl);
       }
     };
   }]);
@@ -1511,52 +1848,71 @@ angular.module('liveopsConfigPanel.shared.directives')
   ]);
 
 'use strict';
+/*jslint browser:true */
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('separateValidation', [function () {
+  .directive('singleElementResizeHandle', ['$window', '$document', '$rootScope', 'lodash', function($window, $document, $rootScope, _) {
     return {
-      restrict: 'A',
-      require: '?form',
-      link: function link($scope, element, iAttrs, formController) {
+      restrict : 'E',
+      scope : {
+        elementId : '@',
+        minWidth: '@',
+        maxWidth: '@'
+      },
+      templateUrl : 'liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html',
+      link : function($scope, $element) {
+        $scope.targetElement = angular.element(document.getElementById($scope.elementId));
 
-        if (! formController) {
-          return;
+        $element.on('mousedown', function(event) {
+          if (event.button !== 2) {
+            event.preventDefault();
+            $document.on('mousemove', mousemove);
+            $document.on('mouseup', $scope.mouseup);
+          }
+        });
+
+        function mousemove(event) {
+          var elementWidth = $scope.targetElement[0].offsetWidth;
+          var pageX = event.pageX;
+          var windowWidth = $window.innerWidth;
+
+          $scope.resizeElement(elementWidth, windowWidth, pageX);
         }
 
-        // Remove this form from parent controller
-        var parentFormController = element.parent().controller('form');
+        $scope.applyClasses = function(width, element){
+          if (width > 700){
+            element.addClass('two-col');
+          } else {
+            element.removeClass('two-col');
+          }
 
-        if(parentFormController){
-          parentFormController.$removeControl(formController);
-        }
-        
-        // Replace form controller with a "null-controller"
-        var nullFormCtrl = {
-
-          $setValidity: function () {
-            formController.$invalid = false;
-            angular.forEach(element.find('input'), function (ele){
-              if(formController[ele.name] && formController[ele.name].$error) {
-                for (var prop in formController[ele.name].$error){
-                  if(prop && formController[ele.name].$error[prop]) {
-                    formController.$invalid = true;
-                    break;
-                  }
-                }
-              }
-
-            });
-
-          },
-          $setDirty: function () {
-            formController.$dirty = true;
-          },
-          $setPristine: function (value) {
-            formController.$pristine = value;
+          if (width < 450){
+            element.addClass('compact-view');
+          } else {
+            element.removeClass('compact-view');
           }
         };
 
-        angular.extend(formController, nullFormCtrl);
+        $scope.mouseup = function() {
+          $document.unbind('mousemove', mousemove);
+          $document.unbind('mouseup', $scope.mouseup);
+        };
+
+        $scope.sendResizeEvent = _.throttle(function(eventInfo) {
+          $rootScope.$broadcast('resizehandle:resize', eventInfo);
+        }, 500);
+
+        $scope.resizeElement = function(elementWidth, windowWidth, pageX) {
+          var newElementWidth = windowWidth - pageX;
+
+          if (newElementWidth < $scope.minWidth || newElementWidth > $scope.maxWidth) {
+            return;
+          }
+
+          $scope.targetElement.css('width', newElementWidth + 'px');
+          $scope.sendResizeEvent(newElementWidth);
+          $scope.applyClasses(newElementWidth, $scope.targetElement);
+        };
       }
     };
   }]);
@@ -1930,373 +2286,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loCancel', ['$q',
-    function ($q) {
-      return {
-        restrict: 'A',
-        require: ['^loFormCancel'],
-        link: function ($scope, $elem, $attrs, $ctrl) {
-          $attrs.event = angular.isDefined($attrs.event) ? $attrs.event : 'click';
-
-          $elem.bind($attrs.event, function () {
-            var promise = $q.when($scope.$eval($attrs.loCancel));
-
-            promise.then(function () {
-              return $ctrl[0].cancel();
-            });
-
-            $scope.$apply();
-          });
-        }
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormAlert', ['$parse', 'Alert',
-    function ($parse, Alert) {
-      return {
-        restrict: 'A',
-        require: ['loFormSubmit'],
-        controller: function() {
-          this.alertSuccess = function(resource) {
-            var action = resource.updated ? 'updated' : 'saved';
-            Alert.success('Record ' + action);
-          };
-
-          this.alertFailure = function(resource) {
-            var action = resource.updated ? 'update' : 'save';
-            Alert.error('Record failed to ' + action);
-          };
-        },
-        link: function ($scope, elem) {
-          $scope.$on('form:submit:success', function(event, resource) {
-            var controller = elem.data('$loFormAlertController');
-            controller.alertSuccess(resource);
-          });
-
-          $scope.$on('form:submit:failure', function(event, resource) {
-            var controller = elem.data('$loFormAlertController');
-            controller.alertFailure(resource);
-          });
-        }
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormCancel', ['$parse', 'DirtyForms', '$timeout', '$rootScope',
-    function ($parse, DirtyForms, $timeout, $rootScope) {
-      return {
-        restrict: 'A',
-        require: ['ngResource', 'form', '^loDetailsPanel'],
-        controller: function($scope) {
-          var self = this;
-          //TODO: Consider loFormReset loReset instead. This one introduces too much coupling.
-          this.resetForm = function () {
-            //Workaround for fields with invalid text in them not being cleared when the model is updated to undefined
-            //E.g. http://stackoverflow.com/questions/18874019/angularjs-set-the-model-to-be-again-doesnt-clear-out-input-type-url
-            angular.forEach(self.formController, function (value, key) {
-              if (value && value.hasOwnProperty('$modelValue') && value.$invalid) {
-                var displayValue = value.$modelValue;
-                if (displayValue === null) {
-                  displayValue = undefined;
-                }
-
-                self.formController[key].$setViewValue(displayValue);
-                self.formController[key].$rollbackViewValue();
-              }
-            });
-
-            self.formController.$setPristine();
-            self.formController.$setUntouched();
-          };
-
-          this.cancel = function () {
-            var resource = $parse(this.ngResource)($scope);
-            if (resource.isNew() || !this.formController.$dirty) {
-             this.loDetailsPanelController.close();
-            } else {
-              DirtyForms.confirmIfDirty(function () {
-                $rootScope.$broadcast('cancel:resource:' + resource.resourceName);
-                resource.reset();
-                $timeout(function(){
-                  self.resetForm(self.formController);
-                });
-              });
-            }
-          };
-        },
-        link: function ($scope, $elem, $attrs, $ctrl) {
-          $scope.$watch($attrs.ngResource, function(newResource, oldResource) {
-            if(oldResource) {
-              oldResource.reset();
-            }
-
-            var form = $parse($attrs.name)($scope);
-            var controller = $elem.data('$loFormCancelController');
-            controller.resetForm(form);
-          });
-
-          var controller = $elem.data('$loFormCancelController');
-          controller.ngResource = $attrs.ngResource;
-          controller.formController = $ctrl[1];
-          controller.loDetailsPanelController = $ctrl[2];
-        }
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .controller('loFormResetController', ['$scope', '$timeout', 'modelResetService', 'DirtyForms',
-    function ($scope, $timeout, modelResetService, DirtyForms) {
-      var vm = this;
-      vm.resetForm = function () {
-        //Workaround for fields with invalid text in them not being cleared when the model is updated to undefined
-        //E.g. http://stackoverflow.com/questions/18874019/angularjs-set-the-model-to-be-again-doesnt-clear-out-input-type-url
-        angular.forEach(vm.formController, function (value, key) {
-          if (value && value.hasOwnProperty('$modelValue') && value.$invalid) {
-            var displayValue = value.$modelValue;
-            if (displayValue === null) {
-              displayValue = undefined;
-            }
-
-            vm.formController[key].$setViewValue(displayValue);
-            vm.formController[key].$rollbackViewValue();
-          }
-        });
-
-        vm.formController.$setPristine();
-        vm.formController.$setUntouched();
-      };
-      
-      vm.reset = function reset(model) {
-        modelResetService.reset(model);
-        vm.resetForm(vm.formController);
-      };
-      
-      vm.onEvent = function (model) {
-        DirtyForms.confirmIfDirty(function () {
-          return $timeout(function(){
-            return vm.reset(model);
-          });
-        });
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormReset', [
-    function () {
-      return {
-        restrict: 'A',
-        require: 'form',
-        controller: 'loFormResetController',
-        link: function (scope, elem, attrs, formController) {
-          var controller = elem.data('$loFormResetController');
-          controller.formController = formController;
-          formController.resetController = controller;
-        }
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormResetWatch', [
-    function () {
-      return {
-        restrict: 'A',
-        require: ['loFormResetController', 'ngModel'],
-        controller: 'loFormResetController',
-        link: function (scope, elem, attrs, ctrls) {
-          var formResetController = ctrls[0];
-          
-          scope.$watch(attrs.ngModel, function(newResource, oldResource) {
-            if(oldResource) {
-              formResetController.reset(oldResource);
-            }
-          });
-        }
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormSubmit', ['$parse', 'apiErrorKeys',
-    function($parse, apiErrorKeys) {
-      return {
-        restrict: 'A',
-        require: 'form',
-        controller: function($scope) {
-          var self = this;
-          
-          self.errorInputWatchesUnbinds = {};
-          
-          this.populateApiErrors = function(error) {
-            if ($parse('data.error')(error)) {
-              angular.forEach(error.data.error.attribute, function(value, key) {
-                if (angular.isDefined(self.formController[key])){
-                  
-                  //if api error is a hardcoded key like "required", then simply
-                  //set the form field error key to {value: true}
-                  if(apiErrorKeys.indexOf(value) >= 0) {
-                    self.formController[key].$setValidity(value, false);
-                    self.formController[key].$error = {};
-                    self.formController[key].$error[value] = true;
-                  } else {
-                    self.formController[key].$setValidity('api', false);
-                    self.formController[key].$error = {
-                      api: value
-                    };
-                  }
-                  
-                  
-                  self.formController[key].$setTouched();
-                  self.formController[key].$setPristine();
-                  
-                  self.errorInputWatchesUnbinds[key] = $scope.$watch(function(){
-                    return self.formController[key].$dirty;
-                  }, function(dirtyValue){
-                    if (dirtyValue){
-                      self.formController[key].$setValidity('api', true);
-                      self.errorInputWatchesUnbinds[key]();
-                      delete self.errorInputWatchesUnbinds[key];
-                    }
-                  });
-                }
-              });
-            }
-
-            return error;
-          };
-        },
-        link: function($scope, $elem, $attrs, form) {
-          var controller = $elem.data('$loFormSubmitController');
-          controller.formController = form;
-        }
-      };
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loReset', ['$q', '$parse',
-    function ($q, $parse) {
-      return {
-        restrict: 'A',
-        require: ['^form', 'ngModel'],
-        controller: 'loFormResetController',
-        link: function (scope, elem, attrs, ctrls) {
-          var controller = elem.data('$loResetController');
-          controller.formController = ctrls[0];
-          controller.ngModel = ctrls[1];
-          
-          if(attrs.name) {
-            $parse(attrs.name).assign(scope, controller);
-          }
-          
-          attrs.event = angular.isDefined(attrs.event) ? attrs.event : 'click';
-          elem.bind(attrs.event, function () {
-            var promise = $q.when(scope.$eval(attrs.loReset));
-
-            promise.then(function (model) {
-              model = model ? model : controller.ngModel.$modelValue;
-              controller.onEvent(model);
-            });
-
-            scope.$apply();
-          });
-        }
-      };
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loSubmit', ['$q', '$parse', function ($q, $parse) {
-    return {
-      restrict: 'A',
-      require: ['^loFormSubmit', '?^loFormCancel', '?^loFormReset', '?^loFormAlert'],
-      link: function ($scope, $elem, $attrs, $ctrl) {
-        $attrs.event = angular.isDefined($attrs.event) ? $attrs.event : 'click';
-
-        var loFormSubmit = $ctrl[0];
-        var loFormCancel = $ctrl[1];
-        var loFormReset = $ctrl[2];
-        var loFormAlert = $ctrl[3];
-
-        $elem.bind($attrs.event, function () {
-          var ngDisabled = $parse($attrs.ngDisabled)($scope);
-          if(!!ngDisabled){
-            return;
-          }
-
-          //TODO check if $attrs.loSubmit is actually a thing that return resource
-          var promise = $q.when($scope.$eval($attrs.loSubmit));
-
-          promise = promise.then(function(resource) {
-            if(loFormCancel) {
-              loFormCancel.resetForm();
-            } else if(loFormReset) {
-              loFormReset.resetForm();
-            }
-
-            return resource;
-          },
-          function(error) {
-            var def = $q.defer();
-            
-            if (loFormSubmit){
-              loFormSubmit.populateApiErrors(error);
-            }
-            
-            def.reject(error);
-            return def.promise;
-          });
-          
-          if (loFormAlert){
-            promise = promise.then(function(resource) {
-              loFormAlert.alertSuccess(resource);
-            }, 
-            function(error) {
-              loFormAlert.alertFailure(error.config.data);
-            });
-          }
-          
-          $scope.$apply();
-        });
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-  .filter('hasPermission', ['UserPermissions', function (UserPermissions) {
-    return function (permissions) {
-      if (! angular.isArray(permissions)){
-        permissions = [permissions];
-      }
-      
-      return UserPermissions.hasPermissionInList(permissions);
-    };
-  }]);
 (function() {
   'use strict';
 
@@ -2362,6 +2351,18 @@ angular.module('liveopsConfigPanel.shared.filters')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
+  .filter('hasPermission', ['UserPermissions', function (UserPermissions) {
+    return function (permissions) {
+      if (! angular.isArray(permissions)){
+        permissions = [permissions];
+      }
+      
+      return UserPermissions.hasPermissionInList(permissions);
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
   .filter('keysCount', [function () {
     return function (obj) {
       return Object.keys(obj).length;
@@ -2408,6 +2409,28 @@ angular.module('liveopsConfigPanel.shared.filters')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
+  .filter('invoke', [function() {
+    return function(target, param) {
+      if (angular.isFunction(target)) {
+        return target.call(param);
+      } else {
+        return target;
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
+  .filter('parse', ['$parse', function($parse) {
+    return function(target, param) {
+      return $parse(param)(target);
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.filters')
 .filter('objectNegation', function() {
     return function (items, field, otherItems, otherField) {
       var filtered = [];
@@ -2432,28 +2455,6 @@ angular.module('liveopsConfigPanel.shared.filters')
       return filtered;
     };
   });
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-  .filter('invoke', [function() {
-    return function(target, param) {
-      if (angular.isFunction(target)) {
-        return target.call(param);
-      } else {
-        return target;
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.filters')
-  .filter('parse', ['$parse', function($parse) {
-    return function(target, param) {
-      return $parse(param)(target);
-    };
-  }]);
-
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.filters')
@@ -2556,6 +2557,10 @@ angular.module('liveopsConfigPanel.shared.filters')
             }
 
             if (!$parse('header.options')(field)) {
+              continue;
+            }
+            
+            if (field.header.all && field.header.all.checked){
               continue;
             }
 
@@ -4011,98 +4016,6 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .controller('EscalationEditorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
-      'ZermeloEscalationList', '_', '$translate', 'Modal', function ($scope,
-        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate, Modal) {
-
-      var vm = this;
-
-      vm.forms = {};
-      vm.escalation = $scope.escalation;
-      vm.afterSecondsMultiplier = 1;
-      vm.timeAmount = vm.escalation.afterSecondsInQueue;
-      vm.minSecondsRequired = $scope.minSeconds;
-      vm.previousEscalation = $scope.previousEscalation;
-
-      if(vm.escalation.afterSecondsInQueue) {
-        vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
-        vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
-      };
-
-      $scope.$watch('previousEscalation.afterSecondsInQueue', function () {
-        vm.checkMinValue();
-      });
-
-      vm.checkMinValue = function () {
-        if(vm.escalation && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
-          var validity = vm.previousEscalation.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
-          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
-
-          if(!validity) {
-            vm.forms.timeAfterForm.amount.$setTouched();
-          }
-        }
-      };
-
-      vm.afterTimeOptions = [
-        {
-          label: $translate.instant('queue.details.priorityUnit.seconds'),
-          value: 1
-        },
-        {
-          label: $translate.instant('queue.details.priorityUnit.minutes'),
-          value: 60
-        }
-      ];
-
-      vm.updateMultiplier = function () {
-        switch (vm.afterSecondsMultiplier) {
-          case 1:
-            vm.timeAmount = vm.timeAmount * 60;
-            break;
-          case 60:
-            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
-            break;
-        }
-
-        vm.updateTimeInSeconds();
-      };
-
-      vm.updateTimeInSeconds = function () {
-        vm.escalation.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
-        vm.checkMinValue();
-      };
-
-      vm.minTimeRequired = function (multiplier) {
-        return vm.minSecondsRequired / multiplier;
-      };
-    }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
-    .directive('escalationEditor', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html',
-        controller: 'EscalationEditorController as ec',
-        scope: {
-          escalation: '=',
-          previousEscalation: '=',
-          minSeconds: '='
-        }
-      };
-    });
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
     .controller('EscalationListEditorController', ['$scope', 'ZermeloEscalationList', 'ZermeloEscalation', 'Modal', '$translate', '_',
       function ($scope, ZermeloEscalationList, ZermeloEscalation, Modal, $translate, _) {
 
@@ -4237,6 +4150,98 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
+    .controller('EscalationEditorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
+      'ZermeloEscalationList', '_', '$translate', 'Modal', function ($scope,
+        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate, Modal) {
+
+      var vm = this;
+
+      vm.forms = {};
+      vm.escalation = $scope.escalation;
+      vm.afterSecondsMultiplier = 1;
+      vm.timeAmount = vm.escalation.afterSecondsInQueue;
+      vm.minSecondsRequired = $scope.minSeconds;
+      vm.previousEscalation = $scope.previousEscalation;
+
+      if(vm.escalation.afterSecondsInQueue) {
+        vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
+        vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
+      };
+
+      $scope.$watch('previousEscalation.afterSecondsInQueue', function () {
+        vm.checkMinValue();
+      });
+
+      vm.checkMinValue = function () {
+        if(vm.escalation && vm.forms.timeAfterForm && vm.forms.timeAfterForm.amount) {
+          var validity = vm.previousEscalation.afterSecondsInQueue < vm.escalation.afterSecondsInQueue;
+          vm.forms.timeAfterForm.amount.$setValidity('minTime', validity);
+
+          if(!validity) {
+            vm.forms.timeAfterForm.amount.$setTouched();
+          }
+        }
+      };
+
+      vm.afterTimeOptions = [
+        {
+          label: $translate.instant('queue.details.priorityUnit.seconds'),
+          value: 1
+        },
+        {
+          label: $translate.instant('queue.details.priorityUnit.minutes'),
+          value: 60
+        }
+      ];
+
+      vm.updateMultiplier = function () {
+        switch (vm.afterSecondsMultiplier) {
+          case 1:
+            vm.timeAmount = vm.timeAmount * 60;
+            break;
+          case 60:
+            vm.timeAmount = Math.ceil(vm.timeAmount / 60);
+            break;
+        }
+
+        vm.updateTimeInSeconds();
+      };
+
+      vm.updateTimeInSeconds = function () {
+        vm.escalation.afterSecondsInQueue = vm.timeAmount * vm.afterSecondsMultiplier;
+        vm.checkMinValue();
+      };
+
+      vm.minTimeRequired = function (multiplier) {
+        return vm.minSecondsRequired / multiplier;
+      };
+    }]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('escalationEditor', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html',
+        controller: 'EscalationEditorController as ec',
+        scope: {
+          escalation: '=',
+          previousEscalation: '=',
+          minSeconds: '='
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
     .controller('EscalationQueryEditorController', ['$scope', 'ZermeloEscalationQuery', 'ZermeloObjectGroup',
        '_', '$translate', 'Modal', function ($scope, ZermeloEscalationQuery, ZermeloObjectGroup, _, $translate, Modal) {
 
@@ -4296,23 +4301,6 @@ angular.module('liveopsConfigPanel.shared.directives')
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('proficiencySelector', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html',
-        scope: {
-          operator: '=',
-          proficiency: '='
-        }
-      };
-    });
-
-})();
-
-(function () {
-  'use strict';
-
-  angular.module('liveopsConfigPanel.shared.directives')
     .controller('ObjectGroupEditorController', ['$scope', '$translate', 'Session', 'Skill', 'Group', 'TenantUser', 'ZermeloEscalationQuery',
       function ($scope, $translate, Session, Skill, Group, TenantUser, ZermeloEscalationQuery) {
       var vm = this;
@@ -4345,6 +4333,23 @@ angular.module('liveopsConfigPanel.shared.directives')
         }
       };
     });
+})();
+
+(function () {
+  'use strict';
+
+  angular.module('liveopsConfigPanel.shared.directives')
+    .directive('proficiencySelector', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'liveops-config-panel-shared/directives/queryEditor/proficiency/proficiencySelector.html',
+        scope: {
+          operator: '=',
+          proficiency: '='
+        }
+      };
+    });
+
 })();
 
 (function () {
@@ -4832,6 +4837,81 @@ angular.module('liveopsConfigPanel.shared.services')
 
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'])
+  .service('mockFlows', function(Flow){
+    return [new Flow({
+      name: 'f1',
+      tenantId: 'tenant-id',
+      description: 'A pretty good flow',
+      id: 'flowId1'
+    }), new Flow({
+      name: 'f2',
+      tenantId: 'tenant-id',
+      description: 'Not as cool as the other flow',
+      id: 'flowId2'
+    }), new Flow({
+      name: 'f3',
+      tenantId: 'tenant-id',
+      description: 'Das flow',
+      id: 'flowId3'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockFlows', 'Session',
+    function ($httpBackend, apiHostname, mockFlows, Session) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id).respond({
+        'result': mockFlows[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[1].id).respond({
+        'result': mockFlows[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
+        'result': mockFlows
+      });
+      
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
+        'result': mockFlows[2]
+      });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+
+      var Flow = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:id',
+        resourceName: 'Flow',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'activeVersion'
+        }, {
+          name: 'channelType',
+          optional: true
+        }, {
+          name: 'type'
+        }, {
+          name: 'active'
+        }],
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      Flow.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Flow;
+    }
+  ]);
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.services')
   .factory('DispatchMapping', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
@@ -4954,63 +5034,6 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
-
-      var Integration = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
-        resourceName: 'Integration',
-        updateFields: [{
-          name: 'properties'
-        }, {
-          name: 'accountSid'
-        }, {
-          name: 'authToken'
-        }, {
-          name: 'webRtc'
-        }, {
-          name: 'active'
-        }],
-        updateInterceptor: emitInterceptor
-      });
-
-      Integration.prototype.getDisplay = function () {
-        return this.type;
-      };
-
-      return Integration;
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPanel.mock'])
-  .service('mockIntegrations', function (Integration) {
-    return [new Integration({
-      'id': 'integrationId1'
-    }), new Integration({
-      'id': 'integrationId2'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockIntegrations',
-    function ($httpBackend, apiHostname, mockIntegrations) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations').respond({
-        'result': mockIntegrations
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId1').respond({
-        'result': mockIntegrations[0]
-      });
-      
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId2').respond({
-        'result': mockIntegrations[1]
-      });
-
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
   .service('itemBackupInterceptor', [function () {
     this.response = function (response) {
       var lists = response.resource;
@@ -5095,6 +5118,63 @@ angular.module('liveopsConfigPanel.shared.services')
       return List;
     }
   ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+
+      var Integration = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
+        resourceName: 'Integration',
+        updateFields: [{
+          name: 'properties'
+        }, {
+          name: 'accountSid'
+        }, {
+          name: 'authToken'
+        }, {
+          name: 'webRtc'
+        }, {
+          name: 'active'
+        }],
+        updateInterceptor: emitInterceptor
+      });
+
+      Integration.prototype.getDisplay = function () {
+        return this.type;
+      };
+
+      return Integration;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPanel.mock'])
+  .service('mockIntegrations', function (Integration) {
+    return [new Integration({
+      'id': 'integrationId1'
+    }), new Integration({
+      'id': 'integrationId2'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockIntegrations',
+    function ($httpBackend, apiHostname, mockIntegrations) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations').respond({
+        'result': mockIntegrations
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId1').respond({
+        'result': mockIntegrations[0]
+      });
+      
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/integrations/integrationId2').respond({
+        'result': mockIntegrations[1]
+      });
+
+    }
+  ]);
+
 'use strict';
 
 angular.module('liveopsConfigPanel.tenant.listType.mock', ['liveopsConfigPanel.mock'])
@@ -5213,81 +5293,6 @@ angular.module('liveopsConfigPanel.shared.services')
     }
   ]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.flow.mock', ['liveopsConfigPanel.mock'])
-  .service('mockFlows', function(Flow){
-    return [new Flow({
-      name: 'f1',
-      tenantId: 'tenant-id',
-      description: 'A pretty good flow',
-      id: 'flowId1'
-    }), new Flow({
-      name: 'f2',
-      tenantId: 'tenant-id',
-      description: 'Not as cool as the other flow',
-      id: 'flowId2'
-    }), new Flow({
-      name: 'f3',
-      tenantId: 'tenant-id',
-      description: 'Das flow',
-      id: 'flowId3'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockFlows', 'Session',
-    function ($httpBackend, apiHostname, mockFlows, Session) {
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[0].id).respond({
-        'result': mockFlows[0]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows/' + mockFlows[1].id).respond({
-        'result': mockFlows[1]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
-        'result': mockFlows
-      });
-      
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/flows').respond({
-        'result': mockFlows[2]
-      });
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
-
-      var Flow = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:id',
-        resourceName: 'Flow',
-        updateFields: [{
-          name: 'name'
-        }, {
-          name: 'description',
-          optional: true
-        }, {
-          name: 'activeVersion'
-        }, {
-          name: 'channelType',
-          optional: true
-        }, {
-          name: 'type'
-        }, {
-          name: 'active'
-        }],
-        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
-      });
-
-      Flow.prototype.getDisplay = function () {
-        return this.name;
-      };
-
-      return Flow;
-    }
-  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.tenant.mediaCollection.mock', ['liveopsConfigPanel.mock'])
