@@ -17,7 +17,7 @@
          ng-class="{'highlight' : highlightedItem == item, 'lo-highlight' : highlightedItem == item}"
          class="lo-hover-highlight"
          ng-click="select(item)" >
-           {{item.getDisplay() || item[nameField]}}
+           {{getDisplayString(item)}}
        </li>
     </ul>
 </div>

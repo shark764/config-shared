@@ -66,3 +66,6 @@ not ideal but will have to do for now.
 
 # 12/18/15 - 1.0.30
 - Modify table options filter to not filter items if All is checked
+
+# 12/21/15 - 1.0.31
+- Typeahead updates text display if selectedItem is updated externally
