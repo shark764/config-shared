@@ -13,7 +13,7 @@
     <ul ng-show="filtered.length > 0 && (showSuggestions || hovering)" 
       ng-mouseover="hovering=true" 
       ng-mouseout="hovering=false">
-       <li ng-repeat="item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)"
+       <li ng-repeat="item in filtered = (items | filter:filterCriteria | orderBy:getDisplay)"
          ng-class="{'highlight' : highlightedItem == item, 'lo-highlight' : highlightedItem == item}"
          class="lo-hover-highlight"
          ng-click="select(item)" >
