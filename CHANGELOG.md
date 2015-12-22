@@ -68,3 +68,9 @@ not ideal but will have to do for now.
 
 ## 12/18/15 - 1.0.31
 - passing 'activeExtension' to TenantUser
+
+## 12/20/15 - 1.0.32
+- Added resetErrors and newResource filter
+
+## 12/22/15 - 1.0.33
+- Added getDisplay to Timezone

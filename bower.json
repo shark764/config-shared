@@ -1,6 +1,6 @@
 {
   "name": "liveops-config-panel-shared",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "main": [
     "dist/liveops-config-panel-shared.js"
   ],
