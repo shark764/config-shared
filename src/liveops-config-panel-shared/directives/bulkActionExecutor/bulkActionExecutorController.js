@@ -50,7 +50,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
         });
 
-        return  $q.all(itemPromises).then(function(){
+        return $q.all(itemPromises).finally(function(){
           $scope.executing = false;
         });
       };
