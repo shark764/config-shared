@@ -74,3 +74,6 @@ not ideal but will have to do for now.
 
 ## 12/22/15 - 1.0.33
 - Added getDisplay to Timezone
+
+## 12/22/15 - 1.0.34
+- Typeahead updates text display if selectedItem is updated externally
