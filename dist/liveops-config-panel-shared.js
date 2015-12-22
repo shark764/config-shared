@@ -1215,6 +1215,31 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+
+  .controller('EditFieldController', function ($scope) {
+
+    $scope.saveHandler = function($event) {
+      if ($event){
+        $event.target.blur();
+      }
+      
+      $scope.$emit('editField:save', {
+        objectId: $scope.objectId,
+        fieldName: $scope.name,
+        fieldValue: $scope.ngModel
+      });
+    };
+
+    $scope.$on($scope.name + ':save', function() {
+      $scope.edit = false;
+    });
+
+  });
+
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('formError', function() {
     return {
       templateUrl : 'liveops-config-panel-shared/directives/formError/formError.html',
@@ -1242,31 +1267,6 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
    });
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-
-  .controller('EditFieldController', function ($scope) {
-
-    $scope.saveHandler = function($event) {
-      if ($event){
-        $event.target.blur();
-      }
-      
-      $scope.$emit('editField:save', {
-        objectId: $scope.objectId,
-        fieldName: $scope.name,
-        fieldValue: $scope.ngModel
-      });
-    };
-
-    $scope.$on($scope.name + ':save', function() {
-      $scope.edit = false;
-    });
-
-  });
-
 
 'use strict';
 
@@ -4438,55 +4438,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
-    function($resource, $http, apiHostname, resultTransformer) {
-      return $resource(apiHostname + '/v1/timezones', {}, {
-        query: {
-          method: 'GET',
-          isArray: true,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
-          cache: true
-        },
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
-  .service('mockTimezones', function () {
-    return [
-      'America/Edmonton',
-      'America/Eirunepe',
-      'America/El_Salvador',
-      'America/Ensenada',
-      'America/Fort_Wayne',
-      'America/Fortaleza',
-      'America/Glace_Bay',
-      'America/Godthab',
-      'America/Goose_Bay',
-      'America/Grand_Turk',
-      'America/Grenada',
-      'America/Guadeloupe',
-      'America/Guatemala',
-      'America/Guayaquil',
-      'America/Guyana',
-      'America/Halifax'
-    ];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
-    function ($httpBackend, apiHostname, mockTimezones) {
-      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
-        'result': mockTimezones
-      });
-    }
-  ]);
-'use strict';
-
 angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
   .service('mockTenants', function (Tenant) {
     return [new Tenant({
@@ -4561,6 +4512,60 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       return Tenant;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
+    function ($resource, $http, apiHostname, resultTransformer) {
+      var Timezone = $resource(apiHostname + '/v1/timezones', {}, {
+        query: {
+          method: 'GET',
+          isArray: true,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
+          cache: true
+        },
+      });
+
+      Timezone.prototype.getDisplay = function () {
+        return '(' + this.offset + ') ' + this.timezone;
+      };
+
+      return Timezone;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTimezones', function () {
+    return [
+      'America/Edmonton',
+      'America/Eirunepe',
+      'America/El_Salvador',
+      'America/Ensenada',
+      'America/Fort_Wayne',
+      'America/Fortaleza',
+      'America/Glace_Bay',
+      'America/Godthab',
+      'America/Goose_Bay',
+      'America/Grand_Turk',
+      'America/Grenada',
+      'America/Guadeloupe',
+      'America/Guatemala',
+      'America/Guayaquil',
+      'America/Guyana',
+      'America/Halifax'
+    ];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
+    function ($httpBackend, apiHostname, mockTimezones) {
+      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
+        'result': mockTimezones
+      });
     }
   ]);
 'use strict';
