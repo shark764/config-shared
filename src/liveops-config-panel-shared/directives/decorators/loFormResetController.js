@@ -23,6 +23,17 @@ angular.module('liveopsConfigPanel.shared.directives')
         vm.formController.$setUntouched();
       };
       
+      vm.resetErrors = function () {
+        for (var errorIndex in vm.formController.$error) {
+          var errorFields = vm.formController.$error[errorIndex];
+
+          for (var errorFieldIndex = 0; errorFieldIndex < errorFields.length; errorFields++) {
+            var error = errorFields[errorFieldIndex];
+            error.$setValidity(errorIndex, true);
+          }
+        }
+      };
+      
       vm.reset = function reset(model) {
         modelResetService.reset(model);
         vm.resetForm(vm.formController);
