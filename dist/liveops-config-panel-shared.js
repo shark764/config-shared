@@ -1215,31 +1215,6 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-
-  .controller('EditFieldController', function ($scope) {
-
-    $scope.saveHandler = function($event) {
-      if ($event){
-        $event.target.blur();
-      }
-      
-      $scope.$emit('editField:save', {
-        objectId: $scope.objectId,
-        fieldName: $scope.name,
-        fieldValue: $scope.ngModel
-      });
-    };
-
-    $scope.$on($scope.name + ':save', function() {
-      $scope.edit = false;
-    });
-
-  });
-
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
   .directive('formError', function() {
     return {
       templateUrl : 'liveops-config-panel-shared/directives/formError/formError.html',
@@ -1267,6 +1242,31 @@ angular.module('liveopsConfigPanel.shared.directives')
       }
     };
    });
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+
+  .controller('EditFieldController', function ($scope) {
+
+    $scope.saveHandler = function($event) {
+      if ($event){
+        $event.target.blur();
+      }
+      
+      $scope.$emit('editField:save', {
+        objectId: $scope.objectId,
+        fieldName: $scope.name,
+        fieldValue: $scope.ngModel
+      });
+    };
+
+    $scope.$on($scope.name + ':save', function() {
+      $scope.edit = false;
+    });
+
+  });
+
 
 'use strict';
 
@@ -5159,6 +5159,7 @@ angular.module('liveopsConfigPanel.tenant.list.mock', ['liveopsConfigPanel.mock'
   .service('mockLists', ['List', function (List) {
     return [new List({
       'id': 'listId1',
+      'tenantId': 'tenant-id',
       'listTypeId': 'listTypeId1',
       'items': [{
         'field1': 'string value',
@@ -5167,9 +5168,11 @@ angular.module('liveopsConfigPanel.tenant.list.mock', ['liveopsConfigPanel.mock'
       }]
     }), new List({
       'id': 'listId2',
+      'tenantId': 'tenant-id',
       'listTypeId': 'listTypeId2'
     }), new List({
       'id': 'listId3',
+      'tenantId': 'tenant-id',
       'listTypeId': 'listTypeId1'
     })];
   }])
