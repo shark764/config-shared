@@ -4,6 +4,7 @@ angular.module('liveopsConfigPanel.tenant.list.mock', ['liveopsConfigPanel.mock'
   .service('mockLists', ['List', function (List) {
     return [new List({
       'id': 'listId1',
+      'tenantId': 'tenant-id',
       'listTypeId': 'listTypeId1',
       'items': [{
         'field1': 'string value',
@@ -12,9 +13,11 @@ angular.module('liveopsConfigPanel.tenant.list.mock', ['liveopsConfigPanel.mock'
       }]
     }), new List({
       'id': 'listId2',
+      'tenantId': 'tenant-id',
       'listTypeId': 'listTypeId2'
     }), new List({
       'id': 'listId3',
+      'tenantId': 'tenant-id',
       'listTypeId': 'listTypeId1'
     })];
   }])

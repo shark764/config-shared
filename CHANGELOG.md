@@ -80,3 +80,6 @@ not ideal but will have to do for now.
 
 ## 12/22/15 - 1.0.35
 - Fix bulk actions loading spinner showing after a failed action
+
+## 12/22/15 - 1.0.36
+- Updated list.mock to include tenantId
