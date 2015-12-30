@@ -22,7 +22,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         vm.formController.$setPristine();
         vm.formController.$setUntouched();
       };
-      
+
       vm.resetErrors = function () {
         for (var errorIndex in vm.formController.$error) {
           var errorFields = vm.formController.$error[errorIndex];
@@ -33,12 +33,12 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
         }
       };
-      
+
       vm.reset = function reset(model) {
         modelResetService.reset(model);
         vm.resetForm(vm.formController);
       };
-      
+
       vm.onEvent = function (model) {
         DirtyForms.confirmIfDirty(function () {
           return $timeout(function(){

@@ -40,6 +40,11 @@ angular.module('liveopsConfigPanel.shared.services')
       } else {
         tenantUser.$roleName = TenantRole.getName(tenantUser.roleId);
       }
+      
+      if(tenantUser.activeExtension &&
+        !Object.keys(tenantUser.activeExtension).length) {
+        delete tenantUser.activeExtension;
+      }
 
       //Required so that we can get a cache hit on TenantUser.cachedGet
       tenantUser.tenantId = Session.tenant.tenantId;

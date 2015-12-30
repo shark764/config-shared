@@ -5,14 +5,17 @@ angular.module('liveopsConfigPanel.shared.directives')
     function () {
       return {
         restrict: 'A',
-        require: ['loFormResetController', 'ngModel'],
+        require: ['ngModel', 'form'],
         controller: 'loFormResetController',
         link: function (scope, elem, attrs, ctrls) {
-          var formResetController = ctrls[0];
-          
+          var formController = ctrls[1];
+          var controller = elem.data('$loFormResetWatchController');
+          controller.formController =formController;
+          formController.resetController = controller;
+
           scope.$watch(attrs.ngModel, function(newResource, oldResource) {
             if(oldResource) {
-              formResetController.reset(oldResource);
+              controller.reset(oldResource);
             }
           });
         }

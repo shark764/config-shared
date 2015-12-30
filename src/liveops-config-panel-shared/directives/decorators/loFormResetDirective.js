@@ -10,7 +10,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         link: function (scope, elem, attrs, formController) {
           var controller = elem.data('$loFormResetController');
           controller.formController = formController;
-          formController.resetController = controller;
+          formController.loFormResetController = controller;
         }
       };
     }
