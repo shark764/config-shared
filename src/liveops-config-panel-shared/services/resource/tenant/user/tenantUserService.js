@@ -24,7 +24,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'extensions'
         }, {
-          name: 'activeExtension'
+          name: 'activeExtension',
+          optional: true
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,
