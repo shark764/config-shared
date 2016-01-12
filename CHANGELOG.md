@@ -83,3 +83,9 @@ not ideal but will have to do for now.
 
 ## 12/22/15 - 1.0.36
 - Updated list.mock to include tenantId
+
+## 01/07/16 - 1.0.38
+- Add twilio language and voice constants
+
+## 01/12/16 - 1.0.39
+- Update tenantUser API intercepter to check for presence of Session.tenant before setting user role name
