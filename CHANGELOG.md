@@ -89,3 +89,6 @@ not ideal but will have to do for now.
 
 ## 01/12/16 - 1.0.39
 - Update tenantUser API intercepter to check for presence of Session.tenant before setting user role name
+
+## 01/12/16 - 1.0.40
+- Update confirmToggle to support a custom function on confirm accept
