@@ -92,3 +92,6 @@ not ideal but will have to do for now.
 
 ## 01/12/16 - 1.0.40
 - Update confirmToggle to support a custom function on confirm accept
+
+## 01/13/16 - 1.0.41
+- Styling fixes for IE11 and IE10
