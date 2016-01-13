@@ -1029,13 +1029,13 @@ $templateCache.put("liveops-config-panel-shared/directives/numberSlider/numberSl
 $templateCache.put("liveops-config-panel-shared/directives/resizeHandle/resizeHandle.html","<div class=\"resizable-handle lo-accent-text\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/singleElementResizeHandle/singleElementResizeHandle.html","<div class=\"resizable-handle\"><i class=\"fa fa-ellipsis-v\"></i></div>");
 $templateCache.put("liveops-config-panel-shared/directives/toggle/toggle.html","<label ng-show=\"trueValue && falseValue\" class=\"switch switch-green\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-true-value=\"\'{{trueValue}}\'\" ng-false-value=\"\'{{falseValue}}\'\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>\n\n<label class=\"switch switch-green\" ng-show=\"!trueValue || !falseValue\" ng-switch on=\"confirmOnToggle\">\n  <input name=\"{{name}}\" ng-switch-when=\"true\" confirm-toggle type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <input name=\"{{name}}\" ng-switch-default type=\"checkbox\" class=\"switch-input\" ng-model=\"$parent.ngModel\" ng-disabled=\"ngDisabled\">\n  <span class=\"switch-label\" data-on=\"On\" data-off=\"Off\"></span>\n  <span class=\"switch-handle\"></span>\n</label>");
-$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-disabled=\"{{disabled}}\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:getDisplayString)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\n         class=\"lo-hover-highlight\"\n         ng-click=\"select(item)\" >\n           {{getDisplayString(item)}}\n       </li>\n    </ul>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/tooltip/tooltip.html","<div class=\"help-tooltip\"><div class=\"tooltip-content lo-accent-bg\" translate=\"{{translateValue}}\">{{text}}</div><div class=\"tooltip-arrow\"></div></div>");
+$templateCache.put("liveops-config-panel-shared/directives/typeAhead/typeAhead.html","<div class=\"typeahead-container\">\n  <input\n    autocomplete=\"off\"\n    placeholder=\"{{placeholder}}\"\n    name=\"{{nameField}}\"\n    id=\"typeahead-container\"\n    type=\"text\"\n    ng-disabled=\"{{disabled}}\"\n    ng-model=\"currentText\"\n    ng-focus=\"showSuggestions=true\"\n    ng-blur=\"onBlur()\"></input>\n    <i class=\"fa fa-search\"></i>\n    <ul ng-show=\"filtered.length > 0 && (showSuggestions || hovering)\" \n      ng-mouseover=\"hovering=true\" \n      ng-mouseout=\"hovering=false\">\n       <li ng-repeat=\"item in filtered = (items | filter:filterCriteria | orderBy:getDisplayString)\"\n         ng-class=\"{\'highlight\' : highlightedItem == item, \'lo-highlight\' : highlightedItem == item}\"\n         class=\"lo-hover-highlight\"\n         ng-click=\"select(item)\" >\n           {{getDisplayString(item)}}\n       </li>\n    </ul>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/services/modal/confirmModal.html","\n<div class=\"confirm\">\n  <h3 class=\"header\">{{title}}</h3>\n  <p>{{message}}</p>\n  \n  <div class=\"footer\">\n    <a id=\"modal-cancel\" class=\"btn\" ng-click=\"cancelCallback()\">{{\'value.cancel\' | translate}}</a>\n    <a ng-click=\"okCallback()\" class=\"btn btn-primary\" id=\"modal-ok\">{{\'value.ok\' | translate}}</a>\n  </div>\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/dropDown/editField_DropDown.html","<div class=\"edit-field edit-field-drop-down\" ng-init=\"edit = false\">\n  <ng-transclude></ng-transclude>\n  <div class=\"input-toggle\">\n\n    <select ng-model=\"ngModel\" ng-options=\"option for option in [\'Admin\', \'Agent\']\" name={{name}} required=\"\" ng-show=\"edit\" ng-change=\"saveHandler()\">\n      <option value=\"\">{{defaultText}}</option>\n    </select>\n\n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">Click to add value</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>");
 $templateCache.put("liveops-config-panel-shared/directives/editField/input/editField_input.html","<div class=\"edit-field edit-field-input\" ng-init=\"edit = false\">\n  <label>{{label}}</label>\n  <div class=\"input-toggle\">\n    <input ng-model=\"ngModel\" name=\"{{name}}\" type=\"{{type ? type : \'text\'}}\" required=\"\" ng-show=\"edit\" ng-keyup=\"$event.keyCode == 13 ? saveHandler($event) : null\">\n    \n    <div ng-mouseover=\"hover=true\" ng-mouseout=\"hover=false\" ng-click=\"edit = true\" title=\"Click to edit.\" ng-show=\"!edit\">\n      <label ng-show=\"ngModel\">{{ngModel}}</label>\n      <label class=\"placeholder\" ng-show=\"!ngModel\">{{placeholder ? placeholder : \'Click to add value\'}}</label>\n      <i class=\"fa fa-pencil\" ng-show=\"hover\"></i>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/conditionGroup/conditionGroupEditor.html","<div ng-class=\"{\'input-group\': !cqe.readonly}\">\n  <label ng-show=\"!cqe.readonly || cqe.conditionGroup.conditions.length > 0\" ng-class=\"{\'has-elements\': cqe.conditionGroup.conditions.length > 0}\">\n    {{ cqe.sectionLabel }}\n  </label>\n\n  <div class=\"instant-add\" ng-show=\"!cqe.readonly\">\n    <div>\n      <type-ahead hover=\"true\" placeholder=\"{{ cqe.placeholderText }}\"\n        items=\"cqe.items\" selected-item=\"cqe.selectedItem\" filters=\"cqe.conditionsFilter\">\n      </type-ahead>\n\n      <proficiency-selector ng-show=\"cqe.selectedItem.hasProficiency\" operator=\"cqe.conditionOperator\" proficiency=\"cqe.conditionProficiency\"></proficiency-selector>\n    </div>\n\n    <button class=\"add btn\" type=\"button\"\n      ng-disabled=\"!cqe.selectedItem.id\" ng-click=\"cqe.addSelectedCondition()\">\n      <i class=\"fa fa-plus\"></i>\n    </button>\n  </div>\n\n  <div class=\"tag-wrapper clear\">\n    <div class=\"tag\" ng-repeat=\"condition in cqe.conditionGroup.conditions\">\n      {{cqe.getConditionName(condition) + \' \' + cqe.prettyConditionFilter(condition)}}\n      <a ng-show=\"!cqe.readonly\" ng-click=\"cqe.conditionGroup.removeCondition(condition)\"><i class=\"fa fa-times\"></i></a>\n    </div> \n  </div>\n</div>\n");
-$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\n    <input id=\"escalation-time-input\" ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\n    <select id=\"escalation-units-dropdown\" ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\n    </select>\n    <form-error field=\"ec.forms.timeAfterForm.amount\"\n      error-type-required=\"Time in queue is required\"\n      error-type-min-time=\"Time in queue must be greater then the previous value\">\n    </form-error>\n  </div>\n</ng-form>\n\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\n");
+$templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalation/escalationEditor.html","<ng-form name=\"ec.forms.timeAfterForm\">\n  <div class=\"input-group time-input\" ng-if=\"ec.minSecondsRequired > 0\">\n    <label>{{\'queues.query.builder.after.seconds\' | translate}}</label>\n    <div>\n      <input id=\"escalation-time-input\" ng-required=\"true\" name=\"amount\" type=\"number\" ng-model=\"ec.timeAmount\" ng-change=\"ec.updateTimeInSeconds()\" />\n      <select id=\"escalation-units-dropdown\" ng-model=\"ec.afterSecondsMultiplier\" ng-options=\"option.value as option.label for option in ec.afterTimeOptions\" ng-change=\"ec.updateMultiplier()\">\n      </select>\n      <form-error field=\"ec.forms.timeAfterForm.amount\"\n        error-type-required=\"Time in queue is required\"\n        error-type-min-time=\"Time in queue must be greater then the previous value\">\n      </form-error>\n    </div>\n  </div>\n</ng-form>\n\n<escalation-query-editor escalation-query=\"ec.escalation.query\"></escalation-query-editor>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationList/escalationListEditor.html","<div class=\"divider-header first-header\">\n  <h4>{{\'value.details.query\' | translate}}</h4>\n  <a class=\"pull-right\">\n    <span id=\"show-advanced-query\" ng-show=\"!qlc.isAdvancedMode\" ng-click=\"qlc.advancedMode()\">\n      {{\'queue.details.version.query.advanced.link\' | translate}}\n    </span>\n    <span class=\"pull-right\"  id=\"show-basic-query\" ng-show=\"qlc.isAdvancedMode && qlc.initialAdvancedQuery\" ng-click=\"qlc.basicMode()\">\n      {{\'queue.details.version.query.basic.link\' | translate}}\n    </span>\n  </a>\n</div>\n\n\n<div class=\"input-group\" ng-if=\"qlc.isAdvancedMode\">\n  <label class=\"textarea-label\">{{\'value.details.query\' | translate}}</label>\n  <textarea id=\"advanced-query-field\"\n    ng-required=\"true\" type=\"text\" ng-model=\"qlc.advancedQuery\" name=\"query\"\n    ng-change=\"qlc.advancedQueryChanged()\"></textarea>\n   <form-error field=\"form[\'query\']\"\n     error-type-required=\"{{\'queue.details.queue.error\' | translate}}\"\n     error-type-zermelo=\"{{\'queue.query.build.zermelo.invalid\' | translate}}\"\n     error-type-api>\n   </form-error>\n</div>\n\n\n\n<div ng-if=\"!qlc.isAdvancedMode\" class=\"query-component\" ng-repeat=\"escalation in qlc.escalationList.escalations\">\n  <div ng-class=\"{\'detail-group\': $index !== 0 }\">\n    <div class=\"divider-header\" ng-if=\"$index !== 0\">\n      <h4 id=\"escalation-level-header\">{{ \'queue.query.escalation.level\' | translate:{level: $index} }}</h4>\n      <a id=\"remove-escalation-level\" class=\"pull-right\" ng-click=\"qlc.removeEscalation(escalation)\">{{ \'queue.query.escalation.level.remove\'| translate}}</a>\n    </div>\n\n    <escalation-editor\n      escalation=\"escalation\"\n      min-seconds=\"qlc.minSecondsForQuery($index)\"\n      previous-escalation=\"::qlc.escalationList.escalations[$index-1]\">\n    </escalation-editor>\n\n    <div >\n      <div class=\"divider-header\" ng-if=\"$index === 0\">\n        <h4>{{ \'queue.query.escalation\' | translate}}</h4>\n      </div>\n\n      <div ng-if=\"!qlc.escalationList.escalations[$index + 1]\" class=\"add-query detail-group\">\n        <h4 id=\"add-escalation-label\">{{ \'queue.query.add.escalation.level\' | translate:{level: ($index+1)} }}</h4>\n        <div class=\"add-group-button\">\n          <button class=\"add btn\" type=\"button\" ng-click=\"qlc.addEscalation()\">\n            <i id=\"add-escalation-btn\" class=\"fa fa-plus\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/escalationQuery/escalationQueryEditor.html","\n<div class=\"input-group\" id=\"add-query-filter\">\n  <label>{{\'queues.query.builder.filters.label\' | translate}}</label>\n  <div class=\"instant-add add-filter\" disable-contents=\"eqc.possibleGroups.length == 0\">\n    <select id=\"select-filter-dropdown\"\n      ng-model=\"eqc.currentGroup\">\n      <option value=\"\" disabled>{{\'queues.query.builder.filters.placeholder\' | translate}}</option>\n      <option ng-repeat=\"key in eqc.possibleGroups\" value=\"{{key}}\">{{\'queues.query.builder.\' + key | translate }}</option>\n    </select>\n    <div class=\"add-group-button\">\n      <button class=\"add btn\" type=\"button\"\n        ng-disabled=\"!eqc.currentGroup\"\n        ng-click=\"eqc.addGroup(eqc.currentGroup)\">\n\n        <i id=\"add-filter-btn\" class=\"fa fa-plus\"></i>\n      </button>\n    </div>\n  </div>\n</div>\n\n\n<div ng-repeat=\"item in eqc.escalationQuery.groups\" class=\"details-group\">\n\n  <div class=\"query-component\">\n    <div class=\"divider-header\">\n      <h4>{{ \'queues.query.builder.\' + item.key + \'.title\' | translate }}</h4>\n      <a id=\"{{item.key}}-remove\" class=\"pull-right\" ng-click=\"eqc.verifyRemoveGroup(item.key)\">\n        {{\'queue.query.filter.remove\' | translate}}\n      </a>\n    </div>\n    <object-group-editor\n      object-group=\"item.objectGroup\"\n      key=\"item.key\">\n    </object-group-editor>\n  </div>\n\n</div>\n");
 $templateCache.put("liveops-config-panel-shared/directives/queryEditor/objectGroup/objectGroupEditor.html","<condition-group-editor\n  id=\"{{oge.key}}-all\"\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.andConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.all\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n\n<condition-group-editor\n  id=\"{{oge.key}}-any\"\n  class=\"details-group\"\n  condition-group=\"oge.objectGroup.orConditions\"\n  items=\"oge.items\"\n  section-label=\"{{\'queue.query.builder.\' + oge.key + \'.some\' | translate}}\"\n  placeholder-text=\"{{ oge.placeholderText }}\"\n  readonly=\"oge.readonly\">\n</condition-group-editor>\n");
@@ -1820,6 +1820,56 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('scrollTable', [function() {
+    return {
+      restrict: 'A',
+      replace: 'true',
+      compile: function CompilingFunction($templateElement) {
+        $templateElement.removeAttr('scroll-table'); //Prevent infinite recursion
+
+        var headerHeight = $templateElement.find('thead').height();
+        if (headerHeight === 0){
+          headerHeight = 35;
+        }
+
+        var headerCopy = $templateElement.find('thead').clone(true, true);
+        headerCopy.find('th').css('height', headerHeight + 'px');
+
+        var cloneHeaderTable = angular.element('<table class="clone-header">' + headerCopy[0].outerHTML + '</table>');
+        var origClasses = $templateElement[0].className;
+        cloneHeaderTable.addClass(origClasses);
+
+        //Remove duplicated header inputs for cleaner HTML
+        //Note: if a cell contains only an input and has no width explicitly set,
+        //removing the input will cause misalignment between the table cells and the header cells.
+        $templateElement.find('thead').find('input').remove();
+
+        $templateElement.replaceWith('<div class="scrollable-table-container" style="padding-top:' + headerHeight + 'px;">' +
+            cloneHeaderTable[0].outerHTML +
+            '<div class="table-wrapper"><div>' + $templateElement[0].outerHTML + '</div></div>' +
+            '</div>');
+
+        return function($scope, element, attrs){
+          if (attrs.maxHeight){
+            $scope.$watch(function(){return element.find('tbody').find('tr').length;}, function(count){
+              if (count > 0){
+                var approxHeight = headerHeight * count;
+                if (approxHeight < attrs.maxHeight){
+                  element.css('height', approxHeight + headerHeight + 5 + 'px');
+                } else {
+                  element.css('height', attrs.maxHeight + 'px');
+                }
+              }
+            });
+          }
+        };
+      }
+    };
+  }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('separateValidation', [function () {
     return {
       restrict: 'A',
@@ -1864,56 +1914,6 @@ angular.module('liveopsConfigPanel.shared.directives')
         };
 
         angular.extend(formController, nullFormCtrl);
-      }
-    };
-  }]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('scrollTable', [function() {
-    return {
-      restrict: 'A',
-      replace: 'true',
-      compile: function CompilingFunction($templateElement) {
-        $templateElement.removeAttr('scroll-table'); //Prevent infinite recursion
-
-        var headerHeight = $templateElement.find('thead').height();
-        if (headerHeight === 0){
-          headerHeight = 35;
-        }
-
-        var headerCopy = $templateElement.find('thead').clone(true, true);
-        headerCopy.find('th').css('height', headerHeight + 'px');
-
-        var cloneHeaderTable = angular.element('<table class="clone-header">' + headerCopy[0].outerHTML + '</table>');
-        var origClasses = $templateElement[0].className;
-        cloneHeaderTable.addClass(origClasses);
-
-        //Remove duplicated header inputs for cleaner HTML
-        //Note: if a cell contains only an input and has no width explicitly set,
-        //removing the input will cause misalignment between the table cells and the header cells.
-        $templateElement.find('thead').find('input').remove();
-
-        $templateElement.replaceWith('<div class="scrollable-table-container" style="padding-top:' + headerHeight + 'px;">' +
-            cloneHeaderTable[0].outerHTML +
-            '<div class="table-wrapper"><div>' + $templateElement[0].outerHTML + '</div></div>' +
-            '</div>');
-
-        return function($scope, element, attrs){
-          if (attrs.maxHeight){
-            $scope.$watch(function(){return element.find('tbody').find('tr').length;}, function(count){
-              if (count > 0){
-                var approxHeight = headerHeight * count;
-                if (approxHeight < attrs.maxHeight){
-                  element.css('height', approxHeight + headerHeight + 5 + 'px');
-                } else {
-                  element.css('height', attrs.maxHeight + 'px');
-                }
-              }
-            });
-          }
-        };
       }
     };
   }]);
@@ -2112,6 +2112,115 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('tooltip', ['$document', '$timeout', function ($document, $timeout) {
+    return {
+      templateUrl: 'liveops-config-panel-shared/directives/tooltip/tooltip.html',
+      scope: {
+        text: '@',
+        target: '=',
+        translateValue: '@'
+      },
+      link: function ($scope, element) {
+        $scope.targetPosition = $scope.target.offset();
+        $scope.tooltipWidth = 0;
+        $scope.tooltipHeight = 0;
+
+        $scope.setPosition = function () {
+          element.find('div').removeClass('top left right bottom');
+          $scope.tooltipWidth = element.outerWidth();
+          $scope.tooltipHeight = element.outerHeight();
+
+          var tooltipPos = $scope.getPositionClass();
+          var absolutePosition = $scope.getAbsolutePosition(tooltipPos);
+
+          element.find('div').addClass(tooltipPos);
+
+          element.css('left', absolutePosition.left);
+          element.css('top', absolutePosition.top);
+        };
+
+        $scope.getPositionClass = function () {
+          var tooltipPos;
+
+          var documentWidth = $document.width();
+          var documentHeight = $document.height();
+
+          var top = $scope.targetPosition.top;
+          var left = $scope.targetPosition.left;
+
+          if (top - $scope.tooltipHeight < 0) {
+            if (left - $scope.tooltipWidth < 0) {
+              tooltipPos = 'bottom right';
+            } else if (left + $scope.tooltipWidth > documentWidth) {
+              tooltipPos = 'bottom left';
+            } else {
+              tooltipPos = 'bottom center';
+            }
+          } else if (top + $scope.tooltipHeight > documentHeight) {
+            if (left - $scope.tooltipWidth < 0) {
+              tooltipPos = 'top right';
+            } else if (left + $scope.tooltipWidth > documentWidth) {
+              tooltipPos = 'top left';
+            } else {
+              tooltipPos = 'top center';
+            }
+          } else {
+            if (left - $scope.tooltipWidth < 0) {
+              tooltipPos = 'center right';
+            } else if (left + $scope.tooltipWidth > documentWidth) {
+              tooltipPos = 'center left';
+            } else {
+              tooltipPos = 'top center';
+            }
+          }
+
+          return tooltipPos;
+        };
+
+        $scope.getAbsolutePosition = function (tooltipPos) {
+          var arrowHeight = 15;
+          var arrowWidth = 13;
+          var arrowBase = 25;
+
+          var targetHeight = $scope.target.outerHeight();
+          var targetWidth = $scope.target.outerWidth();
+
+          var offsetLeft = $scope.targetPosition.left;
+          var offsetTop = $scope.targetPosition.top;
+
+          if (tooltipPos.indexOf('left') > -1) {
+            offsetLeft += -$scope.tooltipWidth - arrowWidth;
+          }
+
+          if (tooltipPos.indexOf('right') > -1) {
+            offsetLeft += targetWidth + arrowWidth;
+          }
+
+          if (tooltipPos === 'bottom center') {
+            offsetTop += targetHeight + arrowHeight;
+            offsetLeft += -(($scope.tooltipWidth - targetWidth) / 2);
+          } else if (tooltipPos === 'top center') {
+            offsetTop += -($scope.tooltipHeight + arrowHeight);
+            offsetLeft += -(($scope.tooltipWidth - targetWidth) / 2);
+          } else if (tooltipPos === 'top right' || tooltipPos === 'top left') {
+            offsetTop += -$scope.tooltipHeight + arrowBase;
+          } else if (tooltipPos === 'center right' || tooltipPos === 'center left') {
+            offsetTop += -($scope.tooltipHeight / 2) + (targetHeight / 2);
+          }
+
+          return {
+            top: offsetTop,
+            left: offsetLeft
+          };
+        };
+
+        $timeout($scope.setPosition, 1);
+      }
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('typeAhead', ['$filter', '$timeout', function($filter, $timeout) {
     return {
       restrict: 'E',
@@ -2295,115 +2404,6 @@ angular.module('liveopsConfigPanel.shared.directives')
     };
   }]);
 
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('tooltip', ['$document', '$timeout', function ($document, $timeout) {
-    return {
-      templateUrl: 'liveops-config-panel-shared/directives/tooltip/tooltip.html',
-      scope: {
-        text: '@',
-        target: '=',
-        translateValue: '@'
-      },
-      link: function ($scope, element) {
-        $scope.targetPosition = $scope.target.offset();
-        $scope.tooltipWidth = 0;
-        $scope.tooltipHeight = 0;
-
-        $scope.setPosition = function () {
-          element.find('div').removeClass('top left right bottom');
-          $scope.tooltipWidth = element.outerWidth();
-          $scope.tooltipHeight = element.outerHeight();
-
-          var tooltipPos = $scope.getPositionClass();
-          var absolutePosition = $scope.getAbsolutePosition(tooltipPos);
-
-          element.find('div').addClass(tooltipPos);
-
-          element.css('left', absolutePosition.left);
-          element.css('top', absolutePosition.top);
-        };
-
-        $scope.getPositionClass = function () {
-          var tooltipPos;
-
-          var documentWidth = $document.width();
-          var documentHeight = $document.height();
-
-          var top = $scope.targetPosition.top;
-          var left = $scope.targetPosition.left;
-
-          if (top - $scope.tooltipHeight < 0) {
-            if (left - $scope.tooltipWidth < 0) {
-              tooltipPos = 'bottom right';
-            } else if (left + $scope.tooltipWidth > documentWidth) {
-              tooltipPos = 'bottom left';
-            } else {
-              tooltipPos = 'bottom center';
-            }
-          } else if (top + $scope.tooltipHeight > documentHeight) {
-            if (left - $scope.tooltipWidth < 0) {
-              tooltipPos = 'top right';
-            } else if (left + $scope.tooltipWidth > documentWidth) {
-              tooltipPos = 'top left';
-            } else {
-              tooltipPos = 'top center';
-            }
-          } else {
-            if (left - $scope.tooltipWidth < 0) {
-              tooltipPos = 'center right';
-            } else if (left + $scope.tooltipWidth > documentWidth) {
-              tooltipPos = 'center left';
-            } else {
-              tooltipPos = 'top center';
-            }
-          }
-
-          return tooltipPos;
-        };
-
-        $scope.getAbsolutePosition = function (tooltipPos) {
-          var arrowHeight = 15;
-          var arrowWidth = 13;
-          var arrowBase = 25;
-
-          var targetHeight = $scope.target.outerHeight();
-          var targetWidth = $scope.target.outerWidth();
-
-          var offsetLeft = $scope.targetPosition.left;
-          var offsetTop = $scope.targetPosition.top;
-
-          if (tooltipPos.indexOf('left') > -1) {
-            offsetLeft += -$scope.tooltipWidth - arrowWidth;
-          }
-
-          if (tooltipPos.indexOf('right') > -1) {
-            offsetLeft += targetWidth + arrowWidth;
-          }
-
-          if (tooltipPos === 'bottom center') {
-            offsetTop += targetHeight + arrowHeight;
-            offsetLeft += -(($scope.tooltipWidth - targetWidth) / 2);
-          } else if (tooltipPos === 'top center') {
-            offsetTop += -($scope.tooltipHeight + arrowHeight);
-            offsetLeft += -(($scope.tooltipWidth - targetWidth) / 2);
-          } else if (tooltipPos === 'top right' || tooltipPos === 'top left') {
-            offsetTop += -$scope.tooltipHeight + arrowBase;
-          } else if (tooltipPos === 'center right' || tooltipPos === 'center left') {
-            offsetTop += -($scope.tooltipHeight / 2) + (targetHeight / 2);
-          }
-
-          return {
-            top: offsetTop,
-            left: offsetLeft
-          };
-        };
-
-        $timeout($scope.setPosition, 1);
-      }
-    };
-  }]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
