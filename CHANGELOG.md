@@ -94,4 +94,7 @@ not ideal but will have to do for now.
 - Update confirmToggle to support a custom function on confirm accept
 
 ## 01/13/16 - 1.0.41
+- Styling fixes for IE11 and IE10
+
+## 01/13/16 - 1.0.42
 - Removed all constants except for apiHostName

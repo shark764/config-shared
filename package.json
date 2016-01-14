@@ -1,6 +1,6 @@
 {
   "name": "liveops-config-panel-shared",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "~2.1.4",
