@@ -24,8 +24,8 @@ angular.module('liveopsConfigPanel.shared.services')
       this.responseError = emitErrorInterceptor.responseError;
     }
   ])
-  .service('emitErrorInterceptor', ['$rootScope',
-    function ($rootScope) {  
+  .service('emitErrorInterceptor', ['$rootScope', '$q',
+    function ($rootScope, $q) {  
       this.responseError = function (error) {
         if(error.status >= 400 && error.status < 500) {
           $rootScope.$broadcast('api:response:4xx', error);
@@ -33,6 +33,8 @@ angular.module('liveopsConfigPanel.shared.services')
           $rootScope.$broadcast('api:response:5xx', error);
         }
         $rootScope.$broadcast('api:response:' + error.status, error);
+        
+        return $q.reject(error);
       };
     }
   ]);

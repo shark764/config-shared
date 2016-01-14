@@ -72,10 +72,10 @@ describe('confirmToggleDirective', function(){
       
       $scope.falseValue = false;
       $scope.trueValue = true;
-      $scope.ngModel = false;
+      $scope.ngModel = true;
       $scope.onToggle(false);
       $timeout.flush();
-      expect($scope.$parent.ngModel).toBeTruthy();
+      expect($scope.ngModel).toBeTruthy();
     }]));
   });
 });

@@ -34,7 +34,7 @@ angular.module('liveopsConfigPanel.shared.services')
               interceptor.responseError(error);
             });
 
-            return error;
+            return $q.reject(error);
           };
 
           var interceptor = {
