@@ -7,7 +7,7 @@ angular.module('liveopsConfigPanel.shared.services')
       var tenantUserStatusUpdateTransformer = function (obj) {
         var cpy = angular.copy(obj);
 
-        if(obj.$original && obj.status === obj.$original.status) { 
+        if(obj.$original && obj.status === obj.$original.status) {
           delete cpy.status;
         }
 
@@ -23,6 +23,9 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'roleId'
         }, {
           name: 'extensions'
+        }, {
+          name: 'activeExtension',
+          optional: true
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,

@@ -2,8 +2,8 @@
 
 angular.module('liveopsConfigPanel.shared.services')
   .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
-    function($resource, $http, apiHostname, resultTransformer) {
-      return $resource(apiHostname + '/v1/timezones', {}, {
+    function ($resource, $http, apiHostname, resultTransformer) {
+      var Timezone = $resource(apiHostname + '/v1/timezones', {}, {
         query: {
           method: 'GET',
           isArray: true,
@@ -14,5 +14,11 @@ angular.module('liveopsConfigPanel.shared.services')
           cache: true
         },
       });
+
+      Timezone.prototype.getDisplay = function () {
+        return '(' + this.offset + ') ' + this.timezone;
+      };
+
+      return Timezone;
     }
   ]);

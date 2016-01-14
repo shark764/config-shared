@@ -11,7 +11,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         trueValue: '@',
         falseValue: '@',
         confirmEnableMessage: '@',
-        confirmDisableMessage: '@'
+        confirmDisableMessage: '@',
+        onConfirm: '&'
       },
       controller: function ($scope) {
         if (angular.isUndefined($scope.trueValue)){

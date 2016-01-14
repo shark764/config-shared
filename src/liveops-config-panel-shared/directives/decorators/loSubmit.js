@@ -4,13 +4,14 @@ angular.module('liveopsConfigPanel.shared.directives')
   .directive('loSubmit', ['$q', '$parse', function ($q, $parse) {
     return {
       restrict: 'A',
-      require: ['^loFormSubmit', '?^loFormCancel', '?^loFormAlert'],
+      require: ['^loFormSubmit', '?^loFormCancel', '?^loFormReset', '?^loFormAlert'],
       link: function ($scope, $elem, $attrs, $ctrl) {
         $attrs.event = angular.isDefined($attrs.event) ? $attrs.event : 'click';
 
         var loFormSubmit = $ctrl[0];
         var loFormCancel = $ctrl[1];
-        var loFormAlert = $ctrl[2];
+        var loFormReset = $ctrl[2];
+        var loFormAlert = $ctrl[3];
 
         $elem.bind($attrs.event, function () {
           var ngDisabled = $parse($attrs.ngDisabled)($scope);
@@ -24,6 +25,8 @@ angular.module('liveopsConfigPanel.shared.directives')
           promise = promise.then(function(resource) {
             if(loFormCancel) {
               loFormCancel.resetForm();
+            } else if(loFormReset) {
+              loFormReset.resetForm();
             }
 
             return resource;

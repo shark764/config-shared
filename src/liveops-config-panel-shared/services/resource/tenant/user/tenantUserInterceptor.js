@@ -35,14 +35,21 @@ angular.module('liveopsConfigPanel.shared.services')
       rename(tenantUser, 'groups', '$groups');
       rename(tenantUser, 'skills', '$skills');
 
-      if(tenantUser.roleName) {
+      if (tenantUser.roleName) {
         rename(tenantUser, 'roleName', '$roleName');
-      } else {
+      } else if (Session.tenant && Session.tenant.tenantId){
         tenantUser.$roleName = TenantRole.getName(tenantUser.roleId);
       }
+      
+      if (tenantUser.activeExtension &&
+        !Object.keys(tenantUser.activeExtension).length) {
+        delete tenantUser.activeExtension;
+      }
 
-      //Required so that we can get a cache hit on TenantUser.cachedGet
-      tenantUser.tenantId = Session.tenant.tenantId;
+      if (Session.tenant){
+        //Required so that we can get a cache hit on TenantUser.cachedGet
+        tenantUser.tenantId = Session.tenant.tenantId;
+      }
 
       tenantUser.$user.$original = angular.copy(tenantUser.$user);
     };

@@ -5,6 +5,7 @@
     name="{{nameField}}"
     id="typeahead-container"
     type="text"
+    ng-disabled="{{disabled}}"
     ng-model="currentText"
     ng-focus="showSuggestions=true"
     ng-blur="onBlur()"></input>
@@ -12,11 +13,11 @@
     <ul ng-show="filtered.length > 0 && (showSuggestions || hovering)" 
       ng-mouseover="hovering=true" 
       ng-mouseout="hovering=false">
-       <li ng-repeat="item in filtered = (items | filter:filterCriteria | orderBy:orderByFunction)"
+       <li ng-repeat="item in filtered = (items | filter:filterCriteria | orderBy:getDisplayString)"
          ng-class="{'highlight' : highlightedItem == item, 'lo-highlight' : highlightedItem == item}"
          class="lo-hover-highlight"
          ng-click="select(item)" >
-           {{item.getDisplay() || item[nameField]}}
+           {{getDisplayString(item)}}
        </li>
     </ul>
 </div>

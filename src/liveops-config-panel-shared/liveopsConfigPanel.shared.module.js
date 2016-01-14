@@ -10,7 +10,8 @@
   angular.module('liveopsConfigPanel.shared.config', [])
     .value('liveopsConfigPanel.shared.config', {
       debug: true
-    });
+    })
+    .value('apiHostname', 'http://localhost:9080');
   
   // Modules
   angular.module('liveopsConfigPanel.shared.directives', [

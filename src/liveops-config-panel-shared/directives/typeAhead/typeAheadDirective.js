@@ -13,14 +13,14 @@ angular.module('liveopsConfigPanel.shared.directives')
         keepExpanded: '=',
         onEnter: '&',
         filters: '=?',
-        selectedItem: '=?'
+        selectedItem: '=?',
+        disabled: '@'
       },
 
       templateUrl: 'liveops-config-panel-shared/directives/typeAhead/typeAhead.html',
 
       controller: function($scope) {
         var self = this;
-
         $scope.currentText = $scope.prefill || '';
 
         this.defaultTextFilter = function defaultTextFilter(item, text) {
@@ -87,6 +87,9 @@ angular.module('liveopsConfigPanel.shared.directives')
         $scope.$watch('selectedItem', function(newVal) {
           if (newVal === null){
             $scope.currentText = '';
+          } else if ($scope.getDisplayString(newVal) !== $scope.currentText){
+            //If selectedItem is updated externally, update the search text
+            $scope.currentText = $scope.getDisplayString(newVal);
           }
         });
 
@@ -98,7 +101,7 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         $scope.select = function(item) {
           if (! angular.isString(item)){
-            $scope.currentText = angular.isDefined(item.getDisplay) ? item.getDisplay() : item[$scope.nameField];
+            $scope.currentText = $scope.getDisplayString(item);
           }
 
           $scope.selectedItem = item;
@@ -109,17 +112,21 @@ angular.module('liveopsConfigPanel.shared.directives')
             $scope.showSuggestions = false;
           }
         };
-
+        
         $scope.onBlur = function() {
           if (!$scope.keepExpanded) { //Prevents the button in multibox from jumping around
             $scope.showSuggestions = false;
           }
         };
 
-        $scope.orderByFunction = function(item){
-          var displayString = item.getDisplay();
-
-          return displayString? displayString : item[$scope.nameField];
+        $scope.getDisplayString = function(item){
+          if (angular.isFunction(item.getDisplay)){
+            return item.getDisplay();
+          } else if (angular.isDefined(item[$scope.nameField])){
+            return item[$scope.nameField];
+          } else {
+            return item;
+          }
         };
       },
       link: function($scope, element) {

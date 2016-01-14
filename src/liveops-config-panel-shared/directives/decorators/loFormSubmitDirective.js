@@ -52,6 +52,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         link: function($scope, $elem, $attrs, form) {
           var controller = $elem.data('$loFormSubmitController');
           controller.formController = form;
+          form.loFormSubmitController = controller;
         }
       };
     }

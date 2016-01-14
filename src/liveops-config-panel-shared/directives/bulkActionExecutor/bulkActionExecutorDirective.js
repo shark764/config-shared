@@ -63,7 +63,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.resetForm = function () {
             $scope.bulkActionForm.$setUntouched();
             $scope.bulkActionForm.$setPristine();
-            angular.forEach(controller.bulkActions, function (bulkAction) {
+            angular.forEach($scope.bulkActions, function (bulkAction) {
               bulkAction.reset();
             });
           };
