@@ -101,3 +101,6 @@ not ideal but will have to do for now.
 
 ## 01/14/16 - 1.0.43
 - Add api error response interceptor
+
+## 01/15/16 - 1.0.44
+- Add custom time picker
