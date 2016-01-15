@@ -1404,6 +1404,8 @@ lo-time-picker {
       width: 30%;
       border: none;
       box-shadow: none;
+      -webkit-transition: none;
+      transition: none;
     }
 
     select[disabled] {
