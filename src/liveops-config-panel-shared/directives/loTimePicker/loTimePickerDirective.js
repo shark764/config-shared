@@ -13,32 +13,34 @@ angular.module('liveopsConfigPanel.shared.directives')
         $scope.updateModel = function(newValue){
           $scope.ngModel = newValue;
         };
-        
-        $scope.hours = [{
-          minutes: -1,
-          val: -1,
-          label: '--'
-        }];
-        $scope.minutes = [];
 
-        for (var i = 1; i < 13; i++){
-          $scope.hours.push({
-            minutes: 60 * i,
-            label: '' + i,
-            val: i
-          });
-        }
+        $scope.init = function(){
+          $scope.hours = [{
+            minutes: -1,
+            val: -1,
+            label: '--'
+          }];
+          $scope.minutes = [];
 
-        for (var j = 0; j < 4; j++){
-          var minutes = 15 * j;
-          var label = (minutes < 10) ? '0' : '';
+          for (var i = 1; i < 13; i++){
+            $scope.hours.push({
+              minutes: 60 * i,
+              label: '' + i,
+              val: i
+            });
+          }
 
-          $scope.minutes.push({
-            minutes: minutes,
-            label: label + minutes,
-            val: j
-          });
-        }
+          for (var j = 0; j < 4; j++){
+            var minutes = 15 * j;
+            var label = (minutes < 10) ? '0' : '';
+
+            $scope.minutes.push({
+              minutes: minutes,
+              label: label + minutes,
+              val: j * 15
+            });
+          }
+        };
 
         $scope.updateMinutesValue = function(){
           var minutesValue = $scope.selectedHour.minutes + $scope.selectedMinute.minutes;
@@ -57,9 +59,9 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.updateModel(minutesValue);
         };
 
-        $scope.updateView = function(){
+        $scope.updateView = function(modelVal){
           //If -1, it's the default "closed" hours
-          if ($scope.ngModel == -1){
+          if (modelVal == -1){
             $scope.selectedHour = $scope.hours[0];
             $scope.selectedMinute = $scope.minutes[0];
             $scope.selectedHalf = 'am';
@@ -67,27 +69,36 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
 
           //Select whether it's morning or afternoon
-          if ($scope.ngModel > 720){
+          if (modelVal >= 720){
             $scope.selectedHalf = 'pm';
           } else {
             $scope.selectedHalf = 'am';
           }
 
           //Extract the selected minutes value
-          var minutesValue = $scope.ngModel % 60;
+          var minutesValue = modelVal % 60;
           var minIndex = minutesValue / 15;
           $scope.selectedMinute = $scope.minutes[minIndex];
 
           //Extract the selected hour
-          var hoursValue = $scope.ngModel - (minIndex * 15);
+          var hoursValue = modelVal - (minIndex * 15);
           var hoursIndex = hoursValue / 60;
           if (hoursIndex > 12){
             hoursIndex -= 12;
           }
+
+          if (hoursIndex == 0){
+            hoursIndex = 12;
+          }
+
           $scope.selectedHour = $scope.hours[hoursIndex];
         };
-        
-        $scope.$watch('ngModel', $scope.updateView);
+
+        $scope.init();
+
+        $scope.$watch('ngModel', function(newVal){
+          $scope.updateView(newVal);
+        });
       }
     };
    }]);

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('filterDropdown directive', function(){
+describe('loSubmitSpinner directive', function(){
   var $scope,
     element,
     doCompile,
