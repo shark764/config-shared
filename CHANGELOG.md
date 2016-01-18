@@ -98,3 +98,6 @@ not ideal but will have to do for now.
 
 ## 01/13/16 - 1.0.42
 - Removed all constants except for apiHostName
+
+## 01/14/16 - 1.0.43
+- Add api error response interceptor

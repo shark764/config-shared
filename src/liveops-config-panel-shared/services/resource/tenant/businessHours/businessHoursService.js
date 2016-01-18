@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('BusinessHour', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor', 'businessHourInterceptor', 'businessHourQueryInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, businessHourInterceptor, businessHourQueryInterceptor) {
+  .factory('BusinessHour', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'businessHourInterceptor', 'businessHourQueryInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, businessHourInterceptor, businessHourQueryInterceptor) {
 
       var BusinessHours = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:id',
@@ -59,8 +59,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'satEndTimeMinutes',
           optional: true
         }],
-        getInterceptor: businessHourInterceptor,
-        queryInterceptor: businessHourQueryInterceptor,
+        getInterceptor: [businessHourInterceptor, emitErrorInterceptor],
+        queryInterceptor: [businessHourQueryInterceptor, emitErrorInterceptor],
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });

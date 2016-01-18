@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor) {
+  .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor) {
 
       var Integration = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
@@ -18,6 +18,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: emitInterceptor,
         updateInterceptor: emitInterceptor
       });
 

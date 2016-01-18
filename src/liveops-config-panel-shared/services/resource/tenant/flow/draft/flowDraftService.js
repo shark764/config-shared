@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('FlowDraft', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', '$http',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, $http) {
+  .factory('FlowDraft', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', '$http',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, $http) {
 
       var endpoint = apiHostname + '/v1/tenants/:tenantId/flows/:flowId/drafts/:id';
 
@@ -23,6 +23,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'history'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: emitInterceptor,
         updateInterceptor: emitInterceptor
       });

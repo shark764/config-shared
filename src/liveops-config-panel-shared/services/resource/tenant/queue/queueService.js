@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Queue', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor) {
+  .factory('Queue', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
 
       var Queue = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/queues/:id',
@@ -18,6 +18,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'active'
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor) {
+  .factory('Media', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
 
       var Media = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/media/:id',
@@ -17,7 +17,10 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'properties',
           optional: true
         }],
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor]
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
       });
 
        Media.prototype.getDisplay = function (){

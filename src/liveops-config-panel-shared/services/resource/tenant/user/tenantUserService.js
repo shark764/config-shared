@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor) {
+  .factory('TenantUser', ['LiveopsResourceFactory', 'apiHostname', 'tenantUserInterceptor', 'tenantUserQueryInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, tenantUserInterceptor, tenantUserQueryInterceptor, cacheAddInterceptor, emitErrorInterceptor) {
 
       var tenantUserStatusUpdateTransformer = function (obj) {
         var cpy = angular.copy(obj);
@@ -29,8 +29,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,
-        getInterceptor: tenantUserInterceptor,
-        queryInterceptor: tenantUserQueryInterceptor,
+        getInterceptor: [tenantUserInterceptor, emitErrorInterceptor],
+        queryInterceptor: [tenantUserQueryInterceptor, emitErrorInterceptor],
         saveInterceptor: [tenantUserInterceptor, cacheAddInterceptor],
         updateInterceptor: tenantUserInterceptor
       });

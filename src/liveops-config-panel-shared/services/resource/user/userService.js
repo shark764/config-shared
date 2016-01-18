@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'userUpdateTransformer',
-    function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, userUpdateTransformer) {
+  .factory('User', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor', 'userUpdateTransformer',
+    function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor, userUpdateTransformer) {
       var User = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/users/:id',
         resourceName: 'User',
@@ -21,6 +21,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'personalTelephone',
           optional: true
         }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor,
         putRequestTransformer: userUpdateTransformer
