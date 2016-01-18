@@ -1,0 +1,19 @@
+<div class="time-picker">
+  <select ng-options="hour as hour.label for hour in hours" 
+    ng-model="selectedHour"
+    ng-change="updateMinutesValue()"></select>
+  
+  <span class="time-divider">:</span>
+  
+  <select ng-options="minute as minute.label for minute in minutes" 
+    ng-model="selectedMinute"
+    ng-change="updateMinutesValue()"
+    ng-disabled="selectedHour.val == -1"></select>
+  
+  <select ng-model="selectedHalf"
+    ng-change="updateMinutesValue()"
+    ng-disabled="selectedHour.val == -1">
+      <option value="am">AM</option>
+      <option value="pm">PM</option>
+  </select>
+</div>

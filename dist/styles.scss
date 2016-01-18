@@ -1391,6 +1391,35 @@ lo-multibox {
     position: static !important;
   }
 }
+lo-time-picker {
+  .time-picker {
+    max-width: 200px;
+    min-width: 170px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset, 0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+    padding: 2px;
+
+    select {
+      width: 30%;
+      border: none;
+      box-shadow: none;
+      -webkit-transition: none;
+      transition: none;
+    }
+
+    select[disabled] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-indent: 1px;
+      text-overflow: '';
+    }
+
+    select[disabled]::-ms-expand {
+      display: none;
+    }
+  }
+}
 .loading {
   color: $grey;
   padding-top: 30px;
