@@ -104,3 +104,6 @@ not ideal but will have to do for now.
 
 ## 01/15/16 - 1.0.44
 - Add custom time picker
+
+## 01/17/16 - 1.0.45
+- Removed "All Users" filter in query editor
