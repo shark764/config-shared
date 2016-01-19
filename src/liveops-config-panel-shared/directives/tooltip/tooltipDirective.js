@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('tooltip', ['$document', function ($document) {
+  .directive('tooltip', ['$document', '$timeout', function ($document, $timeout) {
     /** tooltip element directive
      * Generate a tooltip attached to the given element. 
      * Tooltip orientation is automatically chosen based on the element's proximity to page edges
@@ -108,7 +108,8 @@ angular.module('liveopsConfigPanel.shared.directives')
           };
         };
 
-        $scope.$evalAsync($scope.setPosition);
+        //Must use timeout here; evalAsync happens too early?
+        $timeout($scope.setPosition, 1);
       }
     };
   }]);

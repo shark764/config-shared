@@ -1139,47 +1139,6 @@ fieldset {
     }
   }
 }
-.edit-field {
-  margin-bottom: 15px;
-  color: $darkest-grey;
-  .input-toggle {
-    div {
-      cursor: pointer;
-      margin-top: 5px;
-      display: block;
-      border: $lightest-grey 1px solid;
-      @include border-radius(4px);
-      label {
-        display: inline-block;
-        margin: 10px;
-      }
-      .placeholder {
-        color: $grey;
-      }
-      i {
-        margin-top: 3px;
-        display: inline-block;
-        float: right;
-        height: 39px;
-        width: 38px;
-        vertical-align: middle;
-        font-size: 28px;
-        text-align: center;
-      }
-    }
-    div:hover {
-      border: $grey 1px solid;
-    }
-  }
-  input,
-  select {
-    display: block;
-    margin-top: 5px;
-    border: 1px solid $grey;
-    @include border-radius(4px);
-    padding: 8px;
-  }
-}
 .dropdown-container {
   position: relative;
   text-align: left;
@@ -1312,6 +1271,47 @@ fieldset {
   padding-bottom: 10px;
 }
 
+.edit-field {
+  margin-bottom: 15px;
+  color: $darkest-grey;
+  .input-toggle {
+    div {
+      cursor: pointer;
+      margin-top: 5px;
+      display: block;
+      border: $lightest-grey 1px solid;
+      @include border-radius(4px);
+      label {
+        display: inline-block;
+        margin: 10px;
+      }
+      .placeholder {
+        color: $grey;
+      }
+      i {
+        margin-top: 3px;
+        display: inline-block;
+        float: right;
+        height: 39px;
+        width: 38px;
+        vertical-align: middle;
+        font-size: 28px;
+        text-align: center;
+      }
+    }
+    div:hover {
+      border: $grey 1px solid;
+    }
+  }
+  input,
+  select {
+    display: block;
+    margin-top: 5px;
+    border: 1px solid $grey;
+    @include border-radius(4px);
+    padding: 8px;
+  }
+}
 $help-icon-width: 2em;
 $help-icon-height: $help-icon-width;
 
@@ -1425,6 +1425,54 @@ lo-time-picker {
   padding-top: 30px;
   text-align: center;
   width: 100%;
+}
+#modal {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background-color: rgba(0,0,0,0.65);
+  
+  & > div {
+    background-color: #ffffff;
+    @include border-radius();
+    border: 1px solid $grey;
+    margin: auto auto;
+    margin-top: 100px;
+    min-width: 300px;
+    max-width: 400px;
+    overflow: hidden;
+    width: 30%;
+    top: 80px;
+  }
+  
+  p {
+   padding: 10px 30px;
+  }
+  
+  .header, .footer {
+    background-color: $lightest-grey;
+    padding: 10px 30px;
+  }
+  
+  .header {
+    margin: 0;
+  }
+  
+  .footer {
+    .btn {
+      width: 45%;
+    }
+    
+    .btn + .btn {
+      margin-left: 8%;
+    }
+  }
 }
 number-slider {
   .inner-addon {
@@ -1973,53 +2021,4 @@ readonly-query {
 .compact-view #version-basic-query-details > label {
   width: 50%;
   display: inline-block;
-}
-
-#modal {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background-color: rgba(0,0,0,0.65);
-  
-  & > div {
-    background-color: #ffffff;
-    @include border-radius();
-    border: 1px solid $grey;
-    margin: auto auto;
-    margin-top: 100px;
-    min-width: 300px;
-    max-width: 400px;
-    overflow: hidden;
-    width: 30%;
-    top: 80px;
-  }
-  
-  p {
-   padding: 10px 30px;
-  }
-  
-  .header, .footer {
-    background-color: $lightest-grey;
-    padding: 10px 30px;
-  }
-  
-  .header {
-    margin: 0;
-  }
-  
-  .footer {
-    .btn {
-      width: 45%;
-    }
-    
-    .btn + .btn {
-      margin-left: 8%;
-    }
-  }
 }
