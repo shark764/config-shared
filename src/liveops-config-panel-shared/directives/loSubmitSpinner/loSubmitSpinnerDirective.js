@@ -2,9 +2,13 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('loSubmitSpinner', [function() {
+    /** lo-submit-spinner attribute directive
+     * Show a loading spinner in place of the (button-tyled) element when the given expression is truthy
+     */
     return {
+      restrict: 'A',
       scope : {
-        loSubmitSpinnerStatus: '&'
+        loSubmitSpinnerStatus: '&' // (expression) When true, the spinner is shown and the element is hidden. When false, spinner is hidden and element is shown
       },
       link: function($scope, ele) {
         $scope.spinnerElement = angular.element('<a disabled="true"><i class="fa fa-refresh fa-spin"></i></a>');

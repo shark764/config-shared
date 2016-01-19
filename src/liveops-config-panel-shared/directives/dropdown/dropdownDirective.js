@@ -2,26 +2,37 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('dropdown', [function() {
+    /** dropdown element directive
+     * Generate a dropdown menu/list of items
+     * 
+     * Supported item config is as follows:
+     * - id (string): Optional HTML ID to apply to the item's element
+     * - onClick (function): Optional function triggered when the menu item is clicked
+     * - stateLink (string): Optional state name to transition to when the menu item is clicked
+     * - iconClass (string): Optional class for the icon displayed next to the menu item
+     */
     return {
       scope : {
-        items : '=',
-        label : '@',
-        valuePath: '@',
-        displayPath: '@',
-        collapseIcon: '@',
-        expandIcon: '@',
-        orderBy: '@',
-        hovering: '=?',
-        hoverTracker: '=?',
-        showOnHover: '='
+        items : '=', // (array) The list of configs for items to be shown in the menu.
+        label : '@', // (string) The text of the menu's label/title
+        displayPath: '@', // (string) The item property to be used as the label in the menu. Defaults to 'label'
+        collapseIcon: '@', // (string) The class(es) applied to the icon shown when the menu is open. Defaults to 'fa fa-caret-up'
+        expandIcon: '@', // (string) The class(es) applied to the icon shown when the menu is closed. Defaults to 'fa fa-caret-down'
+        orderBy: '@', // (string) The item property to be used to sort the menu items. Defaults to 'label'
+        hovering: '=?', // (boolean) Optional var to expose if the dropdown menu is being moused-over
+        hoverTracker: '=?', // (array) Optional array used to track which dropdowns on the view are open
+        showOnHover: '=?' // (boolean) Optional var to define if the menu should be shown when the label is hovered-over. Defaults to false
       },
+      restrict: 'E',
       templateUrl : 'liveops-config-panel-shared/directives/dropdown/dropdown.html',
       controller : 'DropdownController',
       link : function(scope, element, attrs, controller) {
-        scope.valuePath = scope.valuePath ? scope.valuePath : 'value';
         scope.displayPath = scope.displayPath ? scope.displayPath : 'label';
-        
-        if (typeof scope.hovering !== 'undefined' && scope.hoverTracker){
+        scope.collapseIcon = scope.collapseIcon ? scope.collapseIcon : 'fa fa-caret-up';
+        scope.expandIcon = scope.expandIcon ? scope.expandIcon : 'fa fa-caret-down';
+        scope.orderBy = scope.orderBy ? scope.orderBy : 'label';
+
+        if (angular.isDefined(scope.hovering) && scope.hoverTracker){
           scope.hoverTracker.push(controller);
         }
 
@@ -33,10 +44,6 @@ angular.module('liveopsConfigPanel.shared.directives')
           });
         };
 
-        if (!scope.orderBy){
-          scope.orderBy = 'label';
-        }
-
         scope.optionClick = function(func){
           scope.showDrop = false;
           scope.hovering = false;
@@ -45,14 +52,6 @@ angular.module('liveopsConfigPanel.shared.directives')
             func();
           }
         };
-
-        if(! scope.collapseIcon){
-          scope.collapseIcon = 'fa fa-caret-up';
-        }
-
-        if (! scope.expandIcon){
-          scope.expandIcon = 'fa fa-caret-down';
-        }
 
         scope.mouseIn = function(){
           if (scope.hovering || scope.showOnHover){

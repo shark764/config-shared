@@ -1,13 +1,18 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('tooltip', ['$document', '$timeout', function ($document, $timeout) {
+  .directive('tooltip', ['$document', function ($document) {
+    /** tooltip element directive
+     * Generate a tooltip attached to the given element. 
+     * Tooltip orientation is automatically chosen based on the element's proximity to page edges
+     */
     return {
       templateUrl: 'liveops-config-panel-shared/directives/tooltip/tooltip.html',
+      restrict: 'E',
       scope: {
-        text: '@',
-        target: '=',
-        translateValue: '@'
+        text: '@', // (string) Optional tooltip content
+        target: '=', // (element) The element to attach the tooltip to
+        translateValue: '@' // (string) Optional translation key for the tooltip content
       },
       link: function ($scope, element) {
         $scope.targetPosition = $scope.target.offset();
@@ -103,7 +108,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           };
         };
 
-        $timeout($scope.setPosition, 1);
+        $scope.$evalAsync($scope.setPosition);
       }
     };
   }]);

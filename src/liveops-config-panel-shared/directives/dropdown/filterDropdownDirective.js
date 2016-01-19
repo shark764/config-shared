@@ -2,16 +2,26 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('filterDropdown', ['$filter', function ($filter) {
+    /** filter-dropdown element directive
+     * Generate a dropdown menu with checkboxes to select/deselect items
+     * 
+     * Supported option config is as follows:
+     * - checked (boolean): Optional boolean to set the initial checked state of the item. Defaults to true
+     * 
+     * An option item can also be a function that returns the display value when passed to the 'invoke' filter
+     * 
+     * Listen for 'dropdown:item:checked' event, thrown when a menu item is checked or unchecked
+     */
     return {
       scope: {
         id: '@',
-        options: '=',
-        valuePath: '@',
-        displayPath: '@',
-        label: '@',
-        showAll: '@',
-        orderBy: '@',
-        all: '=?'
+        options: '=', // (array) The list of config objects for items to be shown in the menu.
+        valuePath: '@', // (string) The property path to be used as the checkbox's model for menu items. Defaults to 'value'
+        displayPath: '@', // (string) The property path to be used as the label for menu items. Defaults to 'display'
+        label: '@', // (string) The text of the menu's label/title
+        showAll: '@', // (boolean) Whether to show the 'All' checkbox option
+        orderBy: '@', // (string) The item property to be used to sort the menu items. Defaults to 'label'
+        all: '=?' // (object) Exposes the 'All' checkbox option. all.checked reveals the 'All' checbox state
       },
       templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
       controller: 'DropdownController',
@@ -28,12 +38,11 @@ angular.module('liveopsConfigPanel.shared.directives')
         };
 
         if ($scope.showAll) {
-
           // If 'all' was checked but some other option has been unchecked, uncheck 'all' option
           // If 'all' was unchecked but all other options are checked, check 'all' option
           $scope.$watch('options', function (newList, oldList) {
             var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
-            
+
             if ($scope.all.checked && (newList.length > oldList.length)){
               // If a new item was added to the options list, while the 'All' option is selected,
               // we make sure it is checked
@@ -44,7 +53,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               $scope.all.checked = false;
             }
           }, true);
-          
+
           $scope.toggleAll = function(){
             $scope.all.checked = !$scope.all.checked;
             
@@ -52,7 +61,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               checkAll();
             }
           };
-          
+
           var checkAll = function(){
             angular.forEach($scope.options, function (option) {
               option.checked = true;
@@ -61,7 +70,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           
           var checkAllByDefault = true;
           angular.forEach($scope.options, function (option) {
-            checkAllByDefault = checkAllByDefault && (typeof option.checked === 'undefined' ? true : option.checked);
+            checkAllByDefault = checkAllByDefault && (angular.isUndefined(option.checked) ? true : option.checked);
           });
           $scope.all = {
             checked: checkAllByDefault
@@ -73,7 +82,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         } else {
           $scope.$watch('options', function () {
             angular.forEach($scope.options, function (option) {
-              option.checked = (typeof option.checked === 'undefined' ? true : option.checked);
+              option.checked = angular.isUndefined(option.checked) ? true : option.checked;
             });
           });
         }

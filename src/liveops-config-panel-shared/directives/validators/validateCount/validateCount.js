@@ -2,6 +2,9 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('validateCount', [function () {
+    /** validate-count attribute directive
+     * Add a validateCount validator to an ngModel. Verifies that the model is a non-empty array.
+     */
     return {
       restrict: 'A',
       require: 'ngModel',

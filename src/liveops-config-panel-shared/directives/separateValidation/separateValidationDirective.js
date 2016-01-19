@@ -2,15 +2,13 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('separateValidation', [function () {
+    /** seperate-validation attribute directive
+     * Apply to a nested ng-form to prevent this form's inputs from affecting the parent form's valid state
+     */
     return {
       restrict: 'A',
-      require: '?form',
+      require: 'form',
       link: function link($scope, element, iAttrs, formController) {
-
-        if (! formController) {
-          return;
-        }
-
         // Remove this form from parent controller
         var parentFormController = element.parent().controller('form');
 
@@ -20,7 +18,6 @@ angular.module('liveopsConfigPanel.shared.directives')
         
         // Replace form controller with a "null-controller"
         var nullFormCtrl = {
-
           $setValidity: function () {
             formController.$invalid = false;
             angular.forEach(element.find('input'), function (ele){
@@ -32,9 +29,7 @@ angular.module('liveopsConfigPanel.shared.directives')
                   }
                 }
               }
-
             });
-
           },
           $setDirty: function () {
             formController.$dirty = true;

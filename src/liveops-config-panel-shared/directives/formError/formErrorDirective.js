@@ -2,10 +2,18 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('formError', function() {
+    /** form-error element directive
+     * Display error messages for an invalid ng-form field
+     * 
+     * Define error messages by passing the translation key as an attribute like "error-type-[VALIDATION_KEY]"
+     * E.g. set the message for a "required" validation error: error-type-required="my.required.key" 
+     *      set the message for an "email" validation error: error-type-email="some.email.error.message"
+     */
     return {
+      restrict: 'E',
       templateUrl : 'liveops-config-panel-shared/directives/formError/formError.html',
       scope : {
-        field : '='
+        field : '=' // (object) The ng-form field object to show error messages for
       },
       link : function($scope, $elem, $attrs){
         $scope.errorTypes = {};

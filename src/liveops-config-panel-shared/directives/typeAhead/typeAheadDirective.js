@@ -2,23 +2,26 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('typeAhead', ['$filter', '$timeout', function($filter, $timeout) {
+    /** type-ahead element directive
+     * Create an input element that shows suggestions as you type
+     * 
+     * Default comparator compares the entered text with the items' getDisplay() result, ignoring case
+     */
     return {
       restrict: 'E',
       scope : {
-        items: '=',
-        nameField: '@',
-        onSelect: '&',
-        placeholder: '@',
-        prefill: '=',
-        keepExpanded: '=',
-        onEnter: '&',
-        filters: '=?',
-        selectedItem: '=?',
-        disabled: '@'
+        items: '=', // (array) The items to search for matches
+        nameField: '@', // (string) HTML name. Also used as the display property path on the items if given items have no getDisplay function
+        onSelect: '&', // (expression) Optional expression invoked when an item is selected. Receives selectedItem as object if text matches one of the items, or the search text if there is no item match
+        placeholder: '@', // (string) Optional placeholder text
+        prefill: '=', // (string) Optional pre-entered search text. Defaults to ''
+        keepExpanded: '=', // (boolean) Whether to keep the dropdown expanded when focus is lost. Defaults to false
+        onEnter: '&', // (expression) Optional expression invoked when the enter key is pressed while the element is focused. Receives item as object if an item was selected, or the search text if there is no item match
+        filters: '=?', // (expression or array) Optional filter function or list of filters used to determine matching items
+        selectedItem: '=?', // (object) Exposes the selectedItem
+        disabled: '@' // (boolean) Whether the element is disabled
       },
-
       templateUrl: 'liveops-config-panel-shared/directives/typeAhead/typeAhead.html',
-
       controller: function($scope) {
         var self = this;
         $scope.currentText = $scope.prefill || '';
@@ -134,7 +137,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           var highlightedIndex;
 
           if (event.which === 13) { //Enter key
-            $timeout(function(){
+            $scope.$evalAsync(function(){
               var selected = $scope.highlightedItem ? $scope.highlightedItem : $scope.currentText;
               $scope.select(selected);
               $scope.onEnter({item: selected});
@@ -145,7 +148,7 @@ angular.module('liveopsConfigPanel.shared.directives')
            highlightedIndex = $scope.filtered.indexOf($scope.highlightedItem);
 
             if (highlightedIndex + 1 < $scope.filtered.length){
-              $timeout(function(){
+              $scope.$evalAsync(function(){
                 $scope.highlightedItem = $scope.filtered[highlightedIndex + 1];
 
                 var li = element.find('li:nth-child(' + (highlightedIndex + 2) + ')');
@@ -156,7 +159,7 @@ angular.module('liveopsConfigPanel.shared.directives')
             highlightedIndex = $scope.filtered.indexOf($scope.highlightedItem);
 
             if (highlightedIndex - 1 >= 0){
-              $timeout(function(){
+              $scope.$evalAsync(function(){
                 $scope.highlightedItem = $scope.filtered[highlightedIndex - 1];
 
                 //Scroll to this element in the dropdown

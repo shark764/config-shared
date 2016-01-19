@@ -2,6 +2,11 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('loTimePicker', [function() {
+    /** lo-time-picker element directive
+     * An element for selecting times (without dates). Sets the given ngModel to the minute value of the selected time.
+     * 
+     * ngModel will be set to -1 when the user selects a time of "--". Otherwise, the time will be a value between 0 and 1440, inclusive.
+     */
     return {
       templateUrl : 'liveops-config-panel-shared/directives/loTimePicker/loTimePicker.html',
       require: 'ngModel',
