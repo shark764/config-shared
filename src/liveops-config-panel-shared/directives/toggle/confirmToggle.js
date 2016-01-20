@@ -2,7 +2,11 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('confirmToggle', ['Modal', '$q', 'Alert', function(Modal, $q, Alert) {
+    /** confirm-toggle attribute directive
+     * Add to a toggle directive to display a confirm modal when the toggle value is changed
+     */
     return {
+      restrict: 'A',
       require: ['ngModel', '^toggle'],
       link: function ($scope, $element, $attrs, controllers) {
         controllers[0].$parsers.push(function (newValue) {

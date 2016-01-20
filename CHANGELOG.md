@@ -107,3 +107,6 @@ not ideal but will have to do for now.
 
 ## 01/17/16 - 1.0.45
 - Removed "All Users" filter in query editor
+
+## 01/19/16 - 1.0.46
+- Added directive documentation and some cleanup

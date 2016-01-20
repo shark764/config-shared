@@ -8,6 +8,11 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('disableContents', [function() {
+    /** disable-contents attribute directive
+     * Set ng-disabled on certain child elements to equal the given expression
+     * Child elements affected are input, button, select, textarea, and label
+     * If a child element already has ng-disabled defined, the given expression is OR'd with the existing ng-disabled value
+     */
     return {
       compile: function(tElem, tAttrs) {
         var inputNames = 'input, button, select, textarea, label';

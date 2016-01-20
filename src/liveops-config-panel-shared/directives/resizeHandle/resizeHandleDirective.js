@@ -4,6 +4,14 @@
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('resizeHandle', ['$window', '$document', '$rootScope', 'lodash',
     function($window, $document, $rootScope, _) {
+    /** resize-handle element directive
+     * Create a resize grapple between two elements. Respects the css min-width sizes of the elements
+     * 
+     * Applies the 'two-col' class to an element that is larger than 700px
+     * Applies the 'compact' class to an element that is smaller than 450px
+     * 
+     * Listen for the 'resizehandle:resize' which is fired when the elements are resized by the grapple
+     */
     return {
       restrict : 'E',
       scope : {

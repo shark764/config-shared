@@ -4,7 +4,7 @@
   formFieldValidationMessage is basically a clone of formError with a couple o
   key differences:
     - it "requires" a form up the DOM tree
-    - it resolves the field based fieldName
+    - it resolves the field based on fieldName
 */
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('formFieldValidationMessage', function() {

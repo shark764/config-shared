@@ -1,6 +1,52 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
+  /** liveopsResourceFactory factory
+   * Generate a custom ngResource to represent a liveops REST API endpoint
+   * 
+   * Default behavior:
+   *  - Properties on the resource beginning with '$' will not be sent with POST requests
+   *  - API responses will have the resultTransformer applied to them to remove the 'result' property
+   *  - The resource object will be updated with the response object's properties after an API call
+   *  - The $original property of the resource keeps a duplicate of the resource to represent the API copy of the data. $original is updated with every API call
+   *  - The $busy property of the resource will be true if there is an unresolved API request pending
+   *  
+   * Adds the following utility functions to the resource:
+   *  - hasItem: Returns true if an object matching the given object's properties is stored in the cache. Returns false otherwise.
+   *  - cachedGet: Fetch a matching item from the cache. If not present in cache, do a GET request, add the response to cache, and return the response.
+   *  - cachedQuery: Get all items stored in cache for this resource. If the cache is empty, perform a query request, add the response to the cache, and return the response.
+   *  - save: If the resource is new, perform a POST request. If the resource is not new (IE has an ID), perform a PUT request
+   *  - reset: Discard all changes to this resoruce and restore the resource's properties to $original
+   *  - getDisplay: Returns a display string representing this resource instance. Override for more user-friendly results.
+   *  - isNew: Returns true if this resource has yet to be POSTed to the API - e.g. it has no ID
+   *
+   * Accepted configuration for create() is as follows:
+   *  - endpoint (string): Full REST url for the resource
+   *  - resourceName (string): The name of the resource to create. Used as a cache key and for broadcasting events
+   *  - updateFields (array of objects): List of fields that can be updated via PUT. Object is as follows:
+   *     - name (string): The object property that can be updated
+   *     - optional (boolean): Whether the value can be null or undefined. Default is false
+   *  - getInterceptor (interceptor, or array of interceptors): Response interceptors to apply to GET requests for a single object
+   *  - queryInterceptor (interceptor, or array of interceptors): Response interceptors to apply to GET requests for an array of object
+   *  - saveInterceptor (interceptor, or array of interceptors): Response interceptors to apply to POST requests
+   *  - updateInterceptor (interceptor, or array of interceptors): Response interceptors to apply to PUT requests
+   *  - requestUrlFields (object): Provide a map of item property names to REST URL variables. See ngResource documentation. Defaults are:
+   *        id: '@id',
+   *        tenantId: '@tenantId',
+   *        groupId: '@groupId',
+   *        flowId: '@flowId',
+   *        queueId: '@queueId',
+   *        userId: '@userId',
+   *        memberId: '@memberId'
+   *  - Lastly, the create configuration supports a custom request and response transformer for each verb. (See ngResource documentation):
+   *        getRequestTransformer, getResponseTransformer
+   *        queryRequestTransformer, queryResponseTransformer
+   *        putRequestTransformer, putResponseTransformer
+   *        postRequestTransformer, postResponseTransformer
+   *        deleteRequestTransformer, deleteResponseTransformer
+   *  
+   */
+
   .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash', 'resultTransformer',
     function($http, $resource, $q, queryCache, _, resultTransformer) {
       function createJsonReplacer(key, value) {
@@ -11,6 +57,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }
       }
 
+      // ngResource will only accept a single interceptor function. To allow chaining multiple interceptors on one request, 
+      // we create a new function that calls all the given interceptor functions
       function getInterceptor(interceptorParam) {
         if (angular.isArray(interceptorParam)) {
           var interceptorFunc = function(response) {
@@ -18,19 +66,19 @@ angular.module('liveopsConfigPanel.shared.services')
               if(!interceptor.response) {
                 return;
               }
-              
+
               interceptor.response(response);
             });
 
             return response.resource;
           };
-          
+
           var interceptorErrorFunc = function(error) {
             angular.forEach(interceptorParam, function(interceptor) {
               if(!interceptor.responseError) {
                 return;
               }
-              
+
               interceptor.responseError(error);
             });
 
@@ -62,6 +110,7 @@ angular.module('liveopsConfigPanel.shared.services')
         create: function(params) {
           function filterUpdateFieldTransformer(data) {
             var cleanedData = angular.copy(data);
+            //Remove disallowed fields from the object before we do an update request
             angular.forEach(cleanedData, function(value, key) {
               var i = _.findIndex(params.updateFields, {
                 'name': key
@@ -129,6 +178,7 @@ angular.module('liveopsConfigPanel.shared.services')
             'Content-Type': 'application/json'
           };
 
+          //Create the ngResource according to our config
           var Resource = $resource(params.endpoint, params.requestUrlFields, {
             query: {
               method: 'GET',
@@ -174,6 +224,7 @@ angular.module('liveopsConfigPanel.shared.services')
 
           Resource.prototype.resourceName = params.resourceName;
 
+          //Function to store custom properties that would normally be wiped after an API response is handled
           Resource.prototype.$$backupSudoProperties = function() {
             var backup = {};
             angular.forEach(this, function(value, key) {
@@ -187,6 +238,7 @@ angular.module('liveopsConfigPanel.shared.services')
             return backup;
           };
 
+          //Function to reset custom properties after an API resposne is handled
           Resource.prototype.$$restoreSudoProperties = function(result, backup) {
             angular.forEach(backup, function(value, key) {
               //if the key is already present, don't overwrite it.
@@ -199,7 +251,6 @@ angular.module('liveopsConfigPanel.shared.services')
           };
 
           var proxyGet = Resource.get;
-
           Resource.get = function(params, success, failure) {
             var getResponse = proxyGet.call(this, params, success, failure);
 
@@ -212,7 +263,6 @@ angular.module('liveopsConfigPanel.shared.services')
           };
 
           var proxyQuery = Resource.query;
-
           Resource.query = function(params, success, failure) {
             var getAllResponse = proxyQuery.call(this, params, success, failure);
 
@@ -263,6 +313,9 @@ angular.module('liveopsConfigPanel.shared.services')
             return !!item;
           };
 
+          //cacheKey defaults to the resource resourceName
+          //If invalidate is truthy, overwrite the existing cache with the response
+          //Provide keyParams if you need custom identifiers for searching the cache for a match. Defaults to value of params
           Resource.cachedGet = function(params, cacheKey, invalidate, keyParams) {
             var key = cacheKey ? cacheKey : this.prototype.resourceName;
             keyParams = keyParams ? keyParams : params;
@@ -290,6 +343,8 @@ angular.module('liveopsConfigPanel.shared.services')
             return item;
           };
 
+          //cacheKey defaults to the resource resourceName
+          //If invalidate is truthy, overwrite the existing cache with the response
           Resource.cachedQuery = function(params, cacheKey, invalidate) {
             var key = cacheKey ? cacheKey : this.prototype.resourceName;
             if (!queryCache.get(key) || invalidate) {
@@ -307,7 +362,7 @@ angular.module('liveopsConfigPanel.shared.services')
 
             self.$busy = true;
 
-            //backup sudo properties such as $user, $groups
+            //backup pseudo-properties such as $user, $groups
             var backup = this.$$backupSudoProperties();
 
             return action.call(self, params, success, failure)
@@ -318,7 +373,7 @@ angular.module('liveopsConfigPanel.shared.services')
                   delete self.$original.$original;
                 }
 
-                //restore backed-up sudo properties
+                //restore backed-up pseudo-properties
                 self.$$restoreSudoProperties(result, backup);
 
                 return result;

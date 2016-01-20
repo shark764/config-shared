@@ -1,27 +1,34 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loMultibox', ['$timeout', function($timeout){
+  .directive('loMultibox', [function(){
+    /** lo-multibox element directive
+     * A custom select-like element for liveopsResources, that also allows the user to create a new item
+     *
+     * Listen for ('resource:details:create:' + resourceName) to handle the create. The event passes selectedItem, and initialized createMode
+     * Broadcast ('resource:details:' + resourceName + ':canceled') to tell the multibox that create has been canceled, and cancel createMode
+     * Broadcast ('created:resource:' + resourceName) when loMultibox is in createMode to select the given resource
+     */
     return {
       restrict: 'E',
       scope: {
-        items: '=',
-        selectedItem: '=',
-        resourceName: '@',
-        name: '@',
-        onItemSelect: '='
+        items: '=', // (array) The items used to populate the dropdown. Expected to be liveopsResources
+        selectedItem: '=', // (object) The currently selected item. Will be null if nothing is selected
+        resourceName: '@', // (string) The name of the liveopsResource used for this dropdown. Used when broadcasting events
+        name: '@', // (string) The html name attribute for the element
+        onItemSelect: '=' // (function) Optional function to execute when an item is selected
       },
       templateUrl: 'liveops-config-panel-shared/directives/loMultibox/loMultibox.html',
       controller: 'DropdownController', //To handle auto collapsing on click!
       link: function($scope, ele, $attrs, dropCtrl) {
-        
+
         $scope.onSelect = function(selectedItem){
           if (angular.isString(selectedItem)){
-            return;
+            return; //User has typed a value into the typeahead that does not match an item. Ignore it.
           }
-          
+
           $scope.display = selectedItem.getDisplay();
-          
+
           if(angular.isFunction($scope.onItemSelect)) {
             $scope.onItemSelect(selectedItem);
           }
@@ -37,11 +44,11 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         $scope.labelClick = function(){
           dropCtrl.setShowDrop(!$scope.showDrop);
-          
+
           $scope.selectedItem = null;
 
           if ($scope.showDrop){
-            $timeout(function(){
+            $scope.$evalAsync(function(){
               var input = ele.find('type-ahead input');
               input.focus();
             });
@@ -49,7 +56,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         };
 
         $scope.$watch('selectedItem', function(item) {
-          if (angular.isString(item)){
+          if (angular.isString(item)){ //User has typed a value into the typeahead that does not match an item. Ignore it.
             return;
           } else if(item && angular.isFunction(item.getDisplay)) {
             $scope.display = item.getDisplay();

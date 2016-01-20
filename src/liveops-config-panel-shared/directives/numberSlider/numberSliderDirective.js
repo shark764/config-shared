@@ -1,20 +1,22 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('numberSlider', ['$timeout', function($timeout){
+  .directive('numberSlider', [function(){
+    /** number-slider element directive
+     * A number-spinner element for choosing a number
+     */
     return {
       restrict: 'E',
       scope: {
-        value: '=',
-        minValue: '@',
-        maxValue: '@',
-        hasHandles: '=',
-        placeholder: '@',
-        ngChanged: '&'
+        value: '=', // (int) The selected number
+        minValue: '@', // (int) Optional minimum number that the user can select (inclusive)
+        maxValue: '@', // (int) Optional maximum number that the user can select (inclusive)
+        hasHandles: '=', // (boolean) Whether to show the increment and decrement buttons
+        placeholder: '@', // (string) Optional placeholder text
+        onChange: '&' // (expression) Optional expression to be executed when the value changes
       },
       templateUrl: 'liveops-config-panel-shared/directives/numberSlider/numberSlider.html',
       link: function($scope, element) {
-
         $scope.minValue = $scope.minValue ? Number($scope.minValue) : null;
         $scope.maxValue = $scope.maxValue ? Number($scope.maxValue) : null;
 
@@ -32,42 +34,44 @@ angular.module('liveopsConfigPanel.shared.directives')
               $scope.value = $scope.minValue;
             }
 
-            $scope.ngChanged($scope.value);
+            $scope.onChange($scope.value);
           }
         });
 
         $scope.increment = function () {
-          if(! $scope.value){
+          if(angular.isUndefined($scope.value) || $scope.value === null){
+            //If the element was only showing the placeholder, set the value
             $scope.value = $scope.minValue ? $scope.minValue : 0;
-            $scope.ngChanged();
+            $scope.onChange();
             return;
           }
 
           if($scope.maxValue === null || $scope.value < $scope.maxValue){
             $scope.value = Number($scope.value) + 1;
-            $scope.ngChanged();
+            $scope.onChange();
           }
         };
 
         $scope.decrement = function () {
-          if(!$scope.value){
+          if(angular.isUndefined($scope.value) || $scope.value === null){
+           //If the element was only showing the placeholder, set the value
             $scope.value = $scope.minValue ? $scope.minValue : 0;
-            $scope.ngChanged();
+            $scope.onChange();
             return;
           }
 
           if($scope.minValue === null || $scope.value > $scope.minValue){
             $scope.value = Number($scope.value) - 1;
-            $scope.ngChanged();
+            $scope.onChange();
           }
         };
 
         element.find('input').bind('keydown keypress', function(event){
           if(event.which === 40){ //Down arrow key
-            $timeout($scope.decrement);
+            $scope.$evalAsync($scope.decrement);
             event.preventDefault();
           } else if(event.which === 38){ //Up arrow key
-            $timeout($scope.increment);
+            $scope.$evalAsync($scope.increment);
             event.preventDefault();
           }
         });

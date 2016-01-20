@@ -2,6 +2,13 @@
 
 angular.module('liveopsConfigPanel.shared.filters')
   .filter('search', ['$parse', function ($parse) {
+    /** search filter
+     * Accepts an array of items, an array of fields to check for matches, and a string search text
+     * Returns a list of items that have at least one property from the list of fields that contain the search text
+     * Returns the original list of items if fields or query are falsy
+     * 
+     * Matches ignore special characters and are case-insensitive
+     */
     return function (items, fields, query) {
       if (!fields || !query) {
         return items;

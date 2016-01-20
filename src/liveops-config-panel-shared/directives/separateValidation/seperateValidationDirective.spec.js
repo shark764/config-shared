@@ -34,13 +34,6 @@ describe('separateValidation directive', function(){
     expect(separatedController['inner-form']).not.toBeDefined();
   });
   
-  it('should do nothing if not applied to a form', function() {
-    element = $compile('<ng-form name="first-form"><input separate-validation name="input-one"></input></ng-form>')($scope);
-    var formController = element.controller('form');
-    expect(formController.$addControl).not.toEqual(angular.noop);
-    expect(formController.$removeControl).not.toEqual(angular.noop);
-  });
-  
   describe('setValidity function', function(){
     it('should set invalid if field is required and not supplied', function() {
       doDefaultCompile();

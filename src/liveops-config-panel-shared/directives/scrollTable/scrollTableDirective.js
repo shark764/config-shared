@@ -2,6 +2,11 @@
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('scrollTable', [function() {
+    /** scroll-table attribute directive
+     * Apply to a table element to display the table with a static header and a scrollable body
+     * 
+     * Set attribute max-height on the element to define the max height of the table body and enable the scrollbar.
+     */
     return {
       restrict: 'A',
       replace: 'true',
