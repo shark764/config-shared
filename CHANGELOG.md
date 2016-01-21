@@ -110,3 +110,6 @@ not ideal but will have to do for now.
 
 ## 01/19/16 - 1.0.46
 - Added directive documentation and some cleanup
+
+## 01/21/16 - 1.0.47
+- Improve lo-form-submit error handling

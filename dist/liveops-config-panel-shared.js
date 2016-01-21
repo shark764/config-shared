@@ -429,6 +429,57 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+/**
+  Based on Zach Snow's blog post entitled AngularJS: Faster ng-include
+
+  http://zachsnow.com/#!/blog/2014/angularjs-faster-ng-include/
+**/
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('compiledInclude', [
+  '$compile',
+  '$templateCache',
+  '$http',
+  '$q',
+  function($compile, $templateCache, $http, $q) {
+    return {
+      restrict: 'A',
+      priority: 400,
+      compile: function(){
+        // In an ideal world, if we could hard-code the template URLs, we could
+        // do all of the below in this compile function. Unfortunately, Since
+        // we do not know what template will be needed, we have to rely on the
+        // pre-link function (the return value of this)
+
+        return function($scope, element, attrs){
+          var templateName = attrs.compiledInclude,
+              template = $templateCache.get(templateName);
+
+          if(!template){
+
+            // If we have no template, lets go fetch it. When we do, store it in cache.
+            // This can cause multiple queries for the same template, but once one puts in
+            // the cache, all future calls will be able to retrieve it from cache.
+            template = $http.get(templateName, {cache: $templateCache}).then(function (result){
+              $templateCache.put(templateName, result.data);
+              return result.data;
+            });
+          }
+
+          // Since we don't know if we're waiting for a promise or just have the value,
+          // use $q.when to handle both cases
+          $q.when(template).then(function (templateHtml) {
+            element.html(templateHtml);
+            $compile(element.contents())($scope);
+          });
+        };
+      }
+    };
+  }
+  ]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.shared.directives')
   .service('BulkAction', ['$q',
     function ($q) {
@@ -658,57 +709,6 @@ angular.module('liveopsConfigPanel.shared.directives.bulkAction.mock', ['liveops
   }]);
 'use strict';
 
-/**
-  Based on Zach Snow's blog post entitled AngularJS: Faster ng-include
-
-  http://zachsnow.com/#!/blog/2014/angularjs-faster-ng-include/
-**/
-
-angular.module('liveopsConfigPanel.shared.directives')
-  .directive('compiledInclude', [
-  '$compile',
-  '$templateCache',
-  '$http',
-  '$q',
-  function($compile, $templateCache, $http, $q) {
-    return {
-      restrict: 'A',
-      priority: 400,
-      compile: function(){
-        // In an ideal world, if we could hard-code the template URLs, we could
-        // do all of the below in this compile function. Unfortunately, Since
-        // we do not know what template will be needed, we have to rely on the
-        // pre-link function (the return value of this)
-
-        return function($scope, element, attrs){
-          var templateName = attrs.compiledInclude,
-              template = $templateCache.get(templateName);
-
-          if(!template){
-
-            // If we have no template, lets go fetch it. When we do, store it in cache.
-            // This can cause multiple queries for the same template, but once one puts in
-            // the cache, all future calls will be able to retrieve it from cache.
-            template = $http.get(templateName, {cache: $templateCache}).then(function (result){
-              $templateCache.put(templateName, result.data);
-              return result.data;
-            });
-          }
-
-          // Since we don't know if we're waiting for a promise or just have the value,
-          // use $q.when to handle both cases
-          $q.when(template).then(function (templateHtml) {
-            element.html(templateHtml);
-            $compile(element.contents())($scope);
-          });
-        };
-      }
-    };
-  }
-  ]);
-
-'use strict';
-
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('loCancel', ['$q',
     function ($q) {
@@ -742,11 +742,19 @@ angular.module('liveopsConfigPanel.shared.directives')
         require: ['loFormSubmit'],
         controller: function() {
           this.alertSuccess = function(resource) {
+            if (! resource){
+              return;
+            }
+
             var action = resource.updated ? 'updated' : 'saved';
             Alert.success('Record ' + action);
           };
 
           this.alertFailure = function(resource) {
+            if (! resource){
+              return;
+            }
+
             var action = resource.updated ? 'update' : 'save';
             Alert.error('Record failed to ' + action);
           };
@@ -939,39 +947,42 @@ angular.module('liveopsConfigPanel.shared.directives')
           self.errorInputWatchesUnbinds = {};
           
           this.populateApiErrors = function(error) {
-            if ($parse('data.error')(error)) {
-              angular.forEach(error.data.error.attribute, function(value, key) {
-                if (angular.isDefined(self.formController[key])){
-                  
-                  //if api error is a hardcoded key like "required", then simply
-                  //set the form field error key to {value: true}
-                  if(apiErrorKeys.indexOf(value) >= 0) {
-                    self.formController[key].$setValidity(value, false);
-                    self.formController[key].$error = {};
-                    self.formController[key].$error[value] = true;
-                  } else {
-                    self.formController[key].$setValidity('api', false);
-                    self.formController[key].$error = {
-                      api: value
-                    };
-                  }
-                  
-                  
-                  self.formController[key].$setTouched();
-                  self.formController[key].$setPristine();
-                  
-                  self.errorInputWatchesUnbinds[key] = $scope.$watch(function(){
-                    return self.formController[key].$dirty;
-                  }, function(dirtyValue){
-                    if (dirtyValue){
-                      self.formController[key].$setValidity('api', true);
-                      self.errorInputWatchesUnbinds[key]();
-                      delete self.errorInputWatchesUnbinds[key];
-                    }
-                  });
-                }
-              });
+            if (!$parse('data.error')(error)){
+              console.warn('Could not parse data.error from:', error);
+              return error;
             }
+            
+            angular.forEach(error.data.error.attribute, function(value, key) {
+              if (angular.isDefined(self.formController[key])){
+                
+                //if api error is a hardcoded key like "required", then simply
+                //set the form field error key to {value: true}
+                if(apiErrorKeys.indexOf(value) >= 0) {
+                  self.formController[key].$setValidity(value, false);
+                  self.formController[key].$error = {};
+                  self.formController[key].$error[value] = true;
+                } else {
+                  self.formController[key].$setValidity('api', false);
+                  self.formController[key].$error = {
+                    api: value
+                  };
+                }
+                
+                
+                self.formController[key].$setTouched();
+                self.formController[key].$setPristine();
+                
+                self.errorInputWatchesUnbinds[key] = $scope.$watch(function(){
+                  return self.formController[key].$dirty;
+                }, function(dirtyValue){
+                  if (dirtyValue){
+                    self.formController[key].$setValidity('api', true);
+                    self.errorInputWatchesUnbinds[key]();
+                    delete self.errorInputWatchesUnbinds[key];
+                  }
+                });
+              }
+            });
 
             return error;
           };
@@ -1070,8 +1081,6 @@ angular.module('liveopsConfigPanel.shared.directives')
               loFormAlert.alertFailure(error.config.data);
             });
           }
-          
-          $scope.$apply();
         });
       }
     };
