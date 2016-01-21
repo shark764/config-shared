@@ -27,7 +27,7 @@ angular.module('liveopsConfigPanel.shared.directives')
             return; //User has typed a value into the typeahead that does not match an item. Ignore it.
           }
 
-          $scope.display = selectedItem.getDisplay();
+          $scope.display = selectedItem ? selectedItem.getDisplay() : null;
 
           if(angular.isFunction($scope.onItemSelect)) {
             $scope.onItemSelect(selectedItem);

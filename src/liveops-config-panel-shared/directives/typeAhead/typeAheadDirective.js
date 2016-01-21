@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('typeAhead', ['$filter', '$timeout', function($filter, $timeout) {
     /** type-ahead element directive
      * Create an input element that shows suggestions as you type
      * 
      * Default comparator compares the entered text with the items' getDisplay() result, ignoring case
      */
+  .directive('typeAhead', ['$filter', '$parse', function($filter, $parse) {
     return {
       restrict: 'E',
+      require: '?^form',
       scope : {
         items: '=', // (array) The items to search for matches
         nameField: '@', // (string) HTML name. Also used as the display property path on the items if given items have no getDisplay function
@@ -88,6 +89,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         });
 
         $scope.$watch('selectedItem', function(newVal) {
+          $scope.onSelect({selectedItem: newVal});
           if (newVal === null){
             $scope.currentText = '';
           } else if ($scope.getDisplayString(newVal) !== $scope.currentText){
@@ -103,13 +105,18 @@ angular.module('liveopsConfigPanel.shared.directives')
         }, true);
 
         $scope.select = function(item) {
+          $scope.selectedItem = item;
+          
           if (! angular.isString(item)){
             $scope.currentText = $scope.getDisplayString(item);
           }
-
-          $scope.selectedItem = item;
-          $scope.onSelect({selectedItem: item});
-
+          
+          if ($scope.form) {
+            var ngModel = $parse($scope.nameField)($scope.form);
+            ngModel.$setDirty();
+            ngModel.$setTouched();
+          }
+          
           if (!$scope.keepExpanded) {
             $scope.hovering = false;
             $scope.showSuggestions = false;
@@ -132,7 +139,11 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
         };
       },
-      link: function($scope, element) {
+      link: function($scope, element, attr, form) {
+        if(form) {
+          $scope.form = form;
+        }
+        
         element.find('input').bind('keydown keypress', function(event){
           var highlightedIndex;
 
