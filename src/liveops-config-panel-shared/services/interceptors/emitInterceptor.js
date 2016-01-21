@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
+   /** emitInterceptor http interceptor service
+    * Add as an interceptor to a liveopsResource to broadcast events based on the http response
+    */
   .service('emitInterceptor', ['$rootScope', '$q', '$location', 'apiHostname', 'emitErrorInterceptor',
     function ($rootScope, $q, $location, apiHostname, emitErrorInterceptor) {
       this.response = function (response) {
@@ -24,6 +27,9 @@ angular.module('liveopsConfigPanel.shared.services')
       this.responseError = emitErrorInterceptor.responseError;
     }
   ])
+  /** emitErrorInterceptor http interceptor service
+    * Add as an interceptor to a liveopsResource to broadcast events based on error http response
+    */
   .service('emitErrorInterceptor', ['$rootScope', '$q',
     function ($rootScope, $q) {  
       this.responseError = function (error) {

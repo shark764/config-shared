@@ -1,9 +1,12 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
+  /** Modal service
+   * Create modal elements on demand and handle inserting them into the page
+   */
   .service('Modal', ['$document', '$rootScope', '$compile', '$q', function ($document, $rootScope, $compile, $q) {
     var self = this;
-    
+
     this.showConfirm = function(config){
       var defaults = {
         title: '',
@@ -11,12 +14,12 @@ angular.module('liveopsConfigPanel.shared.services')
         okCallback: angular.noop,
         cancelCallback: angular.noop
       };
-      
+
       var deferred = $q.defer();
-      
+
       var options = angular.extend(defaults, config);
       var newScope = $rootScope.$new();
-      
+
       //Set scope properties for the template to use
       newScope.modalBody = 'liveops-config-panel-shared/services/modal/confirmModal.html';
       newScope.title = options.title;
@@ -31,13 +34,13 @@ angular.module('liveopsConfigPanel.shared.services')
         deferred.reject('false');
         options.cancelCallback();
       };
-      
+
       var element = $compile('<modal></modal>')(newScope);
       $document.find('body').append(element);
-      
+
       return deferred.promise;
     };
-    
+
     this.close = function(){
       $document.find('modal').remove();
     };

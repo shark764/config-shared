@@ -2,6 +2,10 @@
 
 angular.module('liveopsConfigPanel.shared.services')
   .service('DirtyForms', ['Alert', '$translate', function(Alert, $translate) {
+    /** DirtyForms service
+     * Register forms on the page and track their $dirty property
+     * Used to show a confirm message when user takes an action that would discard edits they have made to a form
+     */
     var self = this;
     this.forms = [];
 

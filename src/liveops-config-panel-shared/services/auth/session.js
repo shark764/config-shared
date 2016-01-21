@@ -115,10 +115,6 @@ angular.module('liveopsConfigPanel.shared.services')
       this.restore = function () {
         angular.extend(this, JSON.parse(localStorage.getItem(this.userSessionKey)));
         angular.extend(this, JSON.parse(localStorage.getItem(this.userPreferenceKey)));
-
-        //if (this.lang) {
-        //  $translate.use(this.lang);
-        //}
       };
 
       this.isAuthenticated = function () {
