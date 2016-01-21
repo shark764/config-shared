@@ -8,11 +8,19 @@ angular.module('liveopsConfigPanel.shared.directives')
         require: ['loFormSubmit'],
         controller: function() {
           this.alertSuccess = function(resource) {
+            if (! resource){
+              return;
+            }
+
             var action = resource.updated ? 'updated' : 'saved';
             Alert.success('Record ' + action);
           };
 
           this.alertFailure = function(resource) {
+            if (! resource){
+              return;
+            }
+
             var action = resource.updated ? 'update' : 'save';
             Alert.error('Record failed to ' + action);
           };

@@ -50,8 +50,6 @@ angular.module('liveopsConfigPanel.shared.directives')
               loFormAlert.alertFailure(error.config.data);
             });
           }
-          
-          $scope.$apply();
         });
       }
     };

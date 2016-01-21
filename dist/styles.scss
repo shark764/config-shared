@@ -1539,6 +1539,11 @@ number-slider {
     }
   }
 }
+.resizable-handle {
+  font-size: 1.4em;
+  font-weight: normal;
+  cursor: col-resize;
+}
 query-list-creator {
 
   .add-filter {
@@ -1629,11 +1634,6 @@ query-list-creator {
   }
 }
 
-.resizable-handle {
-  font-size: 1.4em;
-  font-weight: normal;
-  cursor: col-resize;
-}
 .scrollable-table-container {
   position: relative;
   width: 100%;
