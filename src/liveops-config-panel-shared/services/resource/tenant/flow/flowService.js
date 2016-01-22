@@ -13,7 +13,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'description',
           optional: true
         }, {
-          name: 'activeVersion'
+          name: 'activeVersion',
+          optional: true
         }, {
           name: 'channelType',
           optional: true
