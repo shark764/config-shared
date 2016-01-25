@@ -113,3 +113,6 @@ not ideal but will have to do for now.
 
 ## 01/21/16 - 1.0.47
 - Improve lo-form-submit error handling
+
+## 01/25/16 - 1.0.50
+- Make activeVersion optional for flows
