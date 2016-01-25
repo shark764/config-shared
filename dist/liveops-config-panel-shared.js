@@ -1491,6 +1491,45 @@ angular.module('liveopsConfigPanel.shared.directives')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
+  .directive('loAudioControl', [function() {
+    return {
+      restrict: 'AE',
+      controller: function() {
+        var vm = this;
+        
+        vm.play = function() {
+          vm.audioElement.play();
+        };
+        
+        vm.pause = function() {
+          vm.audioElement.pause();
+        };
+        
+        vm.forward = function(seconds) {
+          if(!angular.isNumber(seconds)) {
+            seconds = 5;
+          }
+          vm.audioElement.currentTime = vm.audioElement.currentTime + seconds;
+        };
+        
+        vm.rewind = function(seconds) {
+          if(!angular.isNumber(seconds)) {
+            seconds = 5;
+          }
+          vm.audioElement.currentTime = vm.audioElement.currentTime - seconds;
+        };
+      },
+      link: function($scope, elem, attr, ctrl) {
+        ctrl.audioElement = elem[0];
+        if(attr.name) {
+          $scope[attr.name] = ctrl;
+        }
+      }
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
   .directive('loDuplicateValidator', ['_', function(_) {
     /** lo-duplicate-validator attribute directive
      * Add a 'duplicate' validator to an ngModel to make sure the ngModel doesn't duplicate an existing item
@@ -1807,6 +1846,35 @@ angular.module('liveopsConfigPanel.shared.directives')
     templateUrl : 'liveops-config-panel-shared/directives/modal/modal.html'
   };
 }]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .directive('namedTransclude', [
+    function() {
+      return {
+        link: function($scope, element, attrs, controller, $transclude) {
+          var innerScope = $scope.$parent.$parent.$new();
+          
+          $transclude(innerScope, function(clone) {
+            element.empty();
+
+            angular.forEach(clone, function(include) {
+              if (include.attributes &&
+                include.attributes.name &&
+                include.attributes.name.value === attrs.name) {
+                element.append(include);
+              }
+            });
+
+            element.on('$destroy', function() {
+              innerScope.$destroy();
+            });
+          });
+        }
+      };
+    }
+  ]);
 
 'use strict';
 
@@ -2432,6 +2500,14 @@ angular.module('liveopsConfigPanel.shared.directives')
         //Must use timeout here; evalAsync happens too early?
         $timeout($scope.setPosition, 1);
       }
+    };
+  }]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.directives')
+  .filter('trusted', ['$sce', function ($sce) {
+    return function (url) {
+      return $sce.trustAsResourceUrl(url);
     };
   }]);
 'use strict';
@@ -4943,6 +5019,60 @@ angular.module('liveopsConfigPanel.shared.directives')
 
 'use strict';
 
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
+    function ($resource, $http, apiHostname, resultTransformer) {
+      var Timezone = $resource(apiHostname + '/v1/timezones', {}, {
+        query: {
+          method: 'GET',
+          isArray: true,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
+          cache: true
+        },
+      });
+
+      Timezone.prototype.getDisplay = function () {
+        return '(' + this.offset + ') ' + this.timezone;
+      };
+
+      return Timezone;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
+  .service('mockTimezones', function () {
+    return [
+      'America/Edmonton',
+      'America/Eirunepe',
+      'America/El_Salvador',
+      'America/Ensenada',
+      'America/Fort_Wayne',
+      'America/Fortaleza',
+      'America/Glace_Bay',
+      'America/Godthab',
+      'America/Goose_Bay',
+      'America/Grand_Turk',
+      'America/Grenada',
+      'America/Guadeloupe',
+      'America/Guatemala',
+      'America/Guayaquil',
+      'America/Guyana',
+      'America/Halifax'
+    ];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
+    function ($httpBackend, apiHostname, mockTimezones) {
+      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
+        'result': mockTimezones
+      });
+    }
+  ]);
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
   .service('mockTenants', function (Tenant) {
     return [new Tenant({
@@ -5019,60 +5149,6 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       return Tenant;
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('Timezone', ['$resource', '$http', 'apiHostname', 'resultTransformer',
-    function ($resource, $http, apiHostname, resultTransformer) {
-      var Timezone = $resource(apiHostname + '/v1/timezones', {}, {
-        query: {
-          method: 'GET',
-          isArray: true,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          transformResponse: Array.prototype.concat($http.defaults.transformResponse, resultTransformer),
-          cache: true
-        },
-      });
-
-      Timezone.prototype.getDisplay = function () {
-        return '(' + this.offset + ') ' + this.timezone;
-      };
-
-      return Timezone;
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.timezone.mock', ['liveopsConfigPanel.mock'])
-  .service('mockTimezones', function () {
-    return [
-      'America/Edmonton',
-      'America/Eirunepe',
-      'America/El_Salvador',
-      'America/Ensenada',
-      'America/Fort_Wayne',
-      'America/Fortaleza',
-      'America/Glace_Bay',
-      'America/Godthab',
-      'America/Goose_Bay',
-      'America/Grand_Turk',
-      'America/Grenada',
-      'America/Guadeloupe',
-      'America/Guatemala',
-      'America/Guayaquil',
-      'America/Guyana',
-      'America/Halifax'
-    ];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockTimezones',
-    function ($httpBackend, apiHostname, mockTimezones) {
-      $httpBackend.when('GET', apiHostname + '/v1/timezones').respond({
-        'result': mockTimezones
-      });
     }
   ]);
 'use strict';
@@ -5644,6 +5720,36 @@ angular.module('liveopsConfigPanel.tenant.integration.mock', ['liveopsConfigPane
     }
   ]);
 
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('RealtimeStatisticInteraction', ['LiveopsResourceFactory', 'apiHostname',
+    function (LiveopsResourceFactory, apiHostname) {
+      var RealtimeStatisticInteraction = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/realtime-statistics/interactions',
+        resourceName: 'RealtimeStatisticInteraction'
+      });
+
+      return RealtimeStatisticInteraction;
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Recording', ['LiveopsResourceFactory', 'apiHostname',
+    function (LiveopsResourceFactory, apiHostname) {
+      var Recording = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/interactions/:interactionId/recordings/:id',
+        resourceName: 'Recording'
+      });
+
+      Recording.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return Recording;
+    }
+  ]);
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
@@ -6901,117 +7007,6 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
-      return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
-        resourceName: 'TenantGroupUser',
-        requestUrlFields: {
-          tenantId: '@tenantId',
-          groupId: '@groupId',
-          memberId: '@memberId'
-        },
-        getInterceptor: emitErrorInterceptor,
-        queryInterceptor: emitErrorInterceptor
-      });
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
-  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
-
-      return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
-        resourceName: 'TenantUserGroup',
-        requestUrlFields: {
-          tenantId: '@tenantId',
-          memberId: '@memberId'
-        },
-        getInterceptor: emitErrorInterceptor,
-        queryInterceptor: emitErrorInterceptor
-      });
-
-    }
-  ]);
-'use strict';
-
-angular.module('liveopsConfigPanel.tenant.user.group.mock', [
-  'liveopsConfigPanel.mock'])
-  .service('mockGroupUsers', function(TenantGroupUsers) {
-    return [new TenantGroupUsers({
-      'groupId': 'groupId1',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantGroupUsers({
-      'groupId': 'groupId2',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantGroupUsers({
-      'groupId': 'groupId1',
-      'memberId': 'userId2',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .service('mockUserGroups', function(TenantUserGroups) {
-    return [new TenantUserGroups({
-      'groupId': 'groupId1',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantUserGroups({
-      'groupId': 'groupId2',
-      'memberId': 'userId1',
-      'tenantId': 'tenant-id'
-    }), new TenantUserGroups({
-      'groupId': 'groupId1',
-      'memberId': 'userId2',
-      'tenantId': 'tenant-id'
-    })];
-  })
-  .run(['$httpBackend', 'apiHostname', 'mockGroups', 'mockGroupUsers', 'mockUserGroups', 'Session',
-    function($httpBackend, apiHostname, mockGroups, mockGroupUsers, mockUserGroups, Session) {
-      Session.tenant.tenantId = 'tenant-id';
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users', {
-        userId: 'userId1'
-      }).respond(200, mockUserGroups[1]);
-
-      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users', {
-        userId: 'userId1'
-      }).respond(200, mockUserGroups[1]);
-
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId1')
-        .respond(200);
-
-      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId2')
-        .respond(200);
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/groups').respond({
-        'result': [mockUserGroups[0], mockUserGroups[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/groups').respond({
-        'result': [mockUserGroups[2]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users').respond({
-        'result': [mockGroupUsers[0], mockGroupUsers[2]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users').respond({
-        'result': [mockGroupUsers[1]]
-      });
-
-      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3/users').respond({
-        'result': []
-      });
-    }
-  ]);
-
-'use strict';
-
-angular.module('liveopsConfigPanel.shared.services')
   .service('removeDefaultProficiencyInterceptor', ['queryCache', 'Skill', 'Session', 'filterFilter',
     function (queryCache, Skill, Session, filterFilter) {
       this.response = function (response) {
@@ -7127,5 +7122,116 @@ angular.module('liveopsConfigPanel.shared.services')
 
         return response.resource;
       };
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
+      return LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
+        resourceName: 'TenantGroupUser',
+        requestUrlFields: {
+          tenantId: '@tenantId',
+          groupId: '@groupId',
+          memberId: '@memberId'
+        },
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
+      });
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('TenantUserGroups', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
+
+      return LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
+        resourceName: 'TenantUserGroup',
+        requestUrlFields: {
+          tenantId: '@tenantId',
+          memberId: '@memberId'
+        },
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor
+      });
+
+    }
+  ]);
+'use strict';
+
+angular.module('liveopsConfigPanel.tenant.user.group.mock', [
+  'liveopsConfigPanel.mock'])
+  .service('mockGroupUsers', function(TenantGroupUsers) {
+    return [new TenantGroupUsers({
+      'groupId': 'groupId1',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantGroupUsers({
+      'groupId': 'groupId2',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantGroupUsers({
+      'groupId': 'groupId1',
+      'memberId': 'userId2',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .service('mockUserGroups', function(TenantUserGroups) {
+    return [new TenantUserGroups({
+      'groupId': 'groupId1',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantUserGroups({
+      'groupId': 'groupId2',
+      'memberId': 'userId1',
+      'tenantId': 'tenant-id'
+    }), new TenantUserGroups({
+      'groupId': 'groupId1',
+      'memberId': 'userId2',
+      'tenantId': 'tenant-id'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockGroups', 'mockGroupUsers', 'mockUserGroups', 'Session',
+    function($httpBackend, apiHostname, mockGroups, mockGroupUsers, mockUserGroups, Session) {
+      Session.tenant.tenantId = 'tenant-id';
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users', {
+        userId: 'userId1'
+      }).respond(200, mockUserGroups[1]);
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users', {
+        userId: 'userId1'
+      }).respond(200, mockUserGroups[1]);
+
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId1')
+        .respond(200);
+
+      $httpBackend.when('DELETE', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users/userId2')
+        .respond(200);
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId1/groups').respond({
+        'result': [mockUserGroups[0], mockUserGroups[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/users/userId2/groups').respond({
+        'result': [mockUserGroups[2]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId1/users').respond({
+        'result': [mockGroupUsers[0], mockGroupUsers[2]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId2/users').respond({
+        'result': [mockGroupUsers[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/groups/groupId3/users').respond({
+        'result': []
+      });
     }
   ]);
