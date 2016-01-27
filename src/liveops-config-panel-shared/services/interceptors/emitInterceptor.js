@@ -13,10 +13,12 @@ angular.module('liveopsConfigPanel.shared.services')
         var proto = Object.getPrototypeOf(response.resource);
         
         if(response.status === 201){
+          $rootScope.$broadcast('created:resource', response.resource);
           $rootScope.$broadcast('created:resource:' + proto.resourceName, response.resource);
           $rootScope.$broadcast('created:resource' + eventPath, response.resource);
         } else if(response.status === 200) {
           eventPath = eventPath.replace(/:[-\w]+$/, '');
+          $rootScope.$broadcast('updated:resource', response.resource);
           $rootScope.$broadcast('updated:resource:' + proto.resourceName, response.resource);
           $rootScope.$broadcast('updated:resource' + eventPath, response.resource);
         }

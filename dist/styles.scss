@@ -528,12 +528,8 @@ header {
 
   #table-pane {
     display: table-cell;
-    min-width: 500px;
-    padding: 20px;
-    box-sizing: border-box;
-    vertical-align: top;
     height: 100%;
-    overflow-y: auto;
+    min-width: 500px;
   }
 
   .resize-pane {
