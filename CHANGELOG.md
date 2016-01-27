@@ -116,3 +116,7 @@ not ideal but will have to do for now.
 
 ## 01/25/16 - 1.0.50
 - Make activeVersion optional for flows
+
+## 01/27/16 - 1.0.50
+- Broadcast a general event in emitInterceptor. 
+- Move table-controls specific styles out of #table-pane class
