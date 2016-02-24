@@ -123,3 +123,6 @@ not ideal but will have to do for now.
 
 ## 01/28/16 - 1.0.52
 - Fix table-pane CSS for firefox and IE
+
+## 02/24/16 - 1.0.53
+- Fix bug in selectedTableOptions

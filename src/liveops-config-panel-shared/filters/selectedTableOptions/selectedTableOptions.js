@@ -17,6 +17,7 @@ angular.module('liveopsConfigPanel.shared.filters')
      */
     return function (items, fields) {
       var filtered = [];
+      if (!items || !items.length) { return; }
 
       if (angular.isUndefined(items)) {
         return filtered;
