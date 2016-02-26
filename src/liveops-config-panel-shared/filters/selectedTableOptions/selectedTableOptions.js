@@ -6,9 +6,9 @@ angular.module('liveopsConfigPanel.shared.filters')
      * Accepts an array of items and an array of field configuration objects
      * Returns a list of items that match at least one selected field option for each field type
      * Returns an empty array if items is undefined
-     * 
+     *
      * Uses the selectedOptions filter to determine if an item matches a field
-     * 
+     *
      * Ignores field configuration objects that:
      *  - have a falsy 'checked' value
      *  - do not have a 'header.options' property
@@ -17,6 +17,7 @@ angular.module('liveopsConfigPanel.shared.filters')
      */
     return function (items, fields) {
       var filtered = [];
+      if (!items || !items.length) { return; }
 
       if (angular.isUndefined(items)) {
         return filtered;
@@ -27,7 +28,7 @@ angular.module('liveopsConfigPanel.shared.filters')
         var showItemInTable = true;
         for (var fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
           var field = fields[fieldIndex];
-          
+
           //If this filter is currently hidden, skip it
           if (!field.checked) {
             continue;

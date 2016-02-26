@@ -118,8 +118,11 @@ not ideal but will have to do for now.
 - Make activeVersion optional for flows
 
 ## 01/27/16 - 1.0.51
-- Broadcast a general event in emitInterceptor. 
+- Broadcast a general event in emitInterceptor.
 - Move table-controls specific styles out of #table-pane class
 
 ## 01/28/16 - 1.0.52
 - Fix table-pane CSS for firefox and IE
+
+## 02/19/16 - 1.0.53
+* Fix bug in selectedTableOptions
