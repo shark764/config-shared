@@ -126,3 +126,6 @@ not ideal but will have to do for now.
 
 ## 02/19/16 - 1.0.53
 * Fix bug in selectedTableOptions
+
+## 03/22/16 - 1.0.54
+* Building with new JSEDN changes
