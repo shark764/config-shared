@@ -129,3 +129,7 @@ not ideal but will have to do for now.
 
 ## 03/22/16 - 1.0.54
 * Building with new JSEDN changes
+
+## 04/11/16 - 1.0.55
+* Add filter for displaying recording duration
+* Fix bug preventing dropdown menus from dismissing on historical dashboard
