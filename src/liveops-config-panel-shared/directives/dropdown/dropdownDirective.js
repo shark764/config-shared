@@ -4,7 +4,7 @@ angular.module('liveopsConfigPanel.shared.directives')
   .directive('dropdown', [function() {
     /** dropdown element directive
      * Generate a dropdown menu/list of items
-     * 
+     *
      * Supported item config is as follows:
      * - id (string): Optional HTML ID to apply to the item's element
      * - onClick (function): Optional function triggered when the menu item is clicked
@@ -47,7 +47,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         scope.optionClick = function(func){
           scope.showDrop = false;
           scope.hovering = false;
-          
+
           if (angular.isFunction(func)){
             func();
           }
@@ -55,6 +55,7 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         scope.mouseIn = function(){
           if (scope.hovering || scope.showOnHover){
+            document.activeElement.blur(); // needed to remove focus from iframe on historical dashboards
             scope.showDrop = true;
             scope.clearOtherHovers();
           }
