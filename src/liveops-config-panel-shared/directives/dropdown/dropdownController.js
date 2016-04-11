@@ -25,7 +25,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         $scope.hovering = false;
       });
 
-      $document.$off('click', self.onClick);
+      $document.off('click', self.onClick);
     });
 
     this.onClick = function(event) {

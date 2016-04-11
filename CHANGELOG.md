@@ -133,3 +133,6 @@ not ideal but will have to do for now.
 ## 04/11/16 - 1.0.55
 * Add filter for displaying recording duration
 * Fix bug preventing dropdown menus from dismissing on historical dashboard
+
+## 04/11/16 - 1.0.56
+* Fix click handler from previous update
