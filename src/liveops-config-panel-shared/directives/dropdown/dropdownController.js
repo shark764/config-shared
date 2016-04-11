@@ -18,6 +18,16 @@ angular.module('liveopsConfigPanel.shared.directives')
         }
     });
 
+    // If window loses focus (ie, user clicks on Birst iframe), close dropdown
+    window.addEventListener('blur', function() {
+      $scope.$apply(function() {
+        $scope.showDrop = false;
+        $scope.hovering = false;
+      });
+
+      $document.$off('click', self.onClick);
+    });
+
     this.onClick = function(event) {
       //Hide the dropdown when user clicks outside of it
       var clickedInDropdown = $element.find(event.target).length > 0;
