@@ -136,3 +136,6 @@ not ideal but will have to do for now.
 
 ## 04/11/16 - 1.0.56
 * Fix click handler from previous update
+
+## 04/19/16 - 1.0.57
+* Fix time filter to account for single digit seconds
