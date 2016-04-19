@@ -706,7 +706,7 @@ angular.module('liveopsConfigPanel.shared.filters')
           seconds = ('0' + Math.floor(input % 60)).slice(-2);
           formattedData = '00:' + minutes + ':' + seconds;
         } else {
-          seconds = Math.floor(input);
+          seconds = ('0' + Math.floor(input)).slice(-2);
           formattedData = '00:00:' + seconds;
         }
 
