@@ -18,6 +18,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'flowId'
         }, {
           name: 'flow'
+        }, {
+          name: 'metadata'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,

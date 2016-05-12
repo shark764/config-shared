@@ -22,6 +22,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'flow'
         }, {
           name: 'history'
+        }, {
+          name: 'metadata'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
