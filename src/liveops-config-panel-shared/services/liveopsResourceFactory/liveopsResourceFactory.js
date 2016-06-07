@@ -137,6 +137,7 @@ angular.module('liveopsConfigPanel.shared.services')
             tenantId: '@tenantId',
             groupId: '@groupId',
             flowId: '@flowId',
+            dashboardId: '@dashboardId',
             queueId: '@queueId',
             userId: '@userId',
             memberId: '@memberId'
