@@ -140,5 +140,8 @@ not ideal but will have to do for now.
 ## 04/19/16 - 1.0.57
 * Fix time filter to account for single digit seconds
 
-## 05/11/16 = 1.0.58
+## 05/11/16 - 1.0.58
 * Added metadata column to flow drafts and versions
+
+## 06/07/16 - 1.1.0
+* Added Realtime Dashboard resource type
