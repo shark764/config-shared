@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('RealtimeDashboard', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
+  .factory('CustomStat', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, emitErrorInterceptor) {
 
-      var RealtimeDashboard = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/dashboards/:id',
-        resourceName: 'RealtimeDashboard',
+      var CustomStat = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/custom-stats/:id',
+        resourceName: 'CustomStat',
         updateFields: [{
           name: 'name'
         }, {
-          name: 'active',
+          name: 'custom-stat',
         }, {
-          name: 'activeVersion',
+          name: 'description',
           optional: true
         }],
         getInterceptor: emitErrorInterceptor,
@@ -21,10 +21,10 @@ angular.module('liveopsConfigPanel.shared.services')
         updateInterceptor: emitInterceptor
       });
 
-      RealtimeDashboard.prototype.getDisplay = function () {
+      CustomStat.prototype.getDisplay = function () {
         return this.name;
       };
 
-      return RealtimeDashboard;
+      return CustomStat;
     }
   ]);
