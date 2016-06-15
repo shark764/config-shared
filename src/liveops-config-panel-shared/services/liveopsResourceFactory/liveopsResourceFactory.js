@@ -140,7 +140,8 @@ angular.module('liveopsConfigPanel.shared.services')
             dashboardId: '@dashboardId',
             queueId: '@queueId',
             userId: '@userId',
-            memberId: '@memberId'
+            memberId: '@memberId',
+            customStatId: '@customStatId'
           };
 
           var defaultResponseTransformer =
