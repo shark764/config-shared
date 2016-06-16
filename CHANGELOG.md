@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.2]
+* CXV1-1682 - Add resource entities for reasons and dispositions
+
 ## [1.1.1]
 * Fixed Realtime Dashboard active field
 * Fixed Changelog layout
@@ -151,17 +154,3 @@ not ideal but will have to do for now.
 
 ## [1.0.0]
 * initial release
-
-
-
-
-
-
-
-
-
-
-
-
-
-
