@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.4]
+* CXV1-1682 - Add resource entity for reason lists
+
 ## [1.1.3]
 * CXV1-1682 - Add resource entity for disposition lists
 
