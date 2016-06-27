@@ -9,42 +9,18 @@ angular.module('liveopsConfigPanel.shared.services')
         updateFields: [{
           name: 'name'
         }, {
+          name: 'channel'
+        }, {
           name: 'description',
           optional: true
         }, {
-          name: 'flowId'
-        }, {
-          name: 'defaultTimeZone',
-        }, {
-          name:'doNotCallLists'
-        }, {
-          name: 'callerID',
-          optional:true
-        }, {
-          name: 'defaultLeadExpiration',
-          optional:true
-        }, {
-          name: 'defaultLeadRetryInterval',
-          optional:true
-        }, {
-          name: 'defaultMaxRetries',
-          optional: true
-        }, {
-          name: 'dispositionCodeListId'
-        }, {
-          name: 'dispositionMappings'
-        }, {
-          name: 'schedule'
+          name: 'dialer'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor
       });
-
-      Campaign.prototype.getDisplay = function () {
-        return this.name;
-      };
 
       return Campaign;
     }

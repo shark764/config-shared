@@ -10,11 +10,7 @@ angular.module('liveopsConfigPanel.shared.services')
         updateFields: [{
           name: 'version'
         }, {
-          name: 'name'
-        }, {
-          name: 'createdOn',
-        }, {
-          name: 'createBy'
+          name: 'created'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
@@ -23,7 +19,7 @@ angular.module('liveopsConfigPanel.shared.services')
       });
 
       CampaignVersion.prototype.getDisplay = function () {
-        return this.name;
+        return this.version;
       };
 
       return CampaignVersion;
