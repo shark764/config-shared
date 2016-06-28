@@ -5331,6 +5331,72 @@ angular.module('liveopsConfigPanel.user.mock', ['liveopsConfigPanel.mock'])
   ]);
 'use strict';
 
+angular.module('liveopsConfigPanel.tenant.campaign.mock', ['liveopsConfigPanel.mock'])
+  .service('mockCampaigns', function(Campaign){
+    return [new Campaign({
+      name: 'Coffee is for closers',
+      description: 'First prize is a Cadillac El Dorado',
+      id: 'cc5ee630-526b-4a1c-b148-75d476d507ec'
+    }), new Campaign({
+      name: 'Clint "Broke Hand" Cameron',
+      description: 'Second prize is a set of steak knives',
+      id: '0d0ff512-9080-4be1-8bf9-0a978cdc3431'
+    }), new Campaign({
+      name: 'Clint "Broke Hand" Cameron',
+      description: 'Second prize is a set of steak knives',
+      id: '0d0ff512-9080-4be1-8bf9-0a978cdc3431'
+    })];
+  })
+  .run(['$httpBackend', 'apiHostname', 'mockCampaigns', 'Session',
+    function ($httpBackend, apiHostname, mockCampaigns, Session) {
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/campaigns/' + mockCampaigns[0].id).respond({
+        'result': mockCampaigns[0]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/campaigns/' + mockCampaigns[1].id).respond({
+        'result': mockCampaigns[1]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/campaigns').respond({
+        'result': mockCampaigns
+      });
+
+      $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/campaigns').respond({
+        'result': mockCampaigns[2]
+      });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('Campaign', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
+      var Campaign = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:id',
+        resourceName: 'Campaign',
+        updateFields: [{
+          name: 'name'
+        }, {
+          name: 'channel'
+        }, {
+          name: 'description',
+          optional: true
+        }, {
+          name: 'dialer'
+        }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      return Campaign;
+    }
+  ]);
+
+'use strict';
+
 angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPanel.mock'])
   .service('mockBusinessHours', function (BusinessHour) {
     return [new BusinessHour({
@@ -7244,6 +7310,34 @@ angular.module('liveopsConfigPanel.tenant.campaign.version.mock', [
       $httpBackend.when('POST', apiHostname + '/v1/tenants/' + Session.tenant.tenantId + '/campaigns/' + mockCampaigns[2].id + '/versions').respond({
         'result': mockCampaignVersions[3]
       });
+    }
+  ]);
+
+'use strict';
+
+angular.module('liveopsConfigPanel.shared.services')
+  .factory('BusinessHourException', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
+
+      var BusinessHours = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/business-hours/:businessHourId/exceptions/:id',
+        resourceName: 'BusinessHourException',
+        updateFields: [{
+          name: 'date'
+        }, {
+          name: 'isAllDay'
+        }],
+        getInterceptor: emitErrorInterceptor,
+        queryInterceptor: emitErrorInterceptor,
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
+        updateInterceptor: emitInterceptor
+      });
+
+      BusinessHours.prototype.getDisplay = function () {
+        return this.name;
+      };
+
+      return BusinessHours;
     }
   ]);
 
