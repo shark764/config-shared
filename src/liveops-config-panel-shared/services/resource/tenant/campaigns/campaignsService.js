@@ -22,6 +22,10 @@ angular.module('liveopsConfigPanel.shared.services')
         updateInterceptor: emitInterceptor
       });
 
+      Campaign.prototype.getDisplay = function() {
+        return this.name;
+      };
+
       return Campaign;
     }
   ]);

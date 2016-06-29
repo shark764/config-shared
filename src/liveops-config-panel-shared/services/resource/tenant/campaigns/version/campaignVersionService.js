@@ -1,26 +1,41 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('CampaignVersion', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'emitErrorInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor) {
-
+  .factory('CampaignVersion', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
       var CampaignVersion = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:version',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:versionId',
         resourceName: 'CampaignVersion',
         updateFields: [{
-          name: 'version'
+          name: 'flowId'
         }, {
-          name: 'created'
+          name: 'defaultTimeZone'
+        }, {
+          name: 'doNotCallLists'
+        }, {
+          name: 'callerID',
+          optional: true
+        }, {
+          name: 'defaultLeadExpiration',
+          optional: true
+        }, {
+          name: 'defaultLeadRetryInterval',
+          optional: true
+        }, {
+          name: 'defaultMaxRetries',
+          optional: true
+        }, {
+          name: 'dispositionCodeListId'
+        }, {
+          name: 'dispositionMappings'
+        }, {
+          name: 'schedule'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
-        saveInterceptor: emitInterceptor,
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor
       });
-
-      CampaignVersion.prototype.getDisplay = function () {
-        return this.version;
-      };
 
       return CampaignVersion;
     }
