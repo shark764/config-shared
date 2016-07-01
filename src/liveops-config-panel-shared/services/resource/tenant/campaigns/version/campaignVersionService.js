@@ -4,7 +4,7 @@ angular.module('liveopsConfigPanel.shared.services')
   .factory('CampaignVersion', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
     function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
       var CampaignVersion = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:versionId',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:id',
         resourceName: 'CampaignVersion',
         updateFields: [{
           name: 'flowId'
