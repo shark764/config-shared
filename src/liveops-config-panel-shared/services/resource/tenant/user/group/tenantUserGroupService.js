@@ -5,9 +5,10 @@ angular.module('liveopsConfigPanel.shared.services')
     function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
 
       return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:memberId/groups',
-        resourceName: 'TenantUserGroup',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:userId/reason-lists/:reasonListId',
+        resourceName: 'TenantUserReasonList',
         requestUrlFields: {
+          reasonListId: '@reasonListId',
           tenantId: '@tenantId',
           memberId: '@memberId'
         },
