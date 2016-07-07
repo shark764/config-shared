@@ -3,17 +3,16 @@
 angular.module('liveopsConfigPanel.shared.services')
   .factory('TenantGroupUsers', ['LiveopsResourceFactory', 'apiHostname', 'emitErrorInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitErrorInterceptor) {
-
       return LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/users/:userId/reason-lists',
-        resourceName: 'TenantReasonListUser',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/groups/:groupId/users/:memberId',
+        resourceName: 'TenantGroupUser',
         requestUrlFields: {
-          reasonListId: '@reasonListId',
           tenantId: '@tenantId',
-          userId: '@userId'
+          groupId: '@groupId',
+          memberId: '@memberId'
         },
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor
       });
     }
-]);
+  ]);
