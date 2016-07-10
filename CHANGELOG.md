@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.0]
+* Add resource entities for CapacityRules, CapacityRuleVersions, and Listeners
+
 ## [1.1.5]
 * Add resource entity for reason list and user associations
 

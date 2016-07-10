@@ -3,14 +3,14 @@
 angular.module('liveopsConfigPanel.shared.services')
   /** liveopsResourceFactory factory
    * Generate a custom ngResource to represent a liveops REST API endpoint
-   * 
+   *
    * Default behavior:
    *  - Properties on the resource beginning with '$' will not be sent with POST requests
    *  - API responses will have the resultTransformer applied to them to remove the 'result' property
    *  - The resource object will be updated with the response object's properties after an API call
    *  - The $original property of the resource keeps a duplicate of the resource to represent the API copy of the data. $original is updated with every API call
    *  - The $busy property of the resource will be true if there is an unresolved API request pending
-   *  
+   *
    * Adds the following utility functions to the resource:
    *  - hasItem: Returns true if an object matching the given object's properties is stored in the cache. Returns false otherwise.
    *  - cachedGet: Fetch a matching item from the cache. If not present in cache, do a GET request, add the response to cache, and return the response.
@@ -44,7 +44,7 @@ angular.module('liveopsConfigPanel.shared.services')
    *        putRequestTransformer, putResponseTransformer
    *        postRequestTransformer, postResponseTransformer
    *        deleteRequestTransformer, deleteResponseTransformer
-   *  
+   *
    */
 
   .factory('LiveopsResourceFactory', ['$http', '$resource', '$q', 'queryCache', 'lodash', 'resultTransformer',
@@ -57,7 +57,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }
       }
 
-      // ngResource will only accept a single interceptor function. To allow chaining multiple interceptors on one request, 
+      // ngResource will only accept a single interceptor function. To allow chaining multiple interceptors on one request,
       // we create a new function that calls all the given interceptor functions
       function getInterceptor(interceptorParam) {
         if (angular.isArray(interceptorParam)) {
@@ -141,7 +141,9 @@ angular.module('liveopsConfigPanel.shared.services')
             queueId: '@queueId',
             userId: '@userId',
             memberId: '@memberId',
-            customStatId: '@customStatId'
+            customStatId: '@customStatId',
+            capacityRuleId: '@capacityRuleId',
+            integrationId: '@integrationId'
           };
 
           var defaultResponseTransformer =
@@ -321,7 +323,7 @@ angular.module('liveopsConfigPanel.shared.services')
           Resource.cachedGet = function(params, cacheKey, invalidate, keyParams) {
             var key = cacheKey ? cacheKey : this.prototype.resourceName;
             keyParams = keyParams ? keyParams : params;
-            
+
             var cache = queryCache.get(key);
 
             if (!cache || invalidate) {

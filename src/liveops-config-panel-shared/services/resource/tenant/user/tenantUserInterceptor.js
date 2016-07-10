@@ -34,13 +34,14 @@ angular.module('liveopsConfigPanel.shared.services')
 
       rename(tenantUser, 'groups', '$groups');
       rename(tenantUser, 'skills', '$skills');
+      rename(tenantUser, 'capacityRules', '$capacityRules');
 
       if (tenantUser.roleName) {
         rename(tenantUser, 'roleName', '$roleName');
       } else if (Session.tenant && Session.tenant.tenantId){
         tenantUser.$roleName = TenantRole.getName(tenantUser.roleId);
       }
-      
+
       if (tenantUser.activeExtension &&
         !Object.keys(tenantUser.activeExtension).length) {
         delete tenantUser.activeExtension;
