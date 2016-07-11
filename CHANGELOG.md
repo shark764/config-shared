@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.5]
+* Add resource entity for reason list and user associations
+
 ## [1.1.4]
 * CXV1-1682 - Add resource entity for reason lists
 
