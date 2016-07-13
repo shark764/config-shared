@@ -185,49 +185,6 @@ angular.module('liveopsConfigPanel.shared.filters')
   }]);
 'use strict';
 
-Array.prototype.removeItem = function (item) {
-  var idx = this.indexOf(item);
-  if (idx > -1){
-    this.splice(idx, 1);
-  }
-};
-
-Array.prototype.clear = function() {
-  this.splice(0,this.length);
-};
-
-Array.prototype.shuffle = function() {
-  var i = this.length, j, temp;
-  if ( i === 0 ) { return this; }
-  while ( --i ) {
-     j = Math.floor( Math.random() * ( i + 1 ) );
-     temp = this[i];
-     this[i] = this[j];
-     this[j] = temp;
-  }
-  return this;
-};
-'use strict';
-
-String.prototype.insert = function (index, string) {
-  if (index > 0) {
-    return this.substring(0, index) + string + this.substring(index, this.length);
-  } else {
-    return string + this;
-  }
-};
-
-String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-if (!String.prototype.contains) {
-  String.prototype.contains = function(s) {
-      return this.indexOf(s) > -1;
-  };
-}
-'use strict';
-
 angular.module('liveopsConfigPanel.mock', [])
   .value('mockRegions', [{
     'id': 'regionId1',
@@ -333,6 +290,49 @@ angular.module('liveopsConfigPanel.mock', [])
   angular.module('liveopsConfigPanel.shared.services')
   .service('flowSetup', flowSetup);
 })();
+'use strict';
+
+Array.prototype.removeItem = function (item) {
+  var idx = this.indexOf(item);
+  if (idx > -1){
+    this.splice(idx, 1);
+  }
+};
+
+Array.prototype.clear = function() {
+  this.splice(0,this.length);
+};
+
+Array.prototype.shuffle = function() {
+  var i = this.length, j, temp;
+  if ( i === 0 ) { return this; }
+  while ( --i ) {
+     j = Math.floor( Math.random() * ( i + 1 ) );
+     temp = this[i];
+     this[i] = this[j];
+     this[j] = temp;
+  }
+  return this;
+};
+'use strict';
+
+String.prototype.insert = function (index, string) {
+  if (index > 0) {
+    return this.substring(0, index) + string + this.substring(index, this.length);
+  } else {
+    return string + this;
+  }
+};
+
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+if (!String.prototype.contains) {
+  String.prototype.contains = function(s) {
+      return this.indexOf(s) > -1;
+  };
+}
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
@@ -7186,35 +7186,23 @@ angular.module('liveopsConfigPanel.shared.services')
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-.factory('CampaignVersionLatest', ['LiveopsResourceFactory', '$q', 'apiHostname', 'emitErrorInterceptor',
-    function (LiveopsResourceFactory, $q, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
-      var latestVersionId;
-
-      var CampaignVersionLatest = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/latest',
-        resourceName: 'CampaignVersionLatest',
+  .factory('CampaignStart', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
+      var CampaignStart = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:versionId/start',
         requestUrlFields: {
           tenantId: '@tenantId',
-          campaignId: '@campaignId'
+          campaignId: '@campaignId',
+          versionId: '@versionId'
         },
+        resourceName: 'CampaignStart',
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
-        getResponseTransformer: function (response) {
-          var responseObj = {};
-          responseObj.versionId = JSON.parse(response);
-          return responseObj;
-        }
+        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        updateInterceptor: emitInterceptor
       });
 
-      CampaignVersionLatest.prototype.getLatestVersionId = function (latestVersionId) {
-        $q.when(latestVersionId.$promise).then(function (response) {
-          console.log('response.versionId.result', response.versionId.result);
-          return response.versionId.result;
-        })
-
-      }
-
-      return CampaignVersionLatest;
+      return CampaignStart;
     }
   ]);
 
