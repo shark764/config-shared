@@ -26,6 +26,10 @@ angular.module('liveopsConfigPanel.shared.services')
         return this.name;
       };
 
+      CapacityRule.prototype.cacheKey = function () {
+        return 'CapacityRule' + this.tenantId;
+      };
+
       return CapacityRule;
     }
   ]);

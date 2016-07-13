@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.1]
+* CXV1-3876 - Added cache key to Capacity Rules entity
+
 ## [1.2.0]
 * Add resource entities for CapacityRules, CapacityRuleVersions, and Listeners
 
