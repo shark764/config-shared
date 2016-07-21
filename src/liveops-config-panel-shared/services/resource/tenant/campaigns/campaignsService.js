@@ -9,12 +9,14 @@ angular.module('liveopsConfigPanel.shared.services')
         updateFields: [{
           name: 'name'
         }, {
-          name: 'channel'
-        }, {
           name: 'description',
           optional: true
         }, {
-          name: 'dialer'
+          name: 'currentState'
+        }, {
+          name: 'channel'
+        }, {
+          name: 'flowId'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
