@@ -25,6 +25,11 @@ angular.module('liveopsConfigPanel.shared.services')
         return this.name;
       };
 
+      DncLists.prototype.download = function(dncListId, session){
+        var apiHostNameNoProtocol = apiHostname.slice(8);
+        window.location.href = 'https://' + window.atob(session.token) + '@' + apiHostNameNoProtocol + '/v1/tenants/' + session.tenant.tenantId + '/dnclists/' + dncListId + '/download.csv';
+      }
+
       return DncLists;
     }
   ]);
