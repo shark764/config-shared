@@ -4,11 +4,10 @@ angular.module('liveopsConfigPanel.shared.services')
   .factory('CampaignStop', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
     function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
       var CampaignStop = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:versionId/stop',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/stop',
         requestUrlFields: {
           tenantId: '@tenantId',
-          campaignId: '@campaignId',
-          versionId: '@versionId'
+          campaignId: '@campaignId'
         },
         resourceName: 'CampaignStop',
         getInterceptor: emitErrorInterceptor,
