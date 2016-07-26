@@ -16,7 +16,7 @@ angular.module('liveopsConfigPanel.shared.services')
         updateInterceptor: emitInterceptor
       });
 
-      CampaignCallListDownload.prototype.download = function(campaignId, session){
+      CampaignCallListDownload.prototype.download = function (campaignId, session) {
         var apiHostNameNoProtocol = apiHostname.slice(8);
         window.location.href = 'https://' + window.atob(session.token) + '@' + apiHostNameNoProtocol + '/v1/tenants/' + session.tenant.tenantId + '/campaigns/' + campaignId + '/call-list/download.csv';
       }
