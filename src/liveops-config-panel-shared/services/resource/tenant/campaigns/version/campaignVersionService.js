@@ -14,6 +14,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'defaultTimeZone'
         }, {
+          name: 'channel'
+        }, {
           name: 'doNotContactLists'
         }, {
           name: 'callerID',
