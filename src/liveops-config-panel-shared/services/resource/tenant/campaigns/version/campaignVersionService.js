@@ -6,10 +6,15 @@ angular.module('liveopsConfigPanel.shared.services')
       var CampaignVersion = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/versions/:versionId',
         resourceName: 'CampaignVersion',
+        requestUrlFields: {
+          campaignId: '@campaignId'
+        },
         updateFields: [{
           name: 'flowId'
         }, {
           name: 'defaultTimeZone'
+        }, {
+          name: 'channel'
         }, {
           name: 'doNotContactLists'
         }, {
