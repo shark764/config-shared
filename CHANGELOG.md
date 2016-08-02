@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ## [1.2.1]
+* Add group reason list entities
+
+## [1.2.1]
 * CXV1-3876 - Added cache key to Capacity Rules entity
 
 ## [1.2.0]
