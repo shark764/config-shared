@@ -28,7 +28,6 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       DncLists.prototype.download = function (dncListId, session) {
-        console.log('session', session)
         var apiHostNameNoProtocol = apiHostname.slice(8);
         window.location.href = 'https://' + window.atob(session.token) + '@' + apiHostNameNoProtocol + '/v1/tenants/' + session.tenant.tenantId + '/dnclists/' + dncListId + '/download.csv';
       }
