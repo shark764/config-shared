@@ -14,9 +14,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'currentState'
         }, {
-          name: 'channel'
-        }, {
-          name: 'flowId'
+          name: 'active'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
@@ -24,7 +22,7 @@ angular.module('liveopsConfigPanel.shared.services')
         updateInterceptor: emitInterceptor
       });
 
-      Campaign.prototype.getDisplay = function() {
+      Campaign.prototype.getDisplay = function () {
         return this.name;
       };
 
