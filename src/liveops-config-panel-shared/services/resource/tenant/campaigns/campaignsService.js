@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Campaign', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
-    function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
+  .factory('Campaign', ['LiveopsResourceFactory', 'emitErrorInterceptor', 'emitInterceptor', 'cacheAddInterceptor', 'apiHostname', function(LiveopsResourceFactory, emitErrorInterceptor, emitInterceptor, cacheAddInterceptor, apiHostname) {
       var Campaign = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:id',
         resourceName: 'Campaign',
@@ -18,7 +17,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
-        saveInterceptor: [cacheAddInterceptor, emitInterceptor],
+        saveInterceptor: [emitInterceptor, cacheAddInterceptor],
         updateInterceptor: emitInterceptor
       });
 
