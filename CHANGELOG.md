@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 * CXV1-2272 - Navigation dropdown menu does not disappear bug fix
 
+## [1.2.7]
+* CXV1-2272 - Navigation dropdown menu does not disappear bug fix
+
 ## [1.2.1]
 * Add group reason list entities
 
