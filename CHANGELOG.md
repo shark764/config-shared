@@ -3,7 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-* CXV1-2272 - Navigation dropdown menu does not disappear bug fix
+
+## [1.2.8]
+* Add supervisor user entity
+* Add regions to campaign versions
+* Fix basic/advanced query builder bug
 
 ## [1.2.7]
 * CXV1-2272 - Navigation dropdown menu does not disappear bug fix
