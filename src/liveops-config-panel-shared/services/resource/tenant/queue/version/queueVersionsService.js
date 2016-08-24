@@ -15,7 +15,8 @@ angular.module('liveopsConfigPanel.shared.services')
           {name: 'maxPriority', optional: true},
           {name: 'priorityValue', optional: true},
           {name: 'priorityRate', optional: true},
-          {name: 'priorityUnit', optional: true}
+          {name: 'priorityUnit', optional: true},
+          {name: 'queryVersion', optional: true}
         ],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
@@ -26,7 +27,7 @@ angular.module('liveopsConfigPanel.shared.services')
       QueueVersion.prototype.getDisplay = function () {
         return this.name;
       };
-      
+
       QueueVersion.prototype.cacheKey = function () {
         return 'QueueVersion' + this.queueId;
       };
