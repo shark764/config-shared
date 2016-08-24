@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.9]
+* Add queryVersion to QueueVersion
+
 ## [1.2.8]
 * Add supervisor user entity
 * Add regions to campaign versions
