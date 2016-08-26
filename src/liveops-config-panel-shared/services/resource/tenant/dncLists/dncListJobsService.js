@@ -1,21 +1,22 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('CampaignCallListDownload', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
+  .factory('DncListJobs', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
     function (LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
-      var CampaignCallListDownload = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/campaigns/:campaignId/call-list/download',
+      var DncListJobs = LiveopsResourceFactory.create({
+        endpoint: apiHostname + '/v1/tenants/:tenantId/dnclists/:dncListId/jobs/:jobId',
         requestUrlFields: {
           tenantId: '@tenantId',
-          campaignId: '@campaignId'
+          dncListId: '@dncListId',
+          jobId: '@jobId'
         },
-        resourceName: 'CampaignCallListDownload',
+        resourceName: 'DncListJobs',
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor
       });
 
-      return CampaignCallListDownload;
+      return DncListJobs;
     }
   ]);
