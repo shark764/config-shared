@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.1]
+* Add description field to media items
+
 ## [1.2.9]
 * Add queryVersion to QueueVersion
 

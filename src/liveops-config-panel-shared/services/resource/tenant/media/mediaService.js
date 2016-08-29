@@ -16,6 +16,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'properties',
           optional: true
+        }, {
+          name: 'description',
+          optional: true
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
@@ -26,7 +29,7 @@ angular.module('liveopsConfigPanel.shared.services')
        Media.prototype.getDisplay = function (){
        return this.name;
       };
-    
+
       return Media;
     }
   ]);
