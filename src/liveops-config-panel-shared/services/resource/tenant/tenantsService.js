@@ -18,6 +18,9 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'adminUserId'
         }, {
           name: 'timezone'
+        }, {
+          name: 'outboundIntegrationId',
+          optional: true
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
@@ -28,8 +31,8 @@ angular.module('liveopsConfigPanel.shared.services')
       Tenant.prototype.getDisplay = function () {
         return this.name;
       };
-      
-      //This is an awkward workaround for tenant list functionality 
+
+      //This is an awkward workaround for tenant list functionality
       //in the case where list should only show current selected tenant due to having MANAGE_TENANT permission
       var obj = Tenant;
       Tenant.prototype.getAsArray = function(id){
