@@ -6,7 +6,8 @@ angular.module('liveopsConfigPanel.shared.directives')
       restrict : 'E',
       scope : {
         query : '=',
-        showBasicQuery: '='
+        showBasicQuery: '=',
+        version: '='
       },
       transclude : true,
       controller : 'ReadonlyQueryController',
