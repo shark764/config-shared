@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.5]
+* Update integration service
+
 ## [1.3.4]
 * Add version property to read-only query
 
