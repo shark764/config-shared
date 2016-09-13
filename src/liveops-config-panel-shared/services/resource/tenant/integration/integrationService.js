@@ -8,6 +8,8 @@ angular.module('liveopsConfigPanel.shared.services')
         endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
         resourceName: 'Integration',
         updateFields: [{
+          name: 'name'
+        }, {
           name: 'description'
         }, {
           name: 'properties'

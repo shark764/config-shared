@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.6]
+* Add name field to integration service
+
 ## [1.3.5]
 * Update integration service
 
