@@ -9,7 +9,7 @@ angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPan
       'description': null,
       'active': true,
       'timezone': 'America/Argentina/Buenos_Aires',
-      
+
       'sunStartTimeMinutes': null,
       'sunEndTimeMinutes': null,
       'monStartTimeMinutes': null,
@@ -24,7 +24,7 @@ angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPan
       'friEndTimeMinutes': null,
       'satEndTimeMinutes': null,
       'satStartTimeMinutes': null,
-      
+
       'exceptions': [{
         'id': 'businessHourException1',
         'businessHoursId': 'businessHour1',
@@ -51,7 +51,7 @@ angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPan
       'description': null,
       'active': true,
       'timezone': 'America/Halifax',
-      
+
       'sunStartTimeMinutes': 60,
       'sunEndTimeMinutes': 780,
       'monStartTimeMinutes': null,
@@ -81,6 +81,10 @@ angular.module('liveopsConfigPanel.tenant.businessHour.mock', ['liveopsConfigPan
 
       $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours').respond({
         'result': [mockBusinessHours[0], mockBusinessHours[1]]
+      });
+
+      $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id').respond({
+        'result': { timezone: 'someTimeZone' }
       });
 
       $httpBackend.when('GET', apiHostname + '/v1/tenants/tenant-id/business-hours/businessHourId0').respond(404);
