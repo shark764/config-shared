@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.8]
+* Add fail message to bulk action executor
+
 ## [1.3.6]
 * Add name field to integration service
 
