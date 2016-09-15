@@ -92,6 +92,8 @@ angular.module('liveopsConfigPanel.shared.directives')
             return controller.execute().then(function () {
               Alert.success($translate.instant('bulkAction.success'));
               $scope.resetForm();
+            }, function() {
+              Alert.error($translate.instant('bulkAction.fail'));
             });
           };
 
