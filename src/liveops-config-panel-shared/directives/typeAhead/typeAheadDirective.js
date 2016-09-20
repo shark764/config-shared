@@ -3,7 +3,7 @@
 angular.module('liveopsConfigPanel.shared.directives')
     /** type-ahead element directive
      * Create an input element that shows suggestions as you type
-     * 
+     *
      * Default comparator compares the entered text with the items' getDisplay() result, ignoring case
      */
   .directive('typeAhead', ['$filter', '$parse', function($filter, $parse) {
@@ -28,6 +28,11 @@ angular.module('liveopsConfigPanel.shared.directives')
         $scope.currentText = $scope.prefill || '';
 
         this.defaultTextFilter = function defaultTextFilter(item, text) {
+          var text = text;
+          if (_.isEmpty(text)) {
+             text = '';
+          }
+
           return item.getDisplay().toLowerCase().contains(text.toLowerCase());
         };
 
@@ -106,23 +111,23 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         $scope.select = function(item) {
           $scope.selectedItem = item;
-          
+
           if (! angular.isString(item)){
             $scope.currentText = $scope.getDisplayString(item);
           }
-          
+
           if ($scope.form) {
             var ngModel = $parse($scope.nameField)($scope.form);
             ngModel.$setDirty();
             ngModel.$setTouched();
           }
-          
+
           if (!$scope.keepExpanded) {
             $scope.hovering = false;
             $scope.showSuggestions = false;
           }
         };
-        
+
         $scope.onBlur = function() {
           if (!$scope.keepExpanded) { //Prevents the button in multibox from jumping around
             $scope.showSuggestions = false;
@@ -130,12 +135,14 @@ angular.module('liveopsConfigPanel.shared.directives')
         };
 
         $scope.getDisplayString = function(item){
-          if (angular.isFunction(item.getDisplay)){
-            return item.getDisplay();
-          } else if (angular.isDefined(item[$scope.nameField])){
-            return item[$scope.nameField];
-          } else {
-            return item;
+          if (item) {
+            if (angular.isFunction(item.getDisplay)){
+              return item.getDisplay();
+            } else if (angular.isDefined(item[$scope.nameField])){
+              return item[$scope.nameField];
+            } else {
+              return item;
+            }
           }
         };
       },
@@ -143,7 +150,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         if(form) {
           $scope.form = form;
         }
-        
+
         element.find('input').bind('keydown keypress', function(event){
           var highlightedIndex;
 
