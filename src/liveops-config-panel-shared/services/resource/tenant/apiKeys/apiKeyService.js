@@ -5,7 +5,7 @@ angular.module('liveopsConfigPanel.shared.services')
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
 
       var ApiKey = LiveopsResourceFactory.create({
-        endpoint: apiHostname + '/v1/tenants/:tenantId/keys/:id',
+        endpoint: apiHostname + '/v1/tenants/:tenantId/api-keys/:id',
         resourceName: 'ApiKey',
         updateFields: [{
           name: 'name'
@@ -16,6 +16,9 @@ angular.module('liveopsConfigPanel.shared.services')
           optional: true
         }, {
           name: 'additionalRoleIds',
+          optional: true
+        }, {
+          name: 'status',
           optional: true
         }],
         getInterceptor: emitErrorInterceptor,
