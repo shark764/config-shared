@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.10]
+* Modify API key service
+
 ## [1.3.9]
 * Add API key service
 
