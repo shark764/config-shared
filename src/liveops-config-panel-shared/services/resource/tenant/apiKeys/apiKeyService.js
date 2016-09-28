@@ -31,6 +31,16 @@ angular.module('liveopsConfigPanel.shared.services')
         return this.name;
       };
 
+      ApiKey.prototype.delete = function(params) {
+        var promise = ApiKey.prototype.$delete(params);
+
+        promise.then(function(result) {
+          return result;
+        });
+
+        return promise;
+      };
+
       return ApiKey;
     }
   ]);
