@@ -4,7 +4,8 @@
       placeholder="{{'multibox.add.placeholder' | translate}}"
       readonly="true" border="0"  class="label"
       ng-required="true"
-      ng-model="display" />
+      ng-model="display"
+      name-field="name" />
     <i class="fa" ng-class="{'fa-caret-down': !showDrop, 'fa-caret-up':showDrop}"></i>
   </div>
 
@@ -14,9 +15,10 @@
       placeholder="{{'multibox.search.placeholder' | translate}}"
       on-select="onSelect(selectedItem)"
       keep-expanded="true"
-      selected-item="selectedItem"></type-ahead>
+      selected-item="selectedItem"
+      name-field="name"></type-ahead>
     <input id="show-create-new-item-btn" class="btn" type="button"
-      ng-click="createItem()" 
+      ng-click="createItem()"
       value="{{'multibox.create.btn' | translate}}" />
   </div>
 </div>

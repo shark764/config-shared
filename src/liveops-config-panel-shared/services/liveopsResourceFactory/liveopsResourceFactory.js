@@ -362,7 +362,19 @@ angular.module('liveopsConfigPanel.shared.services')
 
           Resource.prototype.save = function(params, success, failure) {
             var self = this,
-                action = this.isNew() ? this.$save : this.$update;
+                action = this.isNew() ? this.$save : this.$update,
+                restoreBackup;
+
+            // this searches for a flag that will prevent
+            // $$restoreSudoProperties from firing, which
+            // resets the view, and resetting the view is
+            // not desired in certain instances
+            if (params && angular.isDefined(params.restoreBackup)) {
+              restoreBackup = params.restoreBackup;
+              delete params.restoreBackup;
+            } else {
+              restoreBackup = true;
+            }
 
             self.$busy = true;
 
@@ -378,7 +390,9 @@ angular.module('liveopsConfigPanel.shared.services')
                 }
 
                 //restore backed-up pseudo-properties
-                self.$$restoreSudoProperties(result, backup);
+                if (restoreBackup !== false) {
+                  self.$$restoreSudoProperties(result, backup);
+                }
 
                 return result;
               }).finally(function() {

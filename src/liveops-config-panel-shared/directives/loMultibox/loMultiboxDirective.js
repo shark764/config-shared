@@ -16,21 +16,33 @@ angular.module('liveopsConfigPanel.shared.directives')
         selectedItem: '=', // (object) The currently selected item. Will be null if nothing is selected
         resourceName: '@', // (string) The name of the liveopsResource used for this dropdown. Used when broadcasting events
         name: '@', // (string) The html name attribute for the element
-        onItemSelect: '=' // (function) Optional function to execute when an item is selected
+        onItemSelect: '=', // (function) Optional function to execute when an item is selected
+        idx: '=',
+        bypassMultipicker: '=' // (boolean) Setting this to true allows the individual multipicker
+        // to exist in the same view without being unintentionally data-bound to another multipicker
       },
       templateUrl: 'liveops-config-panel-shared/directives/loMultibox/loMultibox.html',
       controller: 'DropdownController', //To handle auto collapsing on click!
       link: function($scope, ele, $attrs, dropCtrl) {
+        if ($scope.bypassMultipicker === true) {
+            return;
+        }
 
         $scope.onSelect = function(selectedItem){
-          if (angular.isString(selectedItem)){
+          if ($scope.bypassMultipicker === true) {
+            return;
+          }
+
+          if (angular.isString(selectedItem)) {
             return; //User has typed a value into the typeahead that does not match an item. Ignore it.
           }
 
-          $scope.display = selectedItem ? selectedItem.getDisplay() : null;
+          try {
+            $scope.display = selectedItem || _.isEmpty(selectedItem) ||  angular.isDefined(selectedItem) ? selectedItem.getDisplay() : null;
+          } catch (err) {}
 
           if(angular.isFunction($scope.onItemSelect)) {
-            $scope.onItemSelect(selectedItem);
+            $scope.onItemSelect(selectedItem, $scope.idx);
           }
 
           dropCtrl.setShowDrop(false);

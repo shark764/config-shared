@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.12]
+* Made updates to allow for new "media lists" media type
+
 ## [1.3.11]
 * Add delete support for API keys
 
