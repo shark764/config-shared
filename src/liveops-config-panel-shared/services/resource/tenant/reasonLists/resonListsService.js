@@ -27,6 +27,10 @@ angular.module('liveopsConfigPanel.shared.services')
         {
           name: 'reasons',
           optional: true
+        },
+        {
+          name: 'isDefault',
+          optional: true
         }
       ],
       getInterceptor: emitErrorInterceptor,
