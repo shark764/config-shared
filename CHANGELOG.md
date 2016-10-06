@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.13]
+* Add isDefault to reason lists
+
 ## [1.3.12]
 * Made updates to allow for new "media lists" media type
 
