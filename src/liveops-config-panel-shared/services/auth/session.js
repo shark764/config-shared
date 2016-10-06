@@ -32,7 +32,7 @@ angular.module('liveopsConfigPanel.shared.services')
         this.setUser(user);
         this.setTenants(tenants);
         this.setPlatformPermissions(platformPermissions);
-        
+
         this.flush();
       };
 
@@ -60,7 +60,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }
 
         this.flush();
-      };  
+      };
 
       this.setUser = function (user) {
         this.user = {
@@ -75,7 +75,7 @@ angular.module('liveopsConfigPanel.shared.services')
         this.token = token;
         this.flush();
       };
-      
+
       this.setPlatformPermissions = function(platformPermissions){
         this.platformPermissions = platformPermissions;
         this.flush();
@@ -91,7 +91,7 @@ angular.module('liveopsConfigPanel.shared.services')
         this.user = null;
         this.tenants = null;
         this.platformPermissions = null;
-        
+
         localStorage.removeItem(this.userSessionKey);
       };
 
