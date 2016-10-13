@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.14]
+* added service to get 'from' value for messaging interactions
+
 ## [1.3.13]
 * Add isDefault to reason lists
 
