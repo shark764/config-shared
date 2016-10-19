@@ -19,6 +19,7 @@ angular.module('liveopsConfigPanel.shared.directives')
         collapseIcon: '@', // (string) The class(es) applied to the icon shown when the menu is open. Defaults to 'fa fa-caret-up'
         expandIcon: '@', // (string) The class(es) applied to the icon shown when the menu is closed. Defaults to 'fa fa-caret-down'
         orderBy: '@', // (string) The item property to be used to sort the menu items. Defaults to 'label'
+        groupBy: '@', // (string) The item property to be used to group the menu items. Defaults to no grouping.
         hovering: '=?', // (boolean) Optional var to expose if the dropdown menu is being moused-over
         hoverTracker: '=?', // (array) Optional array used to track which dropdowns on the view are open
         showOnHover: '=?' // (boolean) Optional var to define if the menu should be shown when the label is hovered-over. Defaults to false
