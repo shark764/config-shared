@@ -4,8 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [1.3.16]
+## [1.3.17]
 * Added emit on lo-multibox so that other components can know the moment the box is clicked
+
+## [1.3.16]
+* Styling for "group by" titles in dropdowns
 
 ## [1.3.15]
 * CXV1-6012 - Added "group by" functionality to dropdowns
