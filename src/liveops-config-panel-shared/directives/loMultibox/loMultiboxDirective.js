@@ -54,9 +54,14 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.createMode = true;
         };
 
-        $scope.labelClick = function(){
+        $scope.labelClick = function(e){
+          $scope.$emit('multipickerClicked', {
+            clickData: {
+              selectedItem: $scope.selectedItem
+            }
+          });
+          
           dropCtrl.setShowDrop(!$scope.showDrop);
-
           $scope.selectedItem = null;
 
           if ($scope.showDrop){
@@ -65,6 +70,8 @@ angular.module('liveopsConfigPanel.shared.directives')
               input.focus();
             });
           }
+
+
         };
 
         $scope.$watch('selectedItem', function(item) {
