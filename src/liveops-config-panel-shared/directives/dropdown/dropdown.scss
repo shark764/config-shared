@@ -93,5 +93,9 @@
     .groupby-title {
       margin-left: 5px;
     }
+
+    .groupby-title:first-child {
+      margin-top: 8px;
+    }
   }
 }
