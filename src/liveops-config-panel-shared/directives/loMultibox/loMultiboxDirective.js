@@ -60,7 +60,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               selectedItem: $scope.selectedItem
             }
           });
-          
+
           dropCtrl.setShowDrop(!$scope.showDrop);
           $scope.selectedItem = null;
 
@@ -70,8 +70,6 @@ angular.module('liveopsConfigPanel.shared.directives')
               input.focus();
             });
           }
-
-
         };
 
         $scope.$watch('selectedItem', function(item) {
