@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.4]
+* Styling so table header filters can be clicked.
+* Deselecting "All" from filter dropdown will deselect all other checkboxes.
+* Styling for "group by" header.
+
 ## [1.4.3]
 * Added services for transfer lists in user details panel on users page
 
@@ -21,7 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.3.18]
 * Added method to media list to get user-friendly media item names for media lists in table on media page
-* Styling so table header filters can be clicked. Styling for "group by" header.
 
 ## [1.3.17]
 * Added emit on lo-multibox so that other components can know the moment the box is clicked
