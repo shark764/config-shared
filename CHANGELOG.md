@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.19]
+* Modified audit-text directive to allow for instances where the user's name is not available
+
 ## [1.3.18]
 * Added method to media list to get user-friendly media item names for media lists in table on media page
 
