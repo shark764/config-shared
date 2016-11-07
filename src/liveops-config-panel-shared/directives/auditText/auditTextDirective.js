@@ -11,7 +11,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         scope: {
           translation: '@', // (string) The translation key, with placeholder for date and optionally 'displayName'
           userId: '=', // (int) Optional userId. If given, User will be queried and the user's display name will be passed to the translate filter as 'displayName'
-          date: '=' // (date) The date to be formatted to 'medium' format and passed to the translate filter as 'date'
+          date: '=', // (date) The date to be formatted to 'medium' format and passed to the translate filter as 'date',
+          noUsernameFallback: '=' // (bool) if set to true, then we will remove the string "by " so that the final text reads something like, "Created on Oct 15, 2016" instead of "Created by  on Oct 15, 2016"
         },
         template: '{{get()}}',
         link: function ($scope) {
@@ -32,6 +33,11 @@ angular.module('liveopsConfigPanel.shared.directives')
                 displayName: user.getDisplay(),
                 date: $filter('date')($scope.date, 'medium')
               });
+
+              if (!$scope.text.displayName && $scope.noUsernameFallback === true) {
+                var nameText = $scope.text;
+                $scope.text = nameText.replace('by ', '');
+              }
             }
 
             return $scope.text;
