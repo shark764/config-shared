@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.0]
+* Added new token service to change authentication to be token-based
+
 ## [1.3.19]
 * Modified audit-text directive to allow for instances where the user's name is not available
 
