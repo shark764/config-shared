@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.1]
+* Added message template service
+
 ## [1.4.0]
 * Added new token service to change authentication to be token-based
 
