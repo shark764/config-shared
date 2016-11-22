@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.2]
+* Added service for transfer lists
+
 ## [1.4.1]
 * Added message template service
 
