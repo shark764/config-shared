@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.3]
+* Added services for transfer lists in user details panel on users page
+
 ## [1.4.2]
 * Added service for transfer lists
 
