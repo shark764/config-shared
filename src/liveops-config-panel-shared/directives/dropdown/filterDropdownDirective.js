@@ -4,12 +4,12 @@ angular.module('liveopsConfigPanel.shared.directives')
   .directive('filterDropdown', ['$filter', function ($filter) {
     /** filter-dropdown element directive
      * Generate a dropdown menu with checkboxes to select/deselect items
-     * 
+     *
      * Supported option config is as follows:
      * - checked (boolean): Optional boolean to set the initial checked state of the item. Defaults to true
-     * 
+     *
      * An option item can also be a function that returns the display value when passed to the 'invoke' filter
-     * 
+     *
      * Listen for 'dropdown:item:checked' event, thrown when a menu item is checked or unchecked
      */
     return {
@@ -30,7 +30,7 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         $scope.valuePath = $scope.valuePath ? $scope.valuePath : 'value';
         $scope.displayPath = $scope.displayPath ? $scope.displayPath : 'display';
-        
+
         $scope.checkItem = function (option) {
           option.checked = !option.checked;
 
@@ -56,9 +56,11 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           $scope.toggleAll = function(){
             $scope.all.checked = !$scope.all.checked;
-            
+
             if ($scope.all.checked) {
               checkAll();
+            } else {
+              uncheckAll();
             }
           };
 
@@ -67,7 +69,13 @@ angular.module('liveopsConfigPanel.shared.directives')
               option.checked = true;
             });
           };
-          
+
+          var uncheckAll = function(){
+            angular.forEach($scope.options, function (option) {
+              option.checked = false;
+            });
+          };
+
           var checkAllByDefault = true;
           angular.forEach($scope.options, function (option) {
             checkAllByDefault = checkAllByDefault && (angular.isUndefined(option.checked) ? true : option.checked);
@@ -78,7 +86,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           if (checkAllByDefault){
             checkAll();
           }
-          
+
         } else {
           $scope.$watch('options', function () {
             angular.forEach($scope.options, function (option) {

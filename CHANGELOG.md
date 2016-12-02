@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.4]
+* Styling so table header filters can be clicked.
+* Deselecting "All" from filter dropdown will deselect all other checkboxes.
+* Styling for "group by" header.
+
 ## [1.4.3]
 * Added services for transfer lists in user details panel on users page
 
