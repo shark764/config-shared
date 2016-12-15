@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.6]
+* Added new Twilio regions for Virginia and Oregon Interconnect
+
 ## [1.4.5]
 * Enabled assignment of message templates on users page
 
