@@ -36,7 +36,7 @@ angular.module('liveopsConfigPanel.shared.services')
         angular.forEach(list, function (mediaItem, key) {
           if (mediaItem.type === 'list') {
             // if the item is a list, cycle though the 'source' property (an array)
-            var sourceArray = _.map(mediaItem.source, function (mediaItemSrcId, idx) {
+            var sourceArray = _.map(mediaItem.source, function (mediaItemSrcId) {
               // in the event that one of the items is an object, change it into
               // an ID string
               if (angular.isObject(mediaItemSrcId)) {
@@ -50,13 +50,13 @@ angular.module('liveopsConfigPanel.shared.services')
             });
 
             // set the property that the table config will be using
-            list[key]['mediaSourceName'] = sourceArray.join(', ');
+            list[key].mediaSourceName = sourceArray.join(', ');
           } else {
             // if it's not a list, no conversion necessary, just use the source value as is
-            list[key]['mediaSourceName'] = mediaItem.source;
+            list[key].mediaSourceName = mediaItem.source;
           }
         });
-      }
+      };
 
       return Media;
     }

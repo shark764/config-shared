@@ -40,7 +40,6 @@
     "beforeEach": false,
     "after": false,
     "afterEach": false,
-    "g": false,
     "expect": false,
     "describe": false,
     "jasmine": false,

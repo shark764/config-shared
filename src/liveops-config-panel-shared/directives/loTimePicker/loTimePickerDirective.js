@@ -4,8 +4,8 @@ angular.module('liveopsConfigPanel.shared.directives')
   .directive('loTimePicker', [function() {
     /** lo-time-picker element directive
      * An element for selecting times (without dates). Sets the given ngModel to the minute value of the selected time.
-     * 
-     * ngModel will be set to -1 when the user selects a time of "--". Otherwise, the time will be a value between 0 and 1440, inclusive.
+     *
+     * ngModel willl be set to -1 when the user selects a time of "--". Otherwise, the time will be a value between 0 and 1440, inclusive.
      */
     return {
       templateUrl : 'liveops-config-panel-shared/directives/loTimePicker/loTimePicker.html',
@@ -49,15 +49,15 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         $scope.updateMinutesValue = function(){
           var minutesValue = $scope.selectedHour.minutes + $scope.selectedMinute.minutes;
-          if ($scope.selectedHalf == 'pm'){
+          if ($scope.selectedHalf === 'pm'){
             minutesValue += 720;
           }
 
-          if ($scope.selectedHour.val == 12){
+          if ($scope.selectedHour.val === 12){
             minutesValue -= 720;
           }
-          
-          if ($scope.selectedHour.val == -1){
+
+          if ($scope.selectedHour.val === -1){
             minutesValue = -1;
           }
 
@@ -66,7 +66,7 @@ angular.module('liveopsConfigPanel.shared.directives')
 
         $scope.updateView = function(modelVal){
           //If -1, it's the default "closed" hours
-          if (modelVal == -1){
+          if (modelVal === -1){
             $scope.selectedHour = $scope.hours[0];
             $scope.selectedMinute = $scope.minutes[0];
             $scope.selectedHalf = 'am';
@@ -92,7 +92,7 @@ angular.module('liveopsConfigPanel.shared.directives')
             hoursIndex -= 12;
           }
 
-          if (hoursIndex == 0){
+          if (hoursIndex === 0){
             hoursIndex = 12;
           }
 

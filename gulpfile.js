@@ -43,12 +43,6 @@ var sourceFiles = [
   path.join('!' + sourceDirectory, '/**/*.spec.js')
 ];
 
-var lintFiles = [
-  'gulpfile.js',
-  // Karma configuration
-  'karma-*.conf.js'
-].concat(sourceFiles);
-
 gulp.task('build', ['styles'], function () {
   eventStream.merge(gulp.src(sourceFiles), gulp.src('src/**/*.html')
       .pipe(templateCache({
@@ -135,7 +129,7 @@ gulp.task('watch:test', function () {
  * Validate source JavaScript
  */
 gulp.task('jshint', function () {
-  return gulp.src(lintFiles)
+  return gulp.src(sourceFiles)
     .pipe(plumber())
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));

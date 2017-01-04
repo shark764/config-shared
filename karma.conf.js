@@ -22,7 +22,7 @@ module.exports = function(config) {
       'karma-coverage'
     ],
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage', ],
 
     coverageReporter: {
       type: 'html',

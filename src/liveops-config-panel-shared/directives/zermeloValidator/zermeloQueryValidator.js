@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('zermeloQueryValidator', ['ZermeloQuery', 'jsedn',
-      function (ZermeloQuery, jsedn) {
+    .directive('zermeloQueryValidator', ['ZermeloQuery',
+      function (ZermeloQuery) {
         return {
           restrict: 'A',
           require: 'ngModel',

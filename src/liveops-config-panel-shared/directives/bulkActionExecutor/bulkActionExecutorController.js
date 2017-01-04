@@ -13,36 +13,36 @@ angular.module('liveopsConfigPanel.shared.directives')
       this.deregister = function register(bulkAction) {
         $scope.bulkActions.removeItem(bulkAction);
       };
-      
+
       this.getCheckedItems = function (items) {
         return $filter('filter')(items, {
           checked: true
         });
       };
-      
+
       this.getAffected = function getAffected() {
         var checkedItems = self.getCheckedItems($scope.items);
         var checkedBulkActions = self.getCheckedItems($scope.bulkActions);
-        
+
         var affectedItems = [];
-        
+
         angular.forEach(checkedItems, function(item) {
           angular.forEach(checkedBulkActions, function(bulkAction) {
             if(bulkAction.doesQualify(item)) {
               affectedItems.push(item);
             }
           });
-          
+
         });
-        
+
         return affectedItems;
       };
-      
+
       this.execute = function execute() {
         $scope.executing = true;
         var selectedBulkActions = self.getCheckedItems($scope.bulkActions);
         var itemPromises = [];
-        
+
         angular.forEach(selectedBulkActions, function (bulkAction) {
           if (bulkAction.canExecute()) {
             var selectedItems = self.getCheckedItems($scope.items);
@@ -54,18 +54,18 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.executing = false;
         });
       };
-      
+
       this.canExecute = function canExecute () {
         var selectedBulkActions = self.getCheckedItems($scope.bulkActions);
-        
+
         var canExecute = !!selectedBulkActions.length;
-        
-        if(canExecute = canExecute && !!self.getAffected().length){
+
+        if(canExecute && !!self.getAffected().length){
           angular.forEach(selectedBulkActions, function (bulkAction) {
             canExecute = canExecute && bulkAction.canExecute();
           });
         }
-        
+
         return canExecute;
       };
     }

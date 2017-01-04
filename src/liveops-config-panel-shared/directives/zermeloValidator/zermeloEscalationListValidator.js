@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('liveopsConfigPanel.shared.directives')
-    .directive('zermeloEscalationListValidator', ['ZermeloEscalationList', 'jsedn',
-      function (ZermeloEscalationList, jsedn) {
+    .directive('zermeloEscalationListValidator', ['ZermeloEscalationList',
+      function (ZermeloEscalationList) {
         return {
           restrict: 'A',
           require: 'ngModel',

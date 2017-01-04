@@ -6,10 +6,10 @@ angular.module('liveopsConfigPanel.shared.directives')
     function($window, $document, $rootScope, _) {
     /** resize-handle element directive
      * Create a resize grapple between two elements. Respects the css min-width sizes of the elements
-     * 
+     *
      * Applies the 'two-col' class to an element that is larger than 700px
      * Applies the 'compact' class to an element that is smaller than 450px
-     * 
+     *
      * Listen for the 'resizehandle:resize' which is fired when the elements are resized by the grapple
      */
     return {
@@ -26,16 +26,6 @@ angular.module('liveopsConfigPanel.shared.directives')
         scope.leftTargetElement = angular.element($('#'+scope.leftElementId));
         scope.rightTargetElement = angular.element($('#'+scope.rightElementId));
 
-        element.on('mousedown', function(event) {
-          //Don't initiate resize on right click, because it's annoying
-          if (event.button !== 2) {
-            event.preventDefault();
-
-            $document.on('mousemove', mousemove);
-            $document.on('mouseup', scope.mouseup);
-          }
-        });
-
         function mousemove(event) {
           var leftWidth = scope.leftTargetElement[0].offsetWidth;
           var rightWidth = scope.rightTargetElement[0].offsetWidth;
@@ -48,6 +38,16 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           scope.resizeElements(leftWidth, rightWidth, x);
         }
+
+        element.on('mousedown', function(event) {
+          //Don't initiate resize on right click, because it's annoying
+          if (event.button !== 2) {
+            event.preventDefault();
+
+            $document.on('mousemove', mousemove);
+            $document.on('mouseup', scope.mouseup);
+          }
+        });
 
         scope.resizeElements = function(currLeftWidth, currRightWidth, mouseX){
           var delta = currLeftWidth - mouseX,
