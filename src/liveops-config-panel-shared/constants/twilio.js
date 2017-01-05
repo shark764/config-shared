@@ -1,7 +1,5 @@
 'use strict';
 
-/*global window: false */
-
 angular.module('liveopsConfigPanel.shared.config')
 
 .constant('twilioLangs', [{

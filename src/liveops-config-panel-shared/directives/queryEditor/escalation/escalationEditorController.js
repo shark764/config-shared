@@ -3,8 +3,8 @@
 
   angular.module('liveopsConfigPanel.shared.directives')
     .controller('EscalationEditorController', ['$scope', 'ZermeloCondition', 'ZermeloObjectGroup',
-      'ZermeloEscalationList', '_', '$translate', 'Modal', function ($scope,
-        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate, Modal) {
+      'ZermeloEscalationList', '_', '$translate', function ($scope,
+        ZermeloCondition, ZermeloObjectGroup, ZermeloEscalationList, _, $translate) {
 
       var vm = this;
 
@@ -18,7 +18,7 @@
       if(vm.escalation.afterSecondsInQueue) {
         vm.afterSecondsMultiplier = vm.escalation.afterSecondsInQueue % 60 === 0 ? 60 : 1;
         vm.afterTimeInQueue = vm.escalation.afterSecondsInQueue / vm.afterTimeMultiplier;
-      };
+      }
 
       $scope.$watch('previousEscalation.afterSecondsInQueue', function () {
         vm.checkMinValue();

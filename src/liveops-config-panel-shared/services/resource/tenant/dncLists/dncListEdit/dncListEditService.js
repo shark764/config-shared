@@ -4,8 +4,6 @@ angular.module('liveopsConfigPanel.shared.services')
 .factory('DncListEdit', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
   function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, emitErrorInterceptor) {
 
-      var currentList;
-
       var DncListEdit = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/dnclists/:dnclistId',
         resourceName: 'DncListEdit',

@@ -38,6 +38,18 @@ angular.module('liveopsConfigPanel.shared.directives')
         };
 
         if ($scope.showAll) {
+          var checkAll = function(){
+            angular.forEach($scope.options, function (option) {
+              option.checked = true;
+            });
+          };
+
+          var uncheckAll = function(){
+            angular.forEach($scope.options, function (option) {
+              option.checked = false;
+            });
+          };
+
           // If 'all' was checked but some other option has been unchecked, uncheck 'all' option
           // If 'all' was unchecked but all other options are checked, check 'all' option
           $scope.$watch('options', function (newList, oldList) {
@@ -62,18 +74,6 @@ angular.module('liveopsConfigPanel.shared.directives')
             } else {
               uncheckAll();
             }
-          };
-
-          var checkAll = function(){
-            angular.forEach($scope.options, function (option) {
-              option.checked = true;
-            });
-          };
-
-          var uncheckAll = function(){
-            angular.forEach($scope.options, function (option) {
-              option.checked = false;
-            });
           };
 
           var checkAllByDefault = true;

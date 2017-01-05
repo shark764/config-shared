@@ -54,7 +54,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.createMode = true;
         };
 
-        $scope.labelClick = function(e){
+        $scope.labelClick = function(){
           $scope.$emit('multipickerClicked', {
             clickData: {
               selectedItem: $scope.selectedItem

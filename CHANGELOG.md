@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.8]
+* Fixed linting errors
+
 ## [1.4.7]
 * Added new functionality for processing data for custom integrations on Integration page
 

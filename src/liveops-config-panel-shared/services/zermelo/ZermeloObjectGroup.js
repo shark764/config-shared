@@ -56,7 +56,7 @@
               return og;
           }
 
-          throw 'object group must be a list'
+          throw 'object group must be a list';
         };
 
         return ObjectGroup;

@@ -1,5 +1,4 @@
 'use strict';
-/*jslint browser:true */
 
 angular.module('liveopsConfigPanel.shared.directives')
   .directive('singleElementResizeHandle', ['$window', '$document', '$rootScope', 'lodash', function($window, $document, $rootScope, _) {
@@ -14,14 +13,6 @@ angular.module('liveopsConfigPanel.shared.directives')
       link : function($scope, $element) {
         $scope.targetElement = angular.element(document.getElementById($scope.elementId));
 
-        $element.on('mousedown', function(event) {
-          if (event.button !== 2) {
-            event.preventDefault();
-            $document.on('mousemove', mousemove);
-            $document.on('mouseup', $scope.mouseup);
-          }
-        });
-
         function mousemove(event) {
           var elementWidth = $scope.targetElement[0].offsetWidth;
           var pageX = event.pageX;
@@ -29,6 +20,14 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           $scope.resizeElement(elementWidth, windowWidth, pageX);
         }
+
+        $element.on('mousedown', function(event) {
+          if (event.button !== 2) {
+            event.preventDefault();
+            $document.on('mousemove', mousemove);
+            $document.on('mouseup', $scope.mouseup);
+          }
+        });
 
         $scope.applyClasses = function(width, element){
           if (width > 700){

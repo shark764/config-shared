@@ -50,7 +50,7 @@
                 ql.addEscalation(ZermeloEscalation.fromEdn(edn.val[i]));
 
                 if(i > 0 && ql.escalations[i].afterSecondsInQueue <= ql.escalations[i-1].afterSecondsInQueue) {
-                  throw 'after-seconds-in-queue must be increasing'
+                  throw 'after-seconds-in-queue must be increasing';
                 }
               }
 

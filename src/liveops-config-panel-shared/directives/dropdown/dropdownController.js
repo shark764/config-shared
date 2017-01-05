@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .controller('DropdownController', ['$scope', '$document', '$element', function ($scope, $document, $element) {
+  .controller('DropdownController', ['$scope', '$document', '$element', '$window', function ($scope, $document, $element, $window) {
     var self= this;
     $scope.showDrop = false;
     this.setShowDrop = function(val){ //Used by the dropdownDirective
@@ -19,7 +19,7 @@ angular.module('liveopsConfigPanel.shared.directives')
     });
 
     // If window loses focus (ie, user clicks on Birst iframe), close dropdown
-    window.addEventListener('blur', function() {
+    $window.addEventListener('blur', function() {
       $scope.$apply(function() {
         $scope.showDrop = false;
         $scope.hovering = false;
