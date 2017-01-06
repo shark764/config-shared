@@ -78,6 +78,16 @@ angular.module('liveopsConfigPanel.shared.services')
         if (dataWithoutScope === false && scope.selectedIntegration.type && scope.selectedIntegration.type.hasOwnProperty('value')) {
           scope.selectedIntegration.type = scope.selectedIntegration.type.value;
         }
+
+        if (scope.selectedIntegration.type === 'zendesk') {
+          if (_.has(scope.selectedIntegration, 'properties.token')) {
+            delete scope.selectedIntegration.properties.token;
+          }
+
+          if (!_.has(scope.selectedIntegration, 'properties.workItems') || scope.selectedIntegration.properties.workItems === '') {
+            scope.selectedIntegration.properties.workItems = false;
+          }
+        }
       };
 
       return Integration;
