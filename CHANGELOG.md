@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.0]
+* On Integrations page, added 3rd option for authentication method, "no authentication" 
+
 ## [1.4.9]
-* Fixed issues that were preventing Zendesk integrations from saving properly. 
+* Fixed issues that were preventing Zendesk integrations from saving properly.
 
 ## [1.4.8]
 * Fixed linting errors
