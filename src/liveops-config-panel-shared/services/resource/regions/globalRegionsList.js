@@ -36,19 +36,15 @@ angular.module('liveopsConfigPanel.shared.services')
       awsdId: 'us-east-1',
       twilioId: 'us1',
       display: $translate.instant('twilioRegion.usEastCoast')
-    }
-    // TEMPORARILY COMMENTING THESE OUT SINCE WE'RE NOT READY FOR THESE
-    // ON THE BACK END YET
-    // , {
-    //   awsdId: null,
-    //   twilioId: 'us1-tnx',
-    //   display: $translate.instant('twilioRegion.virginiaInterconnect')
-    // }, {
-    //   awsdId: null,
-    //   twilioId: 'us2-tnx',
-    //   display: $translate.instant('twilioRegion.oregonInterconnect')
-    // }
-    ];
+    }, {
+      awsdId: null,
+      twilioId: 'us1-tnx',
+      display: $translate.instant('twilioRegion.virginiaInterconnect')
+    }, {
+      awsdId: null,
+      twilioId: 'us2-tnx',
+      display: $translate.instant('twilioRegion.oregonInterconnect')
+    }];
 
     return regions;
   }]);
