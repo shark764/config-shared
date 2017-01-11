@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.5.0]
+## [1.5.2]
+* Removed unnecessary and bug-causing object properties from POSTS to the Integrations api
+
+## [1.5.1]
 * Re-added new Twilio regions for Virginia and Oregon Interconnect
 
 ## [1.5.0]
