@@ -77,7 +77,6 @@ angular.module('liveopsConfigPanel.shared.services')
         }
       };
 
-
       Integration.prototype.deleteExtraneousData = function (scope) {
         // the conditional statement below allows for situations where
         // we have to pass just the integration data as opposed to the entire
@@ -93,18 +92,39 @@ angular.module('liveopsConfigPanel.shared.services')
           delete scope.selectedIntegration.description;
         }
 
-        // clear out the unnecessary data depending on the auth method's requirements
-        switch (scope.selectedIntegration.authType) {
-          case 'token':
-            scope.selectedIntegration.properties.username = scope.selectedIntegration.properties.password = '';
-            break;
-          case 'basic':
-            scope.selectedIntegration.properties.token = '';
-            break;
-          case 'noAuth':
-            scope.selectedIntegration.properties.username = scope.selectedIntegration.properties.password =
-            scope.selectedIntegration.properties.token = '';
-            break;
+        // clear out the unnecessary auth data depending on the auth method's requirements
+        if (scope.selectedIntegration.hasOwnProperty('authType')) {
+          switch (scope.selectedIntegration.authType) {
+            case 'token':
+              scope.selectedIntegration.properties.username = scope.selectedIntegration.properties.password = '';
+              break;
+            case 'basic':
+              scope.selectedIntegration.properties.token = '';
+              break;
+            case 'noAuth':
+              scope.selectedIntegration.properties.username = scope.selectedIntegration.properties.password =
+              scope.selectedIntegration.properties.token = '';
+              break;
+          }
+
+          // we can get rid of authType as well, as it has served its purpose
+          delete scope.selectedIntegration.authType;
+        }
+
+        // clear out unnecessary data on the rest of the integration object
+        // (switch statement might seem odd for only one option, but setting this
+        // up to be easy to add integrations in the future)
+        switch(scope.selectedIntegration.type) {
+          case 'salesforce':
+            if (_.has(scope.selectedIntegration, 'properties.token')) {
+              delete scope.selectedIntegration.properties.token;
+            }
+
+            if (_.has(scope.selectedIntegration, 'properties.endpointPrefix')) {
+              if (scope.selectedIntegration.properties.endpointPrefix === '') {
+                delete scope.selectedIntegration.properties.endpointPrefix;
+              }
+            }
         }
 
         // this is to account for when we are working with the entire scope
@@ -122,6 +142,12 @@ angular.module('liveopsConfigPanel.shared.services')
           // make sure there is always a workItems value in order to prevent API error
           if (!_.has(scope.selectedIntegration, 'properties.workItems') || scope.selectedIntegration.properties.workItems === '') {
             scope.selectedIntegration.properties.workItems = false;
+          }
+        // and if it isn't a zendesk integration, make sure we are NOT saving the
+        // workItems property
+        } else {
+          if (_.has(scope.selectedIntegration, 'properties.workItems')) {
+            delete scope.selectedIntegration.properties.workItems;
           }
         }
       };
