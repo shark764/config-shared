@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.3]
+* Fixed type of name in GlobalRegionsList "awsId" property
+
 ## [1.5.2]
 * Removed unnecessary and bug-causing object properties from POSTS to the Integrations api
 
