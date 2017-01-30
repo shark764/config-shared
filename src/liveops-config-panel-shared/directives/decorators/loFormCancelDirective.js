@@ -50,7 +50,7 @@ angular.module('liveopsConfigPanel.shared.directives')
                 oldResource.reset();
               } catch (e) {
                 // Maybe use this clause if we need to broadcast/emit something to address this,
-                // but right now I have had to implement this to counter a JS error resulting from the 
+                // but right now I have had to implement this to counter a JS error resulting from the
                 // angular moment picker on the do not call lists details panel not clearing upon
                 // the closing of the panel as it should be. Perhaps a better solution exists...?
               }
