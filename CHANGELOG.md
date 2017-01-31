@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.4]
+* Added contact attribute and layout services
+
 ## [1.5.3]
 * Fixed type of name in GlobalRegionsList "awsId" property
 

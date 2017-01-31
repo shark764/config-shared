@@ -18,7 +18,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         name: '@', // (string) The html name attribute for the element
         onItemSelect: '=', // (function) Optional function to execute when an item is selected
         idx: '=',
-        bypassMultipicker: '=' // (boolean) Setting this to true allows the individual multipicker
+        bypassMultipicker: '=', // (boolean) Setting this to true allows the individual multipicker
+        hideNewButton: '='
         // to exist in the same view without being unintentionally data-bound to another multipicker
       },
       templateUrl: 'liveops-config-panel-shared/directives/loMultibox/loMultibox.html',
