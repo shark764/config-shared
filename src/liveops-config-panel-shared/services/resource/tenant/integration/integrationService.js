@@ -88,6 +88,10 @@ angular.module('liveopsConfigPanel.shared.services')
           dataWithoutScope = true;
         }
 
+        if (_.has(scope, 'selectedIntegration.properties.sdkVersion')) {
+          delete scope.selectedIntegration.properties.sdkVersion;
+        }
+
         if (scope.selectedIntegration.description === null) {
           delete scope.selectedIntegration.description;
         }
