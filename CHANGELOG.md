@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.6]
+* Updated flow service to allow for duplication of flows
+
 ## [1.5.5]
-* (part of hotfix) Fixed bug that was breaking Integrations upon save of a Twilio integration by removing the unnecessary sdkVersion property from the PUT calls 
+* (part of hotfix) Fixed bug that was breaking Integrations upon save of a Twilio integration by removing the unnecessary sdkVersion property from the PUT calls
 
 ## [1.5.4]
 * Added contact attribute and layout services
