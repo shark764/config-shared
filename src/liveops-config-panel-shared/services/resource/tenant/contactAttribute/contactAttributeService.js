@@ -3,6 +3,12 @@
 angular.module('liveopsConfigPanel.shared.services')
   .factory('ContactAttribute', ['LiveopsResourceFactory', 'emitErrorInterceptor', 'emitInterceptor', 'cacheAddInterceptor', 'apiHostname', function(LiveopsResourceFactory, emitErrorInterceptor, emitInterceptor, cacheAddInterceptor, apiHostname) {
 
+    function removeNameAndType(req) {
+      delete req.objectName;
+      delete req.type;
+      return req;
+    }
+
     var ContactAttribute = LiveopsResourceFactory.create({
       endpoint: apiHostname + '/v1/tenants/:tenantId/contacts/attributes/:id',
       resourceName: 'ContactAttribute',
@@ -37,12 +43,6 @@ angular.module('liveopsConfigPanel.shared.services')
     ContactAttribute.prototype.getDisplay = function() {
       return this.objectName;
     };
-
-    function removeNameAndType(req) {
-      delete req.objectName;
-      delete req.type;
-      return req;
-    }
 
     return ContactAttribute;
 
