@@ -68,6 +68,7 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           $scope.toggleAll = function(){
             $scope.all.checked = !$scope.all.checked;
+            $scope.$emit('dropdown:item:checkedUncheckedAll', {checked: $scope.all.checked});
 
             if ($scope.all.checked) {
               checkAll();
