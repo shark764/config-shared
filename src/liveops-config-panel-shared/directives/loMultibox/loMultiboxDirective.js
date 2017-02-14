@@ -19,8 +19,9 @@ angular.module('liveopsConfigPanel.shared.directives')
         onItemSelect: '=', // (function) Optional function to execute when an item is selected
         idx: '=',
         bypassMultipicker: '=', // (boolean) Setting this to true allows the individual multipicker
-        hideNewButton: '='
         // to exist in the same view without being unintentionally data-bound to another multipicker
+        hideNewButton: '=',
+        filters: '=?' // Optional filter function or list of filters to pass to the type-ahead
       },
       templateUrl: 'liveops-config-panel-shared/directives/loMultibox/loMultibox.html',
       controller: 'DropdownController', //To handle auto collapsing on click!
