@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.10]
+* Make multiboxes autofocus
+
 ## [1.5.9]
 * Add emit message to let config-ui know that we are toggling all checkboxes in filter (CXV1-3938)
 
