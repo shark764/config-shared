@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loMultibox', [function(){
+  .directive('loMultibox', ['$timeout', function($timeout){
     /** lo-multibox element directive
      * A custom select-like element for liveopsResources, that also allows the user to create a new item
      *
@@ -67,7 +67,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.selectedItem = null;
 
           if ($scope.showDrop){
-            $scope.$evalAsync(function(){
+            $timeout(function() {
               var input = ele.find('type-ahead input');
               input.focus();
             });

@@ -10,8 +10,8 @@
     ng-focus="showSuggestions=true"
     ng-blur="onBlur()"></input>
     <i class="fa fa-search"></i>
-    <ul ng-show="filtered.length > 0 && (showSuggestions || hovering)" 
-      ng-mouseover="hovering=true" 
+    <ul ng-show="filtered.length > 0 && (showSuggestions || hovering)"
+      ng-mouseover="hovering=true"
       ng-mouseout="hovering=false">
        <li ng-repeat="item in filtered = (items | filter:filterCriteria | orderBy:getDisplayString)"
          ng-class="{'highlight' : highlightedItem == item, 'lo-highlight' : highlightedItem == item}"
