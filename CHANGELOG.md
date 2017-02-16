@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.11]
+* Added method to display Contact Attribute language labels in a list in table
+
 ## [1.5.10]
 * Make multiboxes autofocus
 
