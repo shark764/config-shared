@@ -34,8 +34,16 @@ angular.module('liveopsConfigPanel.shared.services')
         return this.name;
       };
 
-      Flow.prototype.cloneFlow = function (flowData) {
-        self.scopeObj.$emit('flowSvc:cloneFlow', flowData);
+      Flow.prototype.cloneFlow = function (flowData, sourceData) {
+        var allFlowData = {
+          selectedFlowData: flowData
+        }
+
+        if (sourceData) {
+          allFlowData.selectedFlowDataToCopy = sourceData.flow;
+        }
+
+        self.scopeObj.$emit('flowSvc:cloneFlow', allFlowData);
       };
 
       Flow.prototype.getScope = function (scope) {

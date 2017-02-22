@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.13]
+* CXV1-6456 - Updated Flow Clone feature to allow for cloning of versions and drafts
+
 ## [1.5.12]
 * CXV1-7975 - Fix bug with Realtime Dashboard Tables Showing Up Empty
 
