@@ -21,11 +21,17 @@ angular.module('liveopsConfigPanel.shared.directives')
         label: '@', // (string) The text of the menu's label/title
         showAll: '@', // (boolean) Whether to show the 'All' checkbox option
         orderBy: '@', // (string) The item property to be used to sort the menu items. Defaults to 'label'
-        all: '=?' // (object) Exposes the 'All' checkbox option. all.checked reveals the 'All' checbox state
+        all: '=?', // (object) Exposes the 'All' checkbox option. all.checked reveals the 'All' checbox state
+        bypassFilter: '='
       },
       templateUrl: 'liveops-config-panel-shared/directives/dropdown/filterDropdown.html',
       controller: 'DropdownController',
       link: function ($scope, element) {
+        if ($scope.bypassFilter) {
+          $scope.all = undefined;
+          $scope.showAll = undefined;
+        }
+
         element.parent().css('overflow', 'visible');
 
         $scope.valuePath = $scope.valuePath ? $scope.valuePath : 'value';
@@ -53,6 +59,8 @@ angular.module('liveopsConfigPanel.shared.directives')
           // If 'all' was checked but some other option has been unchecked, uncheck 'all' option
           // If 'all' was unchecked but all other options are checked, check 'all' option
           $scope.$watch('options', function (newList, oldList) {
+
+
             var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
 
             if ($scope.all.checked && (newList.length > oldList.length)){
