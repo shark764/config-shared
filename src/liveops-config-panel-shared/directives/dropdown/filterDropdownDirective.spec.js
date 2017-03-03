@@ -47,8 +47,9 @@ describe('filterDropdown directive', function(){
     expect(angular.element(allCheckbox)).toBeTruthy();
   }));
 
+  // Need clarification on the goal of this test later..
   it('should not add the all field if the filters dont provide one', inject(function() {
-    var newStatuses = {filters : [{display: 'Disabled', value: 'false', checked: false}, {display: 'Enabled', value : 'true', checked: false}]};
+    var newStatuses = [{display: 'Disabled', value: 'false', checked: false}, {display: 'Enabled', value : 'true', checked: false}];
     $scope.newStatuses = newStatuses;
 
     element = $compile('<filter-dropdown label="Some Label" options="newStatuses"></filter-dropdown>')($scope);
@@ -62,7 +63,7 @@ describe('filterDropdown directive', function(){
     statuses = [{display: 'Disabled', value: 'false', checked: true}, {display: 'Enabled', value : 'true', checked: true}];
     $scope.statuses = statuses;
     $scope.$digest();
-    
+
     expect($childScope.all.checked).toBe(true);
 
     $scope.statuses[0].checked = false;
@@ -84,7 +85,7 @@ describe('filterDropdown directive', function(){
 
     $childScope.all.checked = true;
     $scope.$digest();
-    
+
     expect($childScope.all.checked).toBeTruthy();
     //expect($scope.statuses[0].checked).toBeTruthy();
   }));
