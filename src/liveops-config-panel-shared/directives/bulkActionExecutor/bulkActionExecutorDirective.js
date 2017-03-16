@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('bulkActionExecutor', ['$q', 'Alert', 'Modal', '$translate', 'DirtyForms', '$filter',
-    function ($q, Alert, Modal, $translate, DirtyForms, $filter) {
+  .directive('bulkActionExecutor', ['$q', 'Alert', 'Modal', '$translate', 'DirtyForms', '$filter', 'toArrayFilter',
+    function ($q, Alert, Modal, $translate, DirtyForms, $filter, toArrayFilter) {
     /** bulk-action-executor element directive
      * Generate the bulk actions panel. This directive uses transclusion to provide the panel content
      */
@@ -51,7 +51,8 @@ angular.module('liveopsConfigPanel.shared.directives')
 
             if ($scope.dropOrderBy) {
               //Reorder elements while preserving original object reference to avoid infinite digest loop
-              var sorted = $filter('orderBy')($scope.checkedItems, $scope.dropOrderBy);
+              var sorted = $filter('orderBy')(toArrayFilter($scope.checkedItems), $scope.dropOrderBy);
+
               $scope.checkedItems.clear();
               $scope.checkedItems.push.apply($scope.checkedItems, sorted);
             }

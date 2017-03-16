@@ -12,13 +12,15 @@
       debug: true
     })
     .value('apiHostname', 'http://localhost:9080');
-  
+
   // Modules
   angular.module('liveopsConfigPanel.shared.directives', [
     'liveopsConfigPanel.shared.services',
     'liveopsConfigPanel.shared.filters'
   ]);
-  angular.module('liveopsConfigPanel.shared.filters', []);
+  angular.module('liveopsConfigPanel.shared.filters', [
+    'angular-toArrayFilter'
+  ]);
   angular.module('liveopsConfigPanel.shared.services', [
     'toastr',
     'ngLodash',

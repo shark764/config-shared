@@ -21,7 +21,8 @@
     "angular-ui-router": "~0.2.15",
     "angular-toastr": "^2.1.1",
     "jsedn": "git@github.com:liveops/jsedn#master",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "angular-toArrayFilter": "^1.0.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.6.3"

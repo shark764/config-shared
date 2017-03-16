@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .controller('bulkActionExecutorController', ['$scope', '$filter', '$q',
-    function ($scope, $filter, $q) {
+  .controller('bulkActionExecutorController', ['$scope', '$filter', '$q', 'toArrayFilter',
+    function ($scope, $filter, $q, toArrayFilter) {
       var self = this;
       $scope.bulkActions = [];
 
@@ -15,7 +15,7 @@ angular.module('liveopsConfigPanel.shared.directives')
       };
 
       this.getCheckedItems = function (items) {
-        return $filter('filter')(items, {
+        return $filter('filter')(toArrayFilter(items), {
           checked: true
         });
       };
