@@ -18,7 +18,7 @@
       </ul>
       <ul ng-if="groupBy">
         <div id="{{item.id}}"
-          ng-repeat="(key, value) in items | groupBy:groupBy | orderBy:orderBy">
+          ng-repeat="(key, value) in items | groupBy:groupBy">
           <h5 class="groupby-title">{{key}}</h5>
           <li ng-repeat="item in value" ng-click="optionClick(item.onClick)">
             <span class="lo-hover-highlight lo-accent-hover-border" ng-if="! item.stateLink"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</span>
