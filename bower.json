@@ -10,7 +10,7 @@
     "angular-route": "^1.6.3",
     "angular": "^1.6.3",
     "font-awesome": "~4.4.0",
-    "ng-lodash": "git@github.com:luwangel/ng-lodash#master",
+    "ng-lodash": "git@github.com:liveops/ng-lodash#0.5.2",
     "angular-translate": "^2.15.0",
     "angular-translate-loader-static-files": "^2.15.0",
     "angular-translate-storage-local": "^2.15.0",
