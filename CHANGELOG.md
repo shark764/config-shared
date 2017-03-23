@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.14]
+* CXV1-8111 - Updated angular to 1.6.3 and fixed breaking changes
+
 ## [1.5.13]
 * CXV1-6456 - Updated Flow Clone feature to allow for cloning of versions and drafts
 
