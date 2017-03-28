@@ -66,6 +66,10 @@ angular.module('liveopsConfigPanel.shared.directives')
           scope.showDrop = ! scope.showDrop;
           scope.hovering = ! scope.hovering;
         };
+
+        scope.dropdownIconClass = function() {
+          return scope.showDrop ? scope.expandIcon : scope.collapseIcon;
+        };
       }
     };
    }])

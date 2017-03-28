@@ -37,7 +37,7 @@ angular.module('liveopsConfigPanel.shared.services')
       Flow.prototype.cloneFlow = function (flowData, sourceData) {
         var allFlowData = {
           selectedFlowData: flowData
-        }
+        };
 
         if (sourceData) {
           allFlowData.selectedFlowDataToCopy = sourceData.flow;

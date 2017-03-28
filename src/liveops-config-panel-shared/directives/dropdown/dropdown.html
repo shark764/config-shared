@@ -2,8 +2,7 @@
   <div class="drop-label" ng-class="{'drop-origin' : showDrop}" ng-click="dropClick()" ng-mouseenter="mouseIn()">
     <div>
       <span>{{label}}</span>
-      <i id="nav-dropdown-down-arrow" ng-show="showDrop" class="{{collapseIcon}} label-icon"></i>
-      <i ng-show="! showDrop" class="{{expandIcon}} label-icon"></i>
+      <i class="label-icon" ng-class="dropdownIconClass()"></i>
     </div>
   </div>
 
@@ -19,7 +18,7 @@
       </ul>
       <ul ng-if="groupBy">
         <div id="{{item.id}}"
-          ng-repeat="(key, value) in items | groupBy:groupBy | orderBy:orderBy">
+          ng-repeat="(key, value) in items | groupBy:groupBy">
           <h5 class="groupby-title">{{key}}</h5>
           <li ng-repeat="item in value" ng-click="optionClick(item.onClick)">
             <span class="lo-hover-highlight lo-accent-hover-border" ng-if="! item.stateLink"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</span>
