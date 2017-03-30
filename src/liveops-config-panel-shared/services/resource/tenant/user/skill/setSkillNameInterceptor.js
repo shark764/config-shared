@@ -11,7 +11,7 @@ angular.module('liveopsConfigPanel.shared.services')
           var matching = filterFilter(skills, {
             id: skillId
           }, true);
-          
+
           if (matching.length > 0){
             response.resource.name = matching[0].name;
           }

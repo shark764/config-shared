@@ -11,7 +11,7 @@ angular.module('liveopsConfigPanel.shared.services')
           var matching = filterFilter(skills, {
             id: skillId
           }, true);
-          
+
           if (matching.length > 0){
             if (! matching[0].hasProficiency){
               delete response.resource.proficiency;
