@@ -21,7 +21,7 @@ angular.module('liveopsConfigPanel.shared.services')
         updateInterceptor: [emitInterceptor, setSkillNameInterceptor],
         deleteInterceptor: userSkillCacheRemoveInterceptor
       });
-      
+
       TenantUserSkill.prototype.cacheKey = function () {
         return 'TenantUserSkill' + this.userId;
       };

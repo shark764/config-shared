@@ -222,7 +222,7 @@ angular.module('liveopsConfigPanel.shared.services')
               headers: defaultHeaders,
               transformRequest: deleteRequestTransformer,
               transformResponse: deleteResponseTransformer,
-              interceptor: getInterceptor(params.saveInterceptor)
+              interceptor: getInterceptor(params.deleteInterceptor || params.saveInterceptor)
             }
           });
 
