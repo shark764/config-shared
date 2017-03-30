@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.15]
+* CXV1-8111 - Adjusted tests for breaking changes in angular 1.6.3 and upgraded font-awesome to match other repos in build
+
 ## [1.5.14]
 * CXV1-8111 - Updated angular to 1.6.3 and fixed breaking changes
 
