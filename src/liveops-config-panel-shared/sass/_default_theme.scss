@@ -10,8 +10,16 @@ a:hover {
   color: $main-color;
 }
 
+#create-btn {
+  background-color: $main-color;
+}
+
 .lo-main-bg, .btn-primary {
-  background-color: $main-color !important;
+  background-color: $main-color;
+}
+
+#submit-details-btn {
+  background-color: $main-color;
 }
 
 .lo-highlight {

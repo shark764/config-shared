@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Branding', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor) {
+  .factory('Branding', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'stylesTransformer', 'saveStylesTransformer',
+    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, stylesTransformer, saveStylesTransformer) {
 
       var Branding = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/branding',
@@ -20,7 +20,10 @@ angular.module('liveopsConfigPanel.shared.services')
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [emitInterceptor, cacheAddInterceptor],
-        updateInterceptor: emitInterceptor
+        updateInterceptor: emitInterceptor,
+        getResponseTransformer: stylesTransformer,
+        putResponseTransformer: stylesTransformer,
+        putRequestTransformer: saveStylesTransformer
       });
 
       Branding.prototype.delete = function(params) {
