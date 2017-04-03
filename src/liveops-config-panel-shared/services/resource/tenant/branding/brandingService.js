@@ -65,9 +65,28 @@ angular.module('liveopsConfigPanel.shared.services')
 		}
         }
 
-        var stylesheetIndex = $rootScope.sheet.rules.length;
+        function colorLuminance(hex, lum) {
+
+		// validate hex string
+		hex = String(hex).replace(/[^0-9a-f]/gi, '');
+		if (hex.length < 6) {
+			hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+		}
+		lum = lum || 0;
+
+		// convert to decimal and change luminosity
+		var rgb = '#', c, i;
+		for (i = 0; i < 3; i++) {
+			c = parseInt(hex.substr(i*2,2), 16);
+			c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+			rgb += ('00'+c).substr(c.length);
+		}
+
+		return rgb;
+        }
 
         // CSS Overides for branding below
+        var stylesheetIndex = $rootScope.sheet.rules.length;
         var navColor = params.styles.navbar;
         var navTextColor = params.styles.navbarText;
 
@@ -76,8 +95,17 @@ angular.module('liveopsConfigPanel.shared.services')
           addCSSRule('#topnav .fa-caret-down', 'color: ' + navColor + '!important', stylesheetIndex);
         }
         if (navTextColor) {
-          addCSSRule('#topnav .drop-label', 'color: ' + navTextColor + '!important', stylesheetIndex);
-          addCSSRule('#topnav .drop-label:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
+          var darkerTextColor = colorLuminance(navTextColor, -0.2);
+          addCSSRule('#topnav .drop-label', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
+          addCSSRule('#topnav #tenant-dropdown .drop-label div', 'border: 1px solid ' + darkerTextColor + '!important', stylesheetIndex);
+          addCSSRule('#topnav .divider', 'border: 1px solid ' + darkerTextColor + '!important', stylesheetIndex);
+          addCSSRule('#welcome i', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
+          addCSSRule('#helpMenu i', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
+
+          addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover .drop-label span, #topnav > ul > li:hover #logo', 'color: ' + navTextColor + '!important', stylesheetIndex);
+          addCSSRule('#topnav > ul > li:not(#welcome):not(#helpMenu):hover .label-icon', 'color: ' + navTextColor + '!important', stylesheetIndex);
+          addCSSRule('#welcome:hover i', 'color: ' + navTextColor + '!important', stylesheetIndex);
+          addCSSRule('#helpMenu i:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
         }
 
       };
