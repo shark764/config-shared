@@ -119,7 +119,7 @@ angular.module('liveopsConfigPanel.shared.services')
           addCSSRule('.lo-accent-hover-border:hover', 'border-color: ' + accentColor + '!important', stylesheetIndex);
         }
         if (accentHoverColor) {
-          addCSSRule('#items-table tr:hover, #items-table .lo-highlight, .dropdown-container a:hover, .lo-hover-highlight:hover, .lo-alert', 'background-color: ' + accentHoverColor + '!important', stylesheetIndex);
+          addCSSRule('#items-table tr:hover, #items-table .lo-highlight, .dropdown-container a:hover, .lo-hover-highlight:hover, .lo-alert, .list-editor .list-body ul li .dispoDropdown ul li:hover', 'background-color: ' + accentHoverColor + '!important', stylesheetIndex);
           addCSSRule('.lo-alert', 'color: ' + '#656565' + '!important', stylesheetIndex);
         }
 
