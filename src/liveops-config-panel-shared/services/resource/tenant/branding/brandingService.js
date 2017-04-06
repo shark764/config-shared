@@ -125,12 +125,15 @@ angular.module('liveopsConfigPanel.shared.services')
           if (primaryColor) {
             addCSSRule('#create-btn, .fa-search, #submit-details-btn', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('.lo-main-text, .btn:not(.btn-primary)', 'color: ' + primaryColor + '!important', stylesheetIndex);
+            addCSSRule('#login-wrapper .btn, #reset-form .btn', 'border-color: ' + primaryColor + '!important', stylesheetIndex);
+            addCSSRule('#login-wrapper .btn, #reset-form .btn', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
           }
           if (accentColor) {
             addCSSRule('.lo-accent-text i', 'color: ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-box-border:hover', 'box-shadow: inset 4px 0px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-border:hover', 'border-color: ' + accentColor + '!important', stylesheetIndex);
+            addCSSRule('#login-wrapper .btn', 'border-color: ' + accentColor + '!important', stylesheetIndex);
           }
           if (accentHoverColor) {
             addCSSRule('#items-table tr:hover, #items-table .lo-highlight, .dropdown-container a:hover, .lo-hover-highlight:hover, .lo-alert, .list-editor .list-body ul li .dispoDropdown ul li:hover', 'background-color: ' + accentHoverColor + '!important', stylesheetIndex);
