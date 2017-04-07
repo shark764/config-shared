@@ -36,6 +36,47 @@ angular.module('liveopsConfigPanel.shared.services')
         return promise;
       };
 
+      // Create a NEW and separate stylesheet for branding CSS overrides
+      function createNewStylesheet() {
+        var style = document.createElement('style');
+        // WebKit hack :(
+        style.appendChild(document.createTextNode(''));
+        // Add the <style> element to the page
+        document.head.appendChild(style);
+
+        return style.sheet;
+      }
+
+      // addCSSRule function for ease of inserts and default to addRule when insertRule is unavailable
+      function addCSSRule(selector, rules, index) {
+        if('insertRule' in $rootScope.sheet) {
+          $rootScope.sheet.insertRule(selector + '{' + rules + '}', index);
+        }
+        else if('addRule' in $rootScope.sheet) {
+          $rootScope.sheet.addRule(selector, rules, index);
+        }
+      }
+
+      function colorLuminance(hex, lum) {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+          hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        var rgb = '#', c, i;
+        for (i = 0; i < 3; i++) {
+          c = parseInt(hex.substr(i*2,2), 16);
+          c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+          rgb += ('00'+c).substr(c.length);
+        }
+
+        return rgb;
+      }
+
       Branding.apply = function(params) {
         console.log(params);
 
@@ -52,47 +93,6 @@ angular.module('liveopsConfigPanel.shared.services')
         // Disable any existing overrides and create new sheet to reapply
         if ($rootScope.sheet) {
           $rootScope.sheet.disabled = true;
-        }
-
-        // Create a NEW and separate stylesheet for branding CSS overrides
-        function createNewStylesheet() {
-          var style = document.createElement('style');
-          // WebKit hack :(
-          style.appendChild(document.createTextNode(''));
-          // Add the <style> element to the page
-          document.head.appendChild(style);
-
-          return style.sheet;
-        }
-
-        // addCSSRule function for ease of inserts and default to addRule when insertRule is unavailable
-        function addCSSRule(selector, rules, index) {
-          if('insertRule' in $rootScope.sheet) {
-            $rootScope.sheet.insertRule(selector + '{' + rules + '}', index);
-          }
-          else if('addRule' in $rootScope.sheet) {
-            $rootScope.sheet.addRule(selector, rules, index);
-          }
-        }
-
-        function colorLuminance(hex, lum) {
-
-          // validate hex string
-          hex = String(hex).replace(/[^0-9a-f]/gi, '');
-          if (hex.length < 6) {
-            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-          }
-          lum = lum || 0;
-
-          // convert to decimal and change luminosity
-          var rgb = '#', c, i;
-          for (i = 0; i < 3; i++) {
-            c = parseInt(hex.substr(i*2,2), 16);
-            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-            rgb += ('00'+c).substr(c.length);
-          }
-
-          return rgb;
         }
 
         if (params && params.styles) {
@@ -130,7 +130,7 @@ angular.module('liveopsConfigPanel.shared.services')
           }
           if (accentColor) {
             addCSSRule('.lo-accent-text i', 'color: ' + accentColor + '!important', stylesheetIndex);
-            addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo, #topnav > ul > li:hover .drop-label span', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-box-border:hover', 'box-shadow: inset 4px 0px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-border:hover', 'border-color: ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn', 'border-color: ' + accentColor + '!important', stylesheetIndex);
