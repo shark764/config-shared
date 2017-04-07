@@ -108,7 +108,7 @@ angular.module('liveopsConfigPanel.shared.services')
           var accentHoverColor = params.styles.accentHoverColor;
 
           if (navColor) {
-            addCSSRule('#topnav', 'background-color: ' + navColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav, .logo-preview img', 'background-color: ' + navColor + '!important', stylesheetIndex);
             addCSSRule('#topnav .fa-caret-down', 'color: ' + navColor + '!important', stylesheetIndex);
             addCSSRule('.lo-alert', 'border: 2px solid' + navColor + '!important', stylesheetIndex);
           }
@@ -130,7 +130,7 @@ angular.module('liveopsConfigPanel.shared.services')
           }
           if (accentColor) {
             addCSSRule('.lo-accent-text i', 'color: ' + accentColor + '!important', stylesheetIndex);
-            addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo, #topnav > ul > li:hover .drop-label span', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo, #topnav > ul > li:not(#welcome):not(#helpMenu):hover dropdown:not(#tenant-dropdown) .drop-label span', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-box-border:hover', 'box-shadow: inset 4px 0px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-border:hover', 'border-color: ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn', 'border-color: ' + accentColor + '!important', stylesheetIndex);
