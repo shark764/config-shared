@@ -12,6 +12,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'custom-stat',
         }, {
+          name: 'active'
+        }, {
           name: 'description',
           optional: true
         }],
