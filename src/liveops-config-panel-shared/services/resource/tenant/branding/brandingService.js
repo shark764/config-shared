@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Branding', ['$rootScope', 'LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'stylesTransformer', 'saveStylesTransformer',
-    function ($rootScope, LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, stylesTransformer, saveStylesTransformer) {
+  .factory('Branding', ['$rootScope', '$state', 'LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'stylesTransformer', 'saveStylesTransformer',
+    function ($rootScope, $state, LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, stylesTransformer, saveStylesTransformer) {
 
       var Branding = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/branding',
@@ -80,8 +80,8 @@ angular.module('liveopsConfigPanel.shared.services')
       Branding.apply = function(params) {
 
         // --- Product Name ---
-
-        $rootScope.productName = params.styles && params.styles.productName ? params.styles.productName : 'CxEngage';
+        $rootScope.productName = (params.styles && params.styles.productName) ? params.styles.productName : 'CxEngage';
+        $rootScope.title = $state.current.title + ' | ' + $rootScope.productName;
 
         // --- Logo / Favicon ---
 
