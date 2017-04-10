@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.17]
+* CXV1-2085 - Branding service adjusted for ease of use. Added apply method on branding service for style overrides.
+
 ## [1.5.16]
 * CXV1-6501 - Added "active" property to custom stats service to fix broken enable/disable functionality, also fixed JS bug resulting from undefined checkbox object on page load
 
