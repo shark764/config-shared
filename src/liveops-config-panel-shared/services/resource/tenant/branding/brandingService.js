@@ -58,6 +58,9 @@ angular.module('liveopsConfigPanel.shared.services')
       }
 
       function colorLuminance(hex, lum) {
+        // returns a hex value that has been lightened or darkened by the value of lum
+        // hex = color hex value (string)
+        // lum = A number from -1 to 1 (number)
 
         // validate hex string
         hex = String(hex).replace(/[^0-9a-f]/gi, '');
