@@ -78,7 +78,10 @@ angular.module('liveopsConfigPanel.shared.services')
       }
 
       Branding.apply = function(params) {
-        console.log(params);
+
+        // --- Product Name ---
+
+        $rootScope.productName = params.styles && params.styles.productName ? params.styles.productName : 'CxEngage';
 
         // --- Logo / Favicon ---
 
@@ -111,6 +114,8 @@ angular.module('liveopsConfigPanel.shared.services')
             addCSSRule('#topnav, .logo-preview img', 'background-color: ' + navColor + '!important', stylesheetIndex);
             addCSSRule('#topnav .fa-caret-down', 'color: ' + navColor + '!important', stylesheetIndex);
             addCSSRule('.lo-alert', 'border: 2px solid' + navColor + '!important', stylesheetIndex);
+            addCSSRule('.lo-gradient-squares', 'background: ' + navColor + '!important', stylesheetIndex);
+            addCSSRule('.lo-gradient-squares', 'background-image: none !important', stylesheetIndex);
           }
           if (navTextColor) {
             var darkerTextColor = colorLuminance(navTextColor, -0.2);
