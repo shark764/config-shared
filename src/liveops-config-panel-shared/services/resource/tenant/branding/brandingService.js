@@ -80,7 +80,7 @@ angular.module('liveopsConfigPanel.shared.services')
         return rgb;
       }
 
-      Branding.apply = function(params) {
+      Branding.set = function(params) {
 
         // --- Product Name ---
         $rootScope.productName = (params.styles && params.styles.productName) ? params.styles.productName : 'CxEngage';
