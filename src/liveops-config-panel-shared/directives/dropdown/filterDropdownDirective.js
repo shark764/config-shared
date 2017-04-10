@@ -63,14 +63,16 @@ angular.module('liveopsConfigPanel.shared.directives')
 
             var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
 
-            if ($scope.all.checked && (newList.length > oldList.length)){
-              // If a new item was added to the options list, while the 'All' option is selected,
-              // we make sure it is checked
-              checkAll();
-            } else if (checkedOptions.length === $scope.options.length ) {
-              $scope.all.checked = true;
-            } else {
-              $scope.all.checked = false;
+            if ($scope.all) {
+              if ($scope.all.checked && (newList.length > oldList.length)){
+                // If a new item was added to the options list, while the 'All' option is selected,
+                // we make sure it is checked
+                checkAll();
+              } else if (checkedOptions.length === $scope.options.length ) {
+                $scope.all.checked = true;
+              } else {
+                $scope.all.checked = false;
+              }
             }
           }, true);
 
