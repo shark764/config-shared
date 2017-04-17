@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.18]
+* CXV1-8597 - Branding UI Style bugs
+
 ## [1.5.17]
 * CXV1-2085 - Branding service adjusted for ease of use. Added apply method on branding service for style overrides.
 

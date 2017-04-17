@@ -115,8 +115,7 @@ angular.module('liveopsConfigPanel.shared.services')
 
           if (navColor) {
             addCSSRule('#topnav, .logo-preview img', 'background-color: ' + navColor + '!important', stylesheetIndex);
-            addCSSRule('#topnav .fa-caret-down', 'color: ' + navColor + '!important', stylesheetIndex);
-            addCSSRule('.lo-alert', 'border: 2px solid' + navColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav > ul > li:not(#welcome):not(#helpMenu) .label-icon', 'color: ' + navColor + '!important', stylesheetIndex);
             addCSSRule('.lo-gradient-squares', 'background: ' + navColor + '!important', stylesheetIndex);
             addCSSRule('.lo-gradient-squares', 'background-image: none !important', stylesheetIndex);
           }
@@ -131,7 +130,13 @@ angular.module('liveopsConfigPanel.shared.services')
 
           }
           if (primaryColor) {
-            addCSSRule('#create-btn, .fa-search, #submit-details-btn, input#submit-invite-accept', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
+            var darkerPrimaryColor = colorLuminance(primaryColor, -0.2);
+            addCSSRule('.btn-blue:hover', 'background-color: ' + darkerPrimaryColor + '!important', stylesheetIndex);
+            addCSSRule('.btn-blue:hover', 'border: 1px solid ' + darkerPrimaryColor + '!important', stylesheetIndex);
+
+            addCSSRule('.btn-blue', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
+            addCSSRule('.btn-blue', 'border: 1px solid ' + darkerPrimaryColor + '!important', stylesheetIndex);
+            addCSSRule('#create-btn, div:not(.typeahead-container) > .fa-search, #submit-details-btn, input#submit-invite-accept, .btn-primary', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('.lo-main-text, .btn:not(.btn-primary)', 'color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn, #reset-form .btn', 'border-color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn, #reset-form .btn', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
@@ -144,8 +149,7 @@ angular.module('liveopsConfigPanel.shared.services')
             addCSSRule('#login-wrapper .btn', 'border-color: ' + accentColor + '!important', stylesheetIndex);
           }
           if (accentHoverColor) {
-            addCSSRule('#items-table tr:hover, #items-table .lo-highlight, .dropdown-container a:hover, .lo-hover-highlight:hover, .lo-alert, .list-editor .list-body ul li .dispoDropdown ul li:hover', 'background-color: ' + accentHoverColor + '!important', stylesheetIndex);
-            addCSSRule('.lo-alert', 'color: ' + '#656565' + '!important', stylesheetIndex);
+            addCSSRule('#items-table tr:hover, #items-table .lo-highlight, .dropdown-container a:hover, .lo-hover-highlight:hover, .list-editor .list-body ul li .dispoDropdown ul li:hover', 'background-color: ' + accentHoverColor + '!important', stylesheetIndex);
           }
         }
       };
