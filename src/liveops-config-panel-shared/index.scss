@@ -13,6 +13,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: 'Source Sans Pro', sans-serif !important;
 }
 
+button, select, html, textarea, input {
+  font-family: $main-font;
+}
+
 a {
   text-decoration: none;
 }
@@ -146,4 +150,3 @@ label.disabled {
 fieldset {
   border: none;
 }
-

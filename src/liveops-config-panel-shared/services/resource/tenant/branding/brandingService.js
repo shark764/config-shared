@@ -131,7 +131,7 @@ angular.module('liveopsConfigPanel.shared.services')
 
           }
           if (primaryColor) {
-            addCSSRule('#create-btn, .fa-search, #submit-details-btn', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
+            addCSSRule('#create-btn, .fa-search, #submit-details-btn, input#submit-invite-accept', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('.lo-main-text, .btn:not(.btn-primary)', 'color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn, #reset-form .btn', 'border-color: ' + primaryColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn, #reset-form .btn', 'background-color: ' + primaryColor + '!important', stylesheetIndex);
