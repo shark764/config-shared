@@ -15,6 +15,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'password'
         }, {
+          name: 'currentPassword'
+        }, {
           name: 'externalId',
           optional: true
         }, {
@@ -24,7 +26,7 @@ angular.module('liveopsConfigPanel.shared.services')
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: emitInterceptor,
+        updateInterceptor: [emitInterceptor, userUpdateTransformer],
         putRequestTransformer: userUpdateTransformer
       });
 
@@ -46,7 +48,6 @@ angular.module('liveopsConfigPanel.shared.services')
         delete user.status; //User cannot edit their own status
         delete user.roleId; //User cannot edit their own platform roleId
       }
-      
       return user;
     };
   }]);

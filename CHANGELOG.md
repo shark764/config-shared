@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.22]
+* CXV1-8143 - Require current password for password update
+
 ## [1.5.21]
 * CXV1-8597 - Fixed Search Icon override bug
 
