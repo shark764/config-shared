@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Tenant', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'queryCache', 'cacheAddInterceptor',
-    function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, queryCache, cacheAddInterceptor) {
+  .factory('Tenant', ['LiveopsResourceFactory', 'Session', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'queryCache', 'cacheAddInterceptor',
+    function (LiveopsResourceFactory, Session, apiHostname, emitInterceptor, emitErrorInterceptor, queryCache, cacheAddInterceptor) {
 
       var Tenant = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:id',
@@ -48,6 +48,39 @@ angular.module('liveopsConfigPanel.shared.services')
         }
 
         return cached;
+      };
+
+      Tenant.prototype.updateSessionTenantProps = function (updatedTenantData, updatedTenantDataPropToCopy, targetPropToUpdate) {
+        var currentSessionTenantIdx = _.findIndex(Session.tenants, function (sessionTenant) {
+          return updatedTenantData.id === sessionTenant.tenantId;
+        });
+
+        // if we're not dealing with one of the tenants in the session then
+        // there's nothing more for us to do here
+        if (currentSessionTenantIdx === -1) {
+          return;
+        }
+
+        // in the event that we're changing the "tenantActive" flag/property, and the
+        // current tenant was set to inactive, then reset the dropdown
+        //to the first tenant in the list
+        var currentSessionTenantId = Session.tenant.tenantId;
+        var tenantBeingUpdatedId = updatedTenantData.id;
+        var hasTenantActiveProperty = _.has(Session.tenants[currentSessionTenantIdx], 'tenantActive');
+
+        // if the tenant that just got modified  is the active tenant
+        if ((currentSessionTenantId === tenantBeingUpdatedId) && hasTenantActiveProperty) {
+          // if the tenant being modified is not active
+          if (Session.tenants[currentSessionTenantIdx].tenantActive === false) {
+            Session.setTenant({
+              tenantId: Session.tenants[0].tenantId,
+              tenantName: Session.tenants[0].tenantName,
+              tenantPermissions: Session.tenants[0].tenantPermissions
+            });
+          }
+        }
+
+        Session.tenants[currentSessionTenantIdx][targetPropToUpdate] = updatedTenantData[updatedTenantDataPropToCopy];
       };
 
       return Tenant;
