@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.20]
+* CXV1-8597 - Fixed white submit button bug
+
 ## [1.5.19]
 * CXV1-8148 - Updated tenant mock to allow for testing to ensure that inactive tenants are excluded from tenant select dropdown in config-ui
 

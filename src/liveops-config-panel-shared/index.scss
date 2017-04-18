@@ -85,6 +85,11 @@ a {
     background: rgba(255, 255, 255, 0.3);
 }
 
+input.btn-primary {
+  background-color: $main-color;
+  color: #ffffff;
+}
+
 input[disabled].btn { /* inputs can't use :before pseudo element" */
   opacity: 0.8;
 }
