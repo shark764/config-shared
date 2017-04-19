@@ -127,7 +127,6 @@ angular.module('liveopsConfigPanel.shared.services')
             addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover .drop-label span, #topnav > ul > li:hover #logo', 'color: ' + navTextColor + '!important', stylesheetIndex);
             addCSSRule('#topnav > ul > li:not(#welcome):not(#helpMenu):hover .label-icon', 'color: ' + navTextColor + '!important', stylesheetIndex);
             addCSSRule('#welcome:hover i, #helpMenu i:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
-
           }
           if (primaryColor) {
             var darkerPrimaryColor = colorLuminance(primaryColor, -0.2);
