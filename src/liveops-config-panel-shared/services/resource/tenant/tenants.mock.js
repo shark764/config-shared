@@ -4,10 +4,14 @@ angular.module('liveopsConfigPanel.tenant.mock', ['liveopsConfigPanel.mock'])
   .service('mockTenants', function (Tenant) {
     return [new Tenant({
       'id': 'tenant-id',
-      'tenantActive': 'true'
+      'tenantId': 'tenant-id',
+      'tenantActive': true,
+      'tenantName': 'Tenant 1'
     }), new Tenant({
       'id': 'tenant-id-2',
-      'tenantActive': 'false'
+      'tenantId': 'tenant-id-2',
+      'tenantActive': true,
+      'tenantName': 'Tenant 2'
     })];
   })
   .run(['$httpBackend', 'apiHostname', 'mockTenants',
