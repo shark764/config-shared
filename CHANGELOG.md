@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.27]
+* CXV1-8619 - Adjusted branding logo and favicons to use local assets when used
+
 ## [1.5.26]
 * CXV1-8619 - Removed extra scroll from table widgets
 
