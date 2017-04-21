@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.29]
+* No ticket - tweaking to fix deploy test runs
+
 ## [1.5.28]
 * No ticket - pull s3 bucket url from constant set dynamically in config-ui from env.js 
 
