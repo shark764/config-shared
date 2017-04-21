@@ -90,9 +90,20 @@ angular.module('liveopsConfigPanel.shared.services')
 
         $rootScope.s3bucketUrl = 'https://cxengagelabs-dev-configurator-images.s3.amazonaws.com/';
 
-        $rootScope.logo = params.logo ? $rootScope.s3bucketUrl + params.logo : 'assets/images/cxengage_white.png';
-        $rootScope.favicon32 = params.favicon ? $rootScope.s3bucketUrl + params.favicon : 'favicon-32x32.png';
-        $rootScope.favicon16 = params.favicon ? $rootScope.s3bucketUrl + params.favicon : 'favicon-16x16.png';
+        // Temporary checks for branding logos that are in our own assets folder
+        if (params.logo && params.logo.indexOf('assets') !== -1) {
+          $rootScope.logo = params.logo;
+        } else {
+          $rootScope.logo = params.logo ? $rootScope.s3bucketUrl + params.logo : 'assets/images/cxengage_white.png';
+        }
+
+        if (params.favicon && params.favicon.indexOf('assets') !== -1) {
+          $rootScope.favicon32 = params.favicon;
+          $rootScope.favicon16 = params.favicon;
+        } else {
+          $rootScope.favicon32 = params.favicon ? $rootScope.s3bucketUrl + params.favicon : 'favicon-32x32.png';
+          $rootScope.favicon16 = params.favicon ? $rootScope.s3bucketUrl + params.favicon : 'favicon-16x16.png';
+        }
 
         // --- Brand Colors ---
 
