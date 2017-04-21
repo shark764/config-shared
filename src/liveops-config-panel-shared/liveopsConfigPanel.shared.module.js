@@ -11,7 +11,8 @@
     .value('liveopsConfigPanel.shared.config', {
       debug: true
     })
-    .value('apiHostname', 'http://localhost:9080');
+    .value('apiHostname', 'placeholder')
+    .value('s3BucketUrl', 'placeholder');
 
   // Modules
   angular.module('liveopsConfigPanel.shared.directives', [
