@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Branding', ['$rootScope', '$state', 'LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'stylesTransformer', 'saveStylesTransformer',
-    function ($rootScope, $state, LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, stylesTransformer, saveStylesTransformer) {
+  .factory('Branding', ['$rootScope', '$state', 'LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'stylesTransformer', 'saveStylesTransformer', 's3BucketUrl',
+    function ($rootScope, $state, LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, stylesTransformer, saveStylesTransformer, s3BucketUrl) {
 
       var Branding = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/branding',
@@ -88,21 +88,21 @@ angular.module('liveopsConfigPanel.shared.services')
 
         // --- Logo / Favicon ---
 
-        $rootScope.s3bucketUrl = 'https://cxengagelabs-dev-configurator-images.s3.amazonaws.com/';
+        $rootScope.s3BucketUrl = s3BucketUrl + '/';
 
         // Temporary checks for branding logos that are in our own assets folder
         if (params.logo && params.logo.indexOf('assets') !== -1) {
           $rootScope.logo = params.logo;
         } else {
-          $rootScope.logo = params.logo ? $rootScope.s3bucketUrl + params.logo : 'assets/images/cxengage_white.png';
+          $rootScope.logo = params.logo ? $rootScope.s3BucketUrl + params.logo : 'assets/images/cxengage_white.png';
         }
 
         if (params.favicon && params.favicon.indexOf('assets') !== -1) {
           $rootScope.favicon32 = params.favicon;
           $rootScope.favicon16 = params.favicon;
         } else {
-          $rootScope.favicon32 = params.favicon ? $rootScope.s3bucketUrl + params.favicon : 'favicon-32x32.png';
-          $rootScope.favicon16 = params.favicon ? $rootScope.s3bucketUrl + params.favicon : 'favicon-16x16.png';
+          $rootScope.favicon32 = params.favicon ? $rootScope.s3BucketUrl + params.favicon : 'favicon-32x32.png';
+          $rootScope.favicon16 = params.favicon ? $rootScope.s3BucketUrl + params.favicon : 'favicon-16x16.png';
         }
 
         // --- Brand Colors ---
