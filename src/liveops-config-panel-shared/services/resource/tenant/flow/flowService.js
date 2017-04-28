@@ -4,6 +4,7 @@ angular.module('liveopsConfigPanel.shared.services')
   .factory('Flow', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', 'emitErrorInterceptor',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, cacheAddInterceptor, emitErrorInterceptor) {
       var self = this;
+      var savedFlow = [];
 
       var Flow = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/flows/:id',
@@ -34,13 +35,24 @@ angular.module('liveopsConfigPanel.shared.services')
         return this.name;
       };
 
+      Flow.prototype.setSavedFlow = function (savedFlowVal) {
+        savedFlow = savedFlowVal;
+      };
+
+      Flow.prototype.getSavedFlow = function () {
+        return savedFlow;
+      };
+
       Flow.prototype.cloneFlow = function (flowData, sourceData) {
         var allFlowData = {
           selectedFlowData: flowData
         };
 
         if (sourceData) {
-          allFlowData.selectedFlowDataToCopy = sourceData.flow;
+          _.merge(allFlowData, {
+            flow: sourceData.flow,
+            metadata: sourceData.metadata
+          });
         }
 
         self.scopeObj.$emit('flowSvc:cloneFlow', allFlowData);
