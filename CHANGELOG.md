@@ -2,11 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.30]
+* CXV1-8232 - Fixed issue with flow copying not also copying flow inputs, outputs, and defaults, but on the config-shared side, used the opportunity to add 2 new methods for temporarily storing the value of the most recently saved flow
+
 ## [1.5.29]
 * No ticket - tweaking to fix deploy test runs
 
 ## [1.5.28]
-* No ticket - pull s3 bucket url from constant set dynamically in config-ui from env.js 
+* No ticket - pull s3 bucket url from constant set dynamically in config-ui from env.js
 
 ## [1.5.27]
 * CXV1-8619 - Adjusted branding logo and favicons to use local assets when used
