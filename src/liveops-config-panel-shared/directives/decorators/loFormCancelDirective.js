@@ -57,14 +57,19 @@ angular.module('liveopsConfigPanel.shared.directives')
             }
 
             var form = $parse($attrs.name)($scope);
-            var controller = $elem.data('$loFormCancelController');
-            controller.resetForm(form);
+            if($elem.data('$loFormCancelController')) {
+              var controller = $elem.data('$loFormCancelController');
+              controller.resetForm(form);
+            }
+
           });
 
-          var controller = $elem.data('$loFormCancelController');
-          controller.ngResource = $attrs.ngResource;
-          controller.formController = $ctrl[1];
-          controller.loDetailsPanelController = $ctrl[2];
+          if($elem.data('$loFormCancelController')) {
+            var controller = $elem.data('$loFormCancelController');
+            controller.ngResource = $attrs.ngResource;
+            controller.formController = $ctrl[1];
+            controller.loDetailsPanelController = $ctrl[2];
+          }
         }
       };
     }
