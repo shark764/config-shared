@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.31]
+* CXV1-9310 - Fixed JS console errors that were affecting config-ui
+
 ## [1.5.30]
 * CXV1-8232 - Fixed issue with flow copying not also copying flow inputs, outputs, and defaults, but on the config-shared side, used the opportunity to add 2 new methods for temporarily storing the value of the most recently saved flow
 

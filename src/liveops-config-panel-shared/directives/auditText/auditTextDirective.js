@@ -16,30 +16,63 @@ angular.module('liveopsConfigPanel.shared.directives')
         },
         template: '{{get()}}',
         link: function ($scope) {
-          $scope.get = function () {
-            if (!$scope.userId) {
-              return  $filter('translate')($scope.translation, {
-                date: $filter('date')($scope.date, 'medium')
-              });
+          var nameText;
+
+          function setTextContent(correctUUID, userData) {
+            var viableDisplayName =
+              correctUUID &&
+              userData &&
+              userData.$resolved;
+
+            $scope.text = $filter('translate')($scope.translation, {
+              displayName: viableDisplayName ? userData.getDisplay() : null,
+              date: $filter('date')($scope.date, 'medium')
+            });
+          }
+
+          function translateText (properUUID, userObj) {
+            setTextContent(properUUID, userObj);
+
+            var badDisplayNameString =
+            ((!properUUID || !$scope.text.displayName) && $scope.noUsernameFallback === true) ||
+            $scope.text.indexOf('by  on') !== -1;
+
+            // if we don't have a good userId or a good user name, or
+            // for whatever reason, no name got inserted between "by" and "on",
+            // let's remove the word, "by"
+            if (badDisplayNameString) {
+              nameText = $scope.text;
+              $scope.text = nameText.replace('by ', '');
             }
+          }
 
-            var user = TenantUser.cachedGet({
-              id: $scope.userId,
-              tenantId: Session.tenant.tenantId
-            }, 'AuditTextUsers');
+          function generateText (goodUUID) {
+            var user;
 
-            if(user.$resolved) {
-              $scope.text = $filter('translate')($scope.translation, {
-                displayName: user.getDisplay(),
-                date: $filter('date')($scope.date, 'medium')
-              });
+            // let's avoid making a call to a non-existent user if we're given the
+            // dreaded '00000000-0000-0000-0000-000000000000' userId
+            if (goodUUID) {
+              user = TenantUser.cachedGet({
+                id: $scope.userId,
+                tenantId: Session.tenant.tenantId
+              }, 'AuditTextUsers');
 
-              if (!$scope.text.displayName && $scope.noUsernameFallback === true) {
-                var nameText = $scope.text;
-                $scope.text = nameText.replace('by ', '');
+              if (user.$resolved) {
+                translateText(goodUUID, user);
+              } else {
+                // force translateText() to prevent attempting to render
+                // a user name by hard-coding the 1st argument to false, even
+                // though we have a viable-looking UUID
+                translateText(false);
               }
+            } else {
+              translateText(goodUUID);
             }
+          }
 
+          $scope.get = function () {
+            var hasUUID = $scope.userId !== '00000000-0000-0000-0000-000000000000';
+            generateText(hasUUID);
             return $scope.text;
           };
         }
