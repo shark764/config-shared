@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
-var karma = require('karma').server;
+var karma = require('karma').Server;
 var concat = require('gulp-concat');
 var concatStream = require('concat-stream');
 var uglify = require('gulp-uglify');
@@ -174,11 +174,12 @@ function listFiles(callback) {
  */
 gulp.task('test', function (done) {
   listFiles(function (files) {
-    karma.start({
+    const karmaServer = new karma({
       configFile: __dirname + '/karma.conf.js',
       files: files,
       singleRun: true
     }, done);
+    karmaServer.start();
   });
 });
 

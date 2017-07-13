@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.32]
+* CXV1-10360 - Added indent and index to dropdown for forced filtering
+
 ## [1.5.31]
 * CXV1-9310 - Fixed JS console errors that were affecting config-ui
 

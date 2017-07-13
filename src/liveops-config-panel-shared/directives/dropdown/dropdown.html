@@ -20,9 +20,23 @@
         <div id="{{item.id}}"
           ng-repeat="(key, value) in items | groupBy:groupBy">
           <h5 class="groupby-title">{{key}}</h5>
-          <li ng-repeat="item in value" ng-click="optionClick(item.onClick)">
-            <span class="lo-hover-highlight lo-accent-hover-border" ng-if="! item.stateLink"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</span>
-            <a class="lo-hover-highlight lo-accent-hover-border" ng-if="item.stateLink" ui-sref="{{item.stateLink}}" ui-sref-opts="{{item.stateLinkParams}}"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</a>
+          <li ng-repeat="item in value | orderBy:'dropdownIndex'" ng-click="optionClick(item.onClick)">
+            <span
+              class="lo-hover-highlight lo-accent-hover-border"
+              ng-class="{'indentDropdown': item.indentDropdown}"
+              ng-if="! item.stateLink">
+              <i class="{{item.iconClass}}"></i>
+              {{item[displayPath]}}
+            </span>
+            <a
+              class="lo-hover-highlight lo-accent-hover-border"
+              ng-class="{'indentDropdown': item.indentDropdown}"
+              ng-if="item.stateLink"
+              ui-sref="{{item.stateLink}}"
+              ui-sref-opts="{{item.stateLinkParams}}">
+              <i class="{{item.iconClass}}"></i>
+              {{item[displayPath]}}
+            </a>
           </li>
         </div>
       </ul>
