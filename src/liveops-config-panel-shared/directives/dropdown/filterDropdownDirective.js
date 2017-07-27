@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('filterDropdown', ['$filter', function ($filter) {
+  .directive('filterDropdown', ['$filter', '$rootScope', function ($filter, $rootScope) {
     /** filter-dropdown element directive
      * Generate a dropdown menu with checkboxes to select/deselect items
      *
@@ -60,7 +60,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           // If 'all' was unchecked but all other options are checked, check 'all' option
           $scope.$watch('options', function (newList, oldList) {
 
-
+            $rootScope.$broadcast('filtersChanged');
             var checkedOptions = $filter('filter')($scope.options, {checked: true}, true);
 
             if ($scope.all) {

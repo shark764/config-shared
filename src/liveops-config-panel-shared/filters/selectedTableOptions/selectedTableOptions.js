@@ -50,7 +50,6 @@ angular.module('liveopsConfigPanel.shared.filters')
           var checkedOptions = $filter('filter')(options, {
             checked : true
           }, true);
-
           //If there aren't any options available, skip this filter
           if (options.length === 0){
             continue;
