@@ -71,7 +71,7 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
 
           $scope.get = function () {
-            var hasUUID = $scope.userId !== '00000000-0000-0000-0000-000000000000';
+            var hasUUID = $scope.userId !== undefined && $scope.userId !== '00000000-0000-0000-0000-000000000000';
             generateText(hasUUID);
             return $scope.text;
           };
