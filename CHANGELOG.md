@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.35]
+* CXV1-10177 - Create UI for new Verint Integration
+
 ## [1.5.34]
 * CXV1-11056 - Prevent auditTestDirective from calling /users route with undefined userId
 

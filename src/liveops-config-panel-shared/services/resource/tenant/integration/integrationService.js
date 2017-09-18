@@ -133,19 +133,35 @@ angular.module('liveopsConfigPanel.shared.services')
 
         // this is to account for when we are working with the entire scope
         // as opposed to just an individual integration object
-        if (dataWithoutScope === false && scope.selectedIntegration.type && scope.selectedIntegration.type.hasOwnProperty('value')) {
+        if (
+          dataWithoutScope === false &&
+          scope.selectedIntegration.type &&
+          scope.selectedIntegration.type.hasOwnProperty('value')
+        ) {
           scope.selectedIntegration.type = scope.selectedIntegration.type.value;
         }
 
-        // get rid of token prop for zendesk to avoid breaking API call
-        if (scope.selectedIntegration.type === 'zendesk') {
+        if (
+          scope.selectedIntegration.type === 'zendesk' ||
+          scope.selectedIntegration.type === 'verint'
+        ) {
           if (_.has(scope.selectedIntegration, 'properties.token')) {
             delete scope.selectedIntegration.properties.token;
           }
 
+          if (scope.selectedIntegration.type === 'verint') {
+            if (_.has(scope.selectedIntegration, 'properties.endpointPrefix')) {
+              delete scope.selectedIntegration.properties.endpointPrefix;
+            }
+          }
+
           // make sure there is always a workItems value in order to prevent API error
           if (!_.has(scope.selectedIntegration, 'properties.workItems') || scope.selectedIntegration.properties.workItems === '') {
-            scope.selectedIntegration.properties.workItems = false;
+            if (scope.selectedIntegration.type === 'verint') {
+              delete scope.selectedIntegration.properties.workItems;
+            } else {
+              scope.selectedIntegration.properties.workItems = false;
+            }
           }
         // and if it isn't a zendesk integration, make sure we are NOT saving the
         // workItems property
