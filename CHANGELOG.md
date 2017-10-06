@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.36]
+* CXV1-11681 - Fixed bug in text search filter that caused search to not pull up email addresses with special characters
+
 ## [1.5.35]
 * CXV1-10177 - Create UI for new Verint Integration
 
