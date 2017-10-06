@@ -6,7 +6,7 @@ angular.module('liveopsConfigPanel.shared.filters')
      * Accepts an array of items, an array of fields to check for matches, and a string search text
      * Returns a list of items that have at least one property from the list of fields that contain the search text
      * Returns the original list of items if fields or query are falsy
-     * 
+     *
      * Matches ignore special characters and are case-insensitive
      */
     return function (items, fields, query) {
@@ -15,8 +15,9 @@ angular.module('liveopsConfigPanel.shared.filters')
       }
 
       function regExpReplace(string) {
-        string.replace(/([.+?^=!:${}()|\[\]\/\\])/g, '\\$1');
-        return string.replace(/([*])/g, '.*');
+        return string
+          .replace(/[\-\[\]\/\{\}\(\)\+\?\.\=\:\!\\\^\$\|]/g, '\\$&')
+          .replace(/([*])/g, '.*');
       }
 
       var findFields = function (field, item) {
