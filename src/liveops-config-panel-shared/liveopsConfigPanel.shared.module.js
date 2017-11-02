@@ -12,7 +12,8 @@
       debug: true
     })
     .value('apiHostname', 'placeholder')
-    .value('s3BucketUrl', 'placeholder');
+    .value('s3BucketUrl', 'placeholder')
+    .value('CxEngageConfig', 'placeholder');
 
   // Modules
   angular.module('liveopsConfigPanel.shared.directives', [

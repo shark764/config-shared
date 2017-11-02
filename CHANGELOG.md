@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.38]
+* CXV1-10846 - Add support for Tenant specific deep linked login SSO redirect (for existing user invite and tenant re auth)
+
 ## [1.5.37]
 * CXV1-10830 - Created service for config-ui IDP management page
 
