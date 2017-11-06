@@ -153,6 +153,13 @@ angular.module('liveopsConfigPanel.shared.services')
             if (_.has(scope.selectedIntegration, 'properties.endpointPrefix')) {
               delete scope.selectedIntegration.properties.endpointPrefix;
             }
+
+            if (
+              _.has(scope.selectedIntegration, 'properties.ctiEnabled') &&
+              !scope.selectedIntegration.properties.ctiEnabled
+            ) {
+              scope.selectedIntegration.properties.ctiEndpoint = '';
+            }
           }
 
           // make sure there is always a workItems value in order to prevent API error
