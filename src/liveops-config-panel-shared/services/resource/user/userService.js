@@ -22,6 +22,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'personalTelephone',
           optional: true
+        }, {
+          name: 'defaultTenant',
+          optional: true          
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
