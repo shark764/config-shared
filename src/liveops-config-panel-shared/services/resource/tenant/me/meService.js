@@ -9,22 +9,20 @@ angular.module('liveopsConfigPanel.shared.services')
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
-        updateInterceptor: [emitInterceptor],
+        updateInterceptor: emitInterceptor,
       });
 
-      Me.prototype.getIdps = function(tenantList, tenantId) {
-        if (!tenantList || tenantList.length === 0) {
-          return false;
-        }
-
-        var identityProvidersList = _.find(tenantList, function (tenant) {
-          return tenant.tenantId === tenantId;
-        }).identityProviders;
-
-        return _.map(identityProvidersList, function (idpObj) {
-          return _.pick(idpObj, ['id', 'name']);
+      // same as the usual Me.cachedQuery() call, except that this one only returns
+      // active tenants assigned to the user (less code in controller this way)
+      Me.prototype.getActiveTenants = function () {
+        var meData = Me.cachedQuery();
+        return meData.$promise.then(function (tenantsResponse) {
+          return _.filter(tenantsResponse, function (val) {
+            return val.active;
+          });
         });
       };
 
       return Me;
-  }]);
+    }
+  ]);
