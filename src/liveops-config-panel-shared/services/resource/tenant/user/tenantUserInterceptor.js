@@ -17,7 +17,11 @@ angular.module('liveopsConfigPanel.shared.services')
     };
 
     this.transform = function(tenantUser) {
+
       tenantUser.$user = new User();
+      _.remove(tenantUser.extensions, {
+        provider: 'plivo'
+      });
 
       if(tenantUser.userId) {
         rename(tenantUser, 'userId', 'id');

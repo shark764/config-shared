@@ -19,7 +19,7 @@ angular.module('liveopsConfigPanel.shared.config')
   'display': 'English, UK'
 }, {
   'value': 'en-IN',
-  'display': 'English, India'
+  'display': 'English, India (Twilio only)'
 }, {
   'value': 'en-US',
   'display': 'English, United States'

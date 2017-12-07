@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.41]
+* CXV1-11824 - Updated Integration service to support GVN (formerly 2600hz) 
+
 ## [1.5.40]
 * CXV1-10835 - Added new service for /me endpoint
 
