@@ -3,6 +3,8 @@
 angular.module('liveopsConfigPanel.shared.services')
   .factory('IdentityProviders', ['LiveopsResourceFactory', 'apiHostname', 'Session', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', '$translate',
     function (LiveopsResourceFactory, apiHostname, Session, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, $translate) {
+      /* globals Blob, URL */
+
       var IdentityProviders = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/identity-providers/:id',
         resourceName: 'IdentityProviders',
