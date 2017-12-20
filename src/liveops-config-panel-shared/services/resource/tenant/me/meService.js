@@ -3,6 +3,8 @@
 angular.module('liveopsConfigPanel.shared.services')
   .factory('Me', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
     function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
+      var hasCxEngageIdp = false;
+
       var Me = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/me',
         resourceName: 'Me',
@@ -21,6 +23,14 @@ angular.module('liveopsConfigPanel.shared.services')
             return val.active;
           });
         });
+      };
+
+      Me.prototype.setHasCxEngageIdp = function (hasCxEngageIdpVal) {
+        hasCxEngageIdp = hasCxEngageIdpVal.password;
+      };
+
+      Me.prototype.getHasCxEngageIdp = function () {
+        return hasCxEngageIdp;
       };
 
       return Me;
