@@ -2,11 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.43]
+* CXV1-10842 - Update forgot password functionality (create flag to tell config-ui whether the current tenant has a CxEngage IDP)
+
 ## [1.5.42]
 * CXV1-10833 - Added ability to set classes for individual menu items in Tenants dropdown
 
 ## [1.5.41]
-* CXV1-11824 - Updated Integration service to support GVN (formerly 2600hz) 
+* CXV1-11824 - Updated Integration service to support GVN (formerly 2600hz)
 
 ## [1.5.40]
 * CXV1-10835 - Added new service for /me endpoint
