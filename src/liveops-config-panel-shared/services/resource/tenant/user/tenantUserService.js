@@ -22,7 +22,8 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'roleId'
         }, {
-          name: 'extensions'
+          name: 'extensions',
+          optional: true
         }, {
           name: 'activeExtension',
           optional: true

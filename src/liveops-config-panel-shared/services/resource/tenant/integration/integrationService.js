@@ -129,6 +129,15 @@ angular.module('liveopsConfigPanel.shared.services')
                 delete scope.selectedIntegration.properties.endpointPrefix;
               }
             }
+            break;
+
+          case 'serenova-voice':
+            var tempProps = angular.copy(scope.selectedIntegration.properties);
+            scope.selectedIntegration.properties = _.pick(tempProps, [
+              'accountId',
+              'apiKey'
+            ]);
+            break;
         }
 
         // this is to account for when we are working with the entire scope
