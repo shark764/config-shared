@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.44]
+* CXV1-12488 Replace display text for GVN on Default Gateway dropdown on Tenant Detail panel
+
 ## [1.5.43]
 * CXV1-10842 - Update forgot password functionality (create flag to tell config-ui whether the current tenant has a CxEngage IDP)
 

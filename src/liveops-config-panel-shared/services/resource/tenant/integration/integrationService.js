@@ -30,6 +30,12 @@ angular.module('liveopsConfigPanel.shared.services')
       var self = Integration.prototype;
 
       Integration.prototype.getDisplay = function () {
+        var updatedDisplay = this.type;
+
+        if (this.type === 'serenova-voice') {
+          return $translate.instant('integration.gvn.displayName');
+        }
+
         return this.type;
       };
 
