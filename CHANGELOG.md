@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.45]
+* CXV1-8326 - Added validation to prevent users from using reserved words in create Atributte Interface
+
 ## [1.5.44]
 * CXV1-12488 Replace display text for GVN on Default Gateway dropdown on Tenant Detail panel
 
