@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.directives')
-  .directive('loFormAlert', ['$parse', 'Alert',
-    function ($parse, Alert) {
+  .directive('loFormAlert', ['$parse', 'Alert', '$translate',
+    function ($parse, Alert,$translate) {
       return {
         restrict: 'A',
         require: ['loFormSubmit'],
@@ -20,8 +20,15 @@ angular.module('liveopsConfigPanel.shared.directives')
             if (! resource){
               return;
             }
-
             var action = resource.updated ? 'update' : 'save';
+            var wordsRes = ["limit", "null", "q", "page", "sortField", "sortOrder"];
+
+            if (wordsRes.indexOf(resource.objectName) !== -1) {
+              var errorMsg = '"' + resource.objectName + '" ' +  $translate.instant('loFormAlert.reservedWord');
+              Alert.error(errorMsg);
+              return;
+            }
+
             Alert.error('Record failed to ' + action);
           };
         },
