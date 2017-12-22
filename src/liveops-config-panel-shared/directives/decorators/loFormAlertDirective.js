@@ -21,7 +21,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               return;
             }
             var action = resource.updated ? 'update' : 'save';
-            var wordsRes = ["limit", "null", "q", "page", "sortField", "sortOrder"];
+            var wordsRes = ['limit', 'null', 'q', 'page', 'sortField', 'sortOrder'];
 
             if (wordsRes.indexOf(resource.objectName) !== -1) {
               var errorMsg = '"' + resource.objectName + '" ' +  $translate.instant('loFormAlert.reservedWord');
