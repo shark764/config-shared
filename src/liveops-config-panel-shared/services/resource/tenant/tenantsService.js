@@ -63,13 +63,16 @@ angular.module('liveopsConfigPanel.shared.services')
 
         // in the event that we're changing the "tenantActive" flag/property, and the
         // current tenant was set to inactive, then reset the dropdown
-        //to the first tenant in the list
+        // to the first tenant in the list
         var currentSessionTenantId = Session.tenant.tenantId;
         var tenantBeingUpdatedId = updatedTenantData.id;
         var hasTenantActiveProperty = _.has(Session.tenants[currentSessionTenantIdx], 'tenantActive');
 
-        // if the tenant that just got modified  is the active tenant
-        if ((currentSessionTenantId === tenantBeingUpdatedId) && hasTenantActiveProperty) {
+        // if the tenant that just got modified is the active tenant
+        if (
+          (currentSessionTenantId === tenantBeingUpdatedId) &&
+          hasTenantActiveProperty
+        ) {
           // if the tenant being modified is not active
           if (Session.tenants[currentSessionTenantIdx].tenantActive === false) {
             Session.setTenant({
@@ -80,7 +83,10 @@ angular.module('liveopsConfigPanel.shared.services')
           }
         }
 
-        Session.tenants[currentSessionTenantIdx][targetPropToUpdate] = updatedTenantData[updatedTenantDataPropToCopy];
+        var tempTenantsData = Object.assign(Session.tenants);
+        tempTenantsData[currentSessionTenantIdx][targetPropToUpdate] = updatedTenantData[updatedTenantDataPropToCopy];
+
+        Session.setTenants(tempTenantsData);
       };
 
       return Tenant;

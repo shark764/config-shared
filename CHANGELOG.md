@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.46]
+* CXV1-12318 - Remove Inactive Tenants from /me Endpoint Response
+
 ## [1.5.45]
 * CXV1-8326 - Added validation to prevent users from using reserved words in create Atributte Interface
 

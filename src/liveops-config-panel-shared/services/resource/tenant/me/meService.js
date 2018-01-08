@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('Me', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor',
-    function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor) {
+  .factory('Me', ['LiveopsResourceFactory', 'apiHostname', 'cacheAddInterceptor', 'emitInterceptor', 'emitErrorInterceptor', 'activeTenantsOnly',
+    function(LiveopsResourceFactory, apiHostname, cacheAddInterceptor, emitInterceptor, emitErrorInterceptor, activeTenantsOnly) {
       var hasCxEngageIdp = false;
 
       var Me = LiveopsResourceFactory.create({
@@ -12,18 +12,8 @@ angular.module('liveopsConfigPanel.shared.services')
         queryInterceptor: emitErrorInterceptor,
         saveInterceptor: [cacheAddInterceptor, emitInterceptor],
         updateInterceptor: emitInterceptor,
+        queryResponseTransformer: activeTenantsOnly
       });
-
-      // same as the usual Me.cachedQuery() call, except that this one only returns
-      // active tenants assigned to the user (less code in controller this way)
-      Me.prototype.getActiveTenants = function () {
-        var meData = Me.cachedQuery();
-        return meData.$promise.then(function (tenantsResponse) {
-          return _.filter(tenantsResponse, function (val) {
-            return val.active;
-          });
-        });
-      };
 
       Me.prototype.setHasCxEngageIdp = function (hasCxEngageIdpVal) {
         hasCxEngageIdp = hasCxEngageIdpVal.password;
@@ -34,5 +24,17 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       return Me;
+    }
+  ])
+  .service('activeTenantsOnly', [
+    function () {
+      return function (value) {
+        var activeTenants = JSON.parse(value);
+        var filteredTenants = _.reject(activeTenants.result, {
+          active: false
+        });
+
+        return filteredTenants;
+      };
     }
   ]);
