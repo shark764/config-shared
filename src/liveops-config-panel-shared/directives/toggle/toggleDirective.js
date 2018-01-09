@@ -5,7 +5,7 @@ angular.module('liveopsConfigPanel.shared.directives')
     /** toggle element directive
      * Generate a two-state switch element
      */
-    
+
     //TODO: move confirmEnableMessage, confirmDisableMessage, and onConfirm to confirmToggle
     return {
       templateUrl : 'liveops-config-panel-shared/directives/toggle/toggle.html',
@@ -19,7 +19,8 @@ angular.module('liveopsConfigPanel.shared.directives')
         falseValue: '@', // (string/primitive) Value for the model when the toggle is switched off. Default is boolean false
         confirmEnableMessage: '@', // (string) Optional translation key for the confirm message shown when toggling on
         confirmDisableMessage: '@', // (string) Optional translation key for the confirm message shown when toggling off
-        onConfirm: '&' // (expression) Optional expression to execute when the user confirms the toggle. If user cancels, nothing happens.
+        onConfirm: '&', // (expression) Optional expression to execute when the user confirms the toggle. If user cancels, nothing happens.
+        title: '@' // (string) this is text for the title popup which shows up on mouseover
       },
       controller: function ($scope) {
         if (angular.isUndefined($scope.trueValue)){
