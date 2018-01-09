@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveopsConfigPanel.shared.services')
-  .factory('IdentityProviders', ['LiveopsResourceFactory', 'apiHostname', 'Session', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', '$translate',
-    function (LiveopsResourceFactory, apiHostname, Session, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, $translate) {
+  .factory('IdentityProviders', ['LiveopsResourceFactory', 'apiHostname', 'Session', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', '$translate', 'jwtHelper', 'Me', '$q',
+    function (LiveopsResourceFactory, apiHostname, Session, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, $translate, jwtHelper, Me, $q) {
       /* globals Blob, URL */
 
       var IdentityProviders = LiveopsResourceFactory.create({
@@ -102,6 +102,32 @@ angular.module('liveopsConfigPanel.shared.services')
         a.target = '_blank';
         a.download = idpName + '_configuration.xml';
         a.click();
+      };
+
+      IdentityProviders.prototype.isActiveIdp = function (ipdId) {
+        var deferred = $q.defer();
+        var decodedToken = jwtHelper.decodeToken(Session.token);
+
+        // find tenant in myTenants that matches Session.tenant.tenantId
+        var myTenants = Me.cachedQuery();
+        return myTenants.$promise.then(function (tenants) {
+          // find the idp in identityProviders that matches the idpId argument
+          var currentTenant = _.find(tenants, {
+            tenantId: Session.tenant.tenantId
+          });
+
+          // if the current tenant has a clientId that matches the client_id we are
+          // getting from the decoded token, then it means that the currently
+          // selected Idp is what we are currently logged in with, so return a boolean
+          // value we can use as a flag to disable the toggle switch
+          var isCurrentIdp = _.some(currentTenant.identityProviders, {
+            'id': ipdId,
+            'client': decodedToken.client_id // jshint ignore:line
+          });
+
+          deferred.resolve(isCurrentIdp);
+          return deferred.promise;
+        });
       };
 
       return IdentityProviders;
