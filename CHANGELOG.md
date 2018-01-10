@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.48]
+* CXV1-12398 - IDP service update to allow for new XML direct input field
+
 ## [1.5.47]
 * CXV1-12394 - Prevented current IDP from being disabled
 
