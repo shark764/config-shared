@@ -3,6 +3,25 @@
 angular.module('liveopsConfigPanel.shared.services')
   .factory('Integration', ['LiveopsResourceFactory', 'apiHostname', 'emitInterceptor', 'emitErrorInterceptor', 'cacheAddInterceptor', '$translate',
     function (LiveopsResourceFactory, apiHostname, emitInterceptor, emitErrorInterceptor, cacheAddInterceptor, $translate) {
+
+      function removeListOfProps(obj, arrayOfProps, importedScope) {
+        importedScope.selectedIntegration.properties = _.pick(obj, arrayOfProps);
+      }
+
+      var salesforceProps = [
+        'consumerKey',
+        'consumerSecret',
+        'loginUrl',
+        'password',
+        'securityToken',
+        'username'
+      ];
+
+      var serenovaVoiceProps = [
+        'accountId',
+        'apiKey'
+      ];
+
       var Integration = LiveopsResourceFactory.create({
         endpoint: apiHostname + '/v1/tenants/:tenantId/integrations/:id',
         resourceName: 'Integration',
@@ -122,25 +141,15 @@ angular.module('liveopsConfigPanel.shared.services')
         // clear out unnecessary data on the rest of the integration object
         // (switch statement might seem odd for only one option, but setting this
         // up to be easy to add integrations in the future)
+        var tempProps = angular.copy(scope.selectedIntegration.properties);
+
         switch(scope.selectedIntegration.type) {
           case 'salesforce':
-            if (_.has(scope.selectedIntegration, 'properties.token')) {
-              delete scope.selectedIntegration.properties.token;
-            }
-
-            if (_.has(scope.selectedIntegration, 'properties.endpointPrefix')) {
-              if (scope.selectedIntegration.properties.endpointPrefix === '') {
-                delete scope.selectedIntegration.properties.endpointPrefix;
-              }
-            }
+            removeListOfProps(tempProps, salesforceProps, scope);
             break;
 
           case 'serenova-voice':
-            var tempProps = angular.copy(scope.selectedIntegration.properties);
-            scope.selectedIntegration.properties = _.pick(tempProps, [
-              'accountId',
-              'apiKey'
-            ]);
+            removeListOfProps(tempProps, serenovaVoiceProps, scope);
             break;
         }
 
@@ -154,7 +163,11 @@ angular.module('liveopsConfigPanel.shared.services')
           scope.selectedIntegration.type = scope.selectedIntegration.type.value;
         }
 
-        if (
+        if (scope.selectedIntegration.type === 'salesforce') {
+          removeListOfProps(tempProps, salesforceProps, scope);
+        } else if (scope.selectedIntegration.type === 'serenova-voice') {
+          removeListOfProps(tempProps, serenovaVoiceProps, scope);
+        } else if (
           scope.selectedIntegration.type === 'zendesk' ||
           scope.selectedIntegration.type === 'verint'
         ) {
