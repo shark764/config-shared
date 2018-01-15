@@ -48,6 +48,10 @@ angular.module('liveopsConfigPanel.shared.services')
           val: 'xml'
         },
         {
+          name: $translate.instant('identityProviders.details.selectedIdpConfigInfoType.xmlDirectInput'),
+          val: 'xmlDirectInput'
+        },
+        {
           name: $translate.instant('identityProviders.details.selectedIdpConfigInfoType.sharedIdentityProviderAccessCode'),
           val: 'sharedIdentityProviderLinkId'
         }
@@ -72,13 +76,20 @@ angular.module('liveopsConfigPanel.shared.services')
       /* jshint ignore:end */
 
       IdentityProviders.prototype.deleteExtraneousProps = function (scope) {
-        // if the user has selected an XML file AND they also have selected
-        // the xml option in the dropdown when saving, get rid of the
-        // metadataUrl value
+        // if the user has selected an XML file -OR- XML direct upload
+        // AND they also have selected the xml option in the dropdown
+        // when saving, get rid of the metadataUrl value
         if (
           scope.idp.selectedIdentityProvider.metadataFile &&
-          scope.idp.newFileUploaded &&
-          scope.idp.selectedIdentityProvider.selectedIdpConfigInfoType === 'xml'
+          (
+            scope.idp.newFileUploaded &&
+            scope.idp.selectedIdentityProvider.selectedIdpConfigInfoType === 'xml'
+          ) ||
+            (
+              scope.idp.selectedIdentityProvider.selectedIdpConfigInfoType === 'xmlDirectInput' &&
+              _.has(scope.forms.detailsForm, 'xmlDirectInput.$pristine') &&
+              !scope.forms.detailsForm.xmlDirectInput.$prisine
+            )
         ) {
           delete scope.idp.selectedIdentityProvider.metadataUrl;
         }
@@ -90,6 +101,9 @@ angular.module('liveopsConfigPanel.shared.services')
         if (scope.idp.selectedIdentityProvider.selectedIdpConfigInfoType) {
           delete scope.idp.selectedIdentityProvider.selectedIdpConfigInfoType;
         }
+
+        delete scope.idp.selectedIdentityProvider.inEditMode;
+        delete scope.idp.selectedIdentityProvider.isReadonly;
       };
 
       IdentityProviders.prototype.downloadConfig = function (doc, idpName) {
