@@ -57,6 +57,18 @@ angular.module('liveopsConfigPanel.shared.services')
         }
       ];
 
+      IdentityProviders.prototype.setConfigType = function (selectedIdentityProvider) {
+        if (selectedIdentityProvider.selectedIdpConfigInfoType === 'xmlDirectInput') {
+          return;
+        }
+
+        if (selectedIdentityProvider.metadataUrl) {
+          selectedIdentityProvider.selectedIdpConfigInfoType = 'url'
+        } else {
+          selectedIdentityProvider.selectedIdpConfigInfoType = 'xml'
+        }
+      };
+
       /* jshint ignore:start */
       IdentityProviders.prototype.parseXmlFile = function (scope) {
         var file = document.getElementById('xml-file-input').files[0];
@@ -88,7 +100,7 @@ angular.module('liveopsConfigPanel.shared.services')
             (
               scope.idp.selectedIdentityProvider.selectedIdpConfigInfoType === 'xmlDirectInput' &&
               _.has(scope.forms.detailsForm, 'xmlDirectInput.$pristine') &&
-              !scope.forms.detailsForm.xmlDirectInput.$prisine
+              !scope.forms.detailsForm.xmlDirectInput.$pristine
             )
         ) {
           delete scope.idp.selectedIdentityProvider.metadataUrl;
