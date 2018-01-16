@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.49]
+* CXV1-12576 - Refactor create new/additional Salesforce Integrations
+
 ## [1.5.48]
 * CXV1-12398 - IDP service update to allow for new XML direct input field
 
