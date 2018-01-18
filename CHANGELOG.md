@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.51]
+* CXV1-12489 - SSO - Provide tooltip to logout and logback in to config-ui
+
 ## [1.5.50]
 * CXV1-12395 - SSO - set "Type" dropdown to active configuration type upon selection of item in IDP list table
 

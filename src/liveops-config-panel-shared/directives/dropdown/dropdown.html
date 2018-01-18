@@ -12,7 +12,9 @@
         <li id="{{item.id}}"
           ng-repeat="item in items | orderBy:orderBy"
           ng-click="optionClick(item.onClick)"
-          ng-class="{ '{{item.className}}': item.className !== undefined }">
+          ng-class="{ '{{item.className}}': item.className !== undefined }"
+          title="{{item.classTitle}}"
+          >
             <span class="lo-hover-highlight lo-accent-hover-border" ng-if="! item.stateLink"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</span>
             <a class="lo-hover-highlight lo-accent-hover-border" ng-if="item.stateLink" ui-sref="{{item.stateLink}}" ui-sref-opts="{{item.stateLinkParams}}"><i class="{{item.iconClass}}"></i>{{item[displayPath]}}</a>
         </li>
