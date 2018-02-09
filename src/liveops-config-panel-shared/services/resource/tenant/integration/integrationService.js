@@ -14,7 +14,8 @@ angular.module('liveopsConfigPanel.shared.services')
         'loginUrl',
         'password',
         'securityToken',
-        'username'
+        'username',
+        'pushEnabled'
       ];
 
       var serenovaVoiceProps = [

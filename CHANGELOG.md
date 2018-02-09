@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.53]
+* CXV1-12811 - SFC - Add pushEnabled to Salesforce Props
+
 ## [1.5.52]
 * CXV1-12489 - SSO - Provide tooltip to logout and logback in to config-ui (update)
 
