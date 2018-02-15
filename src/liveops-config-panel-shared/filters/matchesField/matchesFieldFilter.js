@@ -6,7 +6,7 @@ angular.module('liveopsConfigPanel.shared.filters')
      * Accepts an objectg, a string representing the property path, and the value to match
      * If the item's property matches the value, returns the item
      * If no match, returns undefined.
-     * 
+     *
      * Allows matching/search through arrays; use colons in fieldPath to separate layers
      * e.g. "skills:id" will search an object like {name: "name", skills: [{id: "id"}, {id: "other"}]}
      */
@@ -21,14 +21,14 @@ angular.module('liveopsConfigPanel.shared.filters')
         if (firstColonIndex > -1){
           var currentPath = fieldPath.substring(0, firstColonIndex);
           var remainingPath = fieldPath.substring(firstColonIndex + 1);
-          
+
           return findFields(item[currentPath], remainingPath, value) ? item : undefined;
         }
 
         //The field path has no more colons in it, and our item is an array, check the array item properties
         if (angular.isArray(item)) {
           for (var i = 0; i < item.length; i++){
-            if (item[i][fieldPath] === value){
+            if (item[i][fieldPath] === value || item[i] === value){
               return item;
             }
           }
