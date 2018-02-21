@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.55]
+* CXV1-12912 - Fix branding for privacy link
+
 ## [1.5.54]
 * CXV1-12927 - Fix Skills/Groups filtering
 
