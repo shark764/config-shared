@@ -132,12 +132,12 @@ angular.module('liveopsConfigPanel.shared.services')
           }
           if (navTextColor) {
             var darkerTextColor = colorLuminance(navTextColor, -0.2);
-            addCSSRule('#topnav .drop-label, #welcome i, #helpMenu i', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav .drop-label, #welcome i, #helpMenu i, #privacy a', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
             addCSSRule('#topnav #tenant-dropdown .drop-label div, #topnav .divider', 'border: 1px solid ' + darkerTextColor + '!important', stylesheetIndex);
 
             addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover .drop-label span, #topnav > ul > li:hover #logo', 'color: ' + navTextColor + '!important', stylesheetIndex);
             addCSSRule('#topnav > ul > li:not(#welcome):not(#helpMenu):hover .label-icon', 'color: ' + navTextColor + '!important', stylesheetIndex);
-            addCSSRule('#welcome:hover i, #helpMenu i:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
+            addCSSRule('#welcome:hover i, #helpMenu i:hover, #privacy a:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
           }
           if (primaryColor) {
             var darkerPrimaryColor = colorLuminance(primaryColor, -0.2);
