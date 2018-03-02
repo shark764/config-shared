@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.56]
+* CXV1-12397 - Fixed bugs related to IDP XML file uploads
+
 ## [1.5.55]
 * CXV1-12912 - Fix branding for privacy link
 
