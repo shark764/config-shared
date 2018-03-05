@@ -79,6 +79,7 @@ angular.module('liveopsConfigPanel.shared.services')
           scope.idp.selectedIdentityProvider.metadataFileName = file.name;
           scope.idp.selectedIdentityProvider.inEditMode = true;
           scope.idp.newFileUploaded = true;
+          scope.forms.detailsForm.$setDirty();
         };
 
         if (file) {
