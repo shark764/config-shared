@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.57]
+* CXV1-12954 - Re-init the DispositionList/Presence Reasons list after "Cancel" action.
+
 ## [1.5.56]
 * CXV1-12397 - Fixed bugs related to IDP XML file uploads
 
