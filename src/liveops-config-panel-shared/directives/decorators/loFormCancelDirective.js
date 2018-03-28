@@ -13,15 +13,16 @@ angular.module('liveopsConfigPanel.shared.directives')
             //Workaround for fields with invalid text in them not being cleared when the model is updated to undefined
             //E.g. http://stackoverflow.com/questions/18874019/angularjs-set-the-model-to-be-again-doesnt-clear-out-input-type-url
             angular.forEach(self.formController, function (value, key) {
+
               if (value && value.hasOwnProperty('$modelValue') && value.$invalid) {
                 var displayValue = value.$modelValue;
                 if (displayValue === null) {
                   displayValue = undefined;
                 }
-
                 self.formController[key].$setViewValue(displayValue);
                 self.formController[key].$rollbackViewValue();
               }
+
             });
 
             self.formController.$setPristine();
@@ -30,6 +31,7 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           this.cancel = function () {
             var resource = $parse(this.ngResource)($scope);
+
             if (resource.isNew() || !this.formController.$dirty) {
              this.loDetailsPanelController.close();
             } else {
@@ -38,6 +40,9 @@ angular.module('liveopsConfigPanel.shared.directives')
                 resource.reset();
                 $timeout(function(){
                   self.resetForm(self.formController);
+                  if (resource.resourceName === "DispositionList" || resource.resourceName === "ReasonList") {
+                    $scope.cancelAction();
+                  }
                 });
               });
             }
