@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.58]
+* CXV1-10832 - Added IDP management on the Tenant Management page
+
 ## [1.5.57]
 * CXV1-12954 - Re-init the DispositionList/Presence Reasons list after "Cancel" action.
 

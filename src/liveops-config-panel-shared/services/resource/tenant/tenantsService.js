@@ -19,8 +19,12 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'timezone'
         }, {
+          name: 'allowPasswords'
+        }, {
           name: 'outboundIntegrationId',
           optional: true
+        }, {
+          name: 'defaultIdentityProvider'
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
