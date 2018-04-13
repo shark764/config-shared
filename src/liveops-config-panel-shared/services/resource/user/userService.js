@@ -24,7 +24,7 @@ angular.module('liveopsConfigPanel.shared.services')
           optional: true
         }, {
           name: 'defaultTenant',
-          optional: true          
+          optional: true
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
@@ -40,6 +40,16 @@ angular.module('liveopsConfigPanel.shared.services')
         } else {
           return this.email;
         }
+      };
+
+      User.prototype.isResendAllowed = function () {
+        var allowedStatusesForResend = [
+          'pending',
+          'invited',
+          'expired'
+        ];
+
+        return allowedStatusesForResend.indexOf(status) !== -1;
       };
 
       return User;

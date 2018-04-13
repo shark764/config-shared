@@ -30,6 +30,12 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'supervisorId',
           optional: true
+        }, {
+          name: 'defaultIdentityProvider'
+        }, {
+          name: 'invitationStatus'
+        }, {
+          name: 'noPassword'
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,
@@ -55,6 +61,20 @@ angular.module('liveopsConfigPanel.shared.services')
 
       TenantUser.prototype.isNew = function() {
         return !this.id;
+      };
+
+      TenantUser.prototype.removePropsBeforeSave = function (tenantUserObj) {
+        return _.omit(tenantUserObj, [
+          'activeExtension',
+          'disableCxEngageStatusSelect',
+          'disableDefaultSsoProvider',
+          'hasPassword',
+          'identityProviders',
+          'resourceName',
+          'displayStatus',
+          'tenantCxLoginStatus',
+          'invitationStatus'
+        ]);
       };
 
       return TenantUser;
