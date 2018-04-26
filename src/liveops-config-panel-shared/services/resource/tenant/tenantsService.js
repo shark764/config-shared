@@ -19,7 +19,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'timezone'
         }, {
-          name: 'allowPasswords'
+          name: 'cxengageIdentityProvider'
         }, {
           name: 'outboundIntegrationId',
           optional: true
