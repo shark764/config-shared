@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.2]
+* CXV1-13348 - Added else case for empty Custom Domain values.
+
 ## [1.6.1]
 * CXV1-10832 - Updated Tenant Management service to work with API changes.
 

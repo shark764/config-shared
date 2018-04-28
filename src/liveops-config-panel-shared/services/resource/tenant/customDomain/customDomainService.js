@@ -22,8 +22,10 @@ angular.module('liveopsConfigPanel.shared.services')
         customDomain.$promise.then(function (response) {
             if (response !== undefined && response.active === true && response.value !== '') {
               $rootScope.helpURL = 'http://'+response.value+'-docs.cxengage.net';
-              $rootScope.$broadcast('updateHelpURL');
+            } else {
+              $rootScope.helpURL = 'http://docs.cxengage.net';
             }
+            $rootScope.$broadcast('updateHelpURL');
           }, function (error) {
             $rootScope.helpURL = 'http://docs.cxengage.net';
             $rootScope.$broadcast('updateHelpURL');
