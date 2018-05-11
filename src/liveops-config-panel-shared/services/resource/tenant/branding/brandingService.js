@@ -132,12 +132,12 @@ angular.module('liveopsConfigPanel.shared.services')
           }
           if (navTextColor) {
             var darkerTextColor = colorLuminance(navTextColor, -0.2);
-            addCSSRule('#topnav .drop-label, #welcome i, #helpMenu i, #privacy a', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav .drop-label, #welcome i, #helpMenu i, #privacy a, #quality-management-nav-link a', 'color: ' + darkerTextColor + '!important', stylesheetIndex);
             addCSSRule('#topnav #tenant-dropdown .drop-label div, #topnav .divider', 'border: 1px solid ' + darkerTextColor + '!important', stylesheetIndex);
 
             addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover .drop-label span, #topnav > ul > li:hover #logo', 'color: ' + navTextColor + '!important', stylesheetIndex);
             addCSSRule('#topnav > ul > li:not(#welcome):not(#helpMenu):hover .label-icon', 'color: ' + navTextColor + '!important', stylesheetIndex);
-            addCSSRule('#welcome:hover i, #helpMenu i:hover, #privacy a:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
+            addCSSRule('#welcome:hover i, #helpMenu i:hover, #privacy a:hover, #quality-management-nav-link a:hover', 'color: ' + navTextColor + '!important', stylesheetIndex);
           }
           if (primaryColor) {
             var darkerPrimaryColor = colorLuminance(primaryColor, -0.2);
@@ -153,7 +153,7 @@ angular.module('liveopsConfigPanel.shared.services')
           }
           if (accentColor) {
             addCSSRule('.lo-accent-text i', 'color: ' + accentColor + '!important', stylesheetIndex);
-            addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo, #topnav > ul > li:not(#welcome):not(#helpMenu):hover dropdown:not(#tenant-dropdown) .drop-label span', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
+            addCSSRule('#topnav > ul > li.active .drop-label span, #topnav > ul > li.active #logo, #topnav > ul > li:hover #logo, #topnav > ul > li.active#quality-management-nav-link, #topnav > ul > li:hover#quality-management-nav-link, #topnav > ul > li:not(#welcome):not(#helpMenu):hover dropdown:not(#tenant-dropdown) .drop-label span', 'box-shadow: inset 0px -5px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-box-border:hover', 'box-shadow: inset 4px 0px 0px 0px ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('.lo-accent-hover-border:hover', 'border-color: ' + accentColor + '!important', stylesheetIndex);
             addCSSRule('#login-wrapper .btn', 'border-color: ' + accentColor + '!important', stylesheetIndex);

@@ -2,14 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-##[1.6.5]
+## [1.6.6]
+* CXV1-12854 - Branding for quality management
+
+## [1.6.5]
 * CXV1-13125 - Pages are Missing Links to Associated Docs.
 
-##[1.6.4]
+## [1.6.4]
 * CXV1-11557 - Changed word-break property to normal to avoid words gets cut in half in config ui detail panel
 
-##[1.6.3]
--CXV1-8888 - Changed $rootScope.sheet.rules.length to $rootScope.sheet.cssRules.length for FF,Chrome and IE.
+## [1.6.3]
+* CXV1-8888 - Changed $rootScope.sheet.rules.length to $rootScope.sheet.cssRules.length for FF,Chrome and IE.
 
 ## [1.6.2]
 * CXV1-13348 - Added else case for empty Custom Domain values.
