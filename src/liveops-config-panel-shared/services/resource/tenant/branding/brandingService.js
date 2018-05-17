@@ -117,7 +117,7 @@ angular.module('liveopsConfigPanel.shared.services')
           $rootScope.sheet = createNewStylesheet();
 
           // CSS Overides for branding below
-          var stylesheetIndex = $rootScope.sheet.rules.length;
+          var stylesheetIndex = $rootScope.sheet.cssRules.length;
           var navColor = params.styles.navbar;
           var navTextColor = params.styles.navbarText;
           var primaryColor = params.styles.primaryColor;

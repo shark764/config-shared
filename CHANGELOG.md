@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+##[1.6.3-SNAPSHOT]
+-CXV1-8888 - Changed $rootScope.sheet.rules.length to $rootScope.sheet.cssRules.length for FF,Chrome and IE.
+
 ## [1.6.2]
 * CXV1-13348 - Added else case for empty Custom Domain values.
 
