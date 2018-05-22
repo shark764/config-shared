@@ -14,27 +14,11 @@ angular.module('liveopsConfigPanel.shared.services')
         updateInterceptor: emitInterceptor
       });
 
-      CustomDomain.setHelpURL = function(tenantId) {
-        var customDomain = CustomDomain.cachedGet({
-          tenantId: tenantId
-        });
-
-        customDomain.$promise.then(function (response) {
-            if (response !== undefined && response.active === true && response.value !== '') {
-              $rootScope.helpURL = 'http://'+response.value+'-docs.cxengage.net';
-            } else {
-              $rootScope.helpURL = 'http://docs.cxengage.net';
-            }
-            $rootScope.$broadcast('updateHelpURL');
-          }, function (error) {
-            $rootScope.helpURL = 'http://docs.cxengage.net';
-            $rootScope.$broadcast('updateHelpURL');
-            if (error.status !== 404) {
-              console.log("No Custom Domain Error:", error);
-            }
-          });
+      // Getting URL for documentation, it concatenate Prefix and Suffix
+      // Recieves Suffix from services call
+      CustomDomain.prototype.getHelpURL = function(helpURLSuffix) {
+        return 'http://docs.cxengage.net' + helpURLSuffix;
       };
-
 
       return CustomDomain;
     }

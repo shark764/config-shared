@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+##[1.6.5]
+* CXV1-13125 - Pages are Missing Links to Associated Docs.
+
 ##[1.6.4]
 * CXV1-11557 - Changed word-break property to normal to avoid words gets cut in half in config ui detail panel
 
