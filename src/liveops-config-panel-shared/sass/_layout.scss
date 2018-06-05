@@ -75,12 +75,12 @@ header {
   .details-pane {
     height: 100%;
     overflow-y: auto;
-    height: 100%;
     -ms-box-orient: vertical;
     @include display-flex();
     @include flex-box-direct(column);
     position: relative;
     vertical-align: top; /* fixes scrollbar when two resource details panels are open */
+    width: inherit;
 
     .detail-header {
       background-color: #fff;
