@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.7]
+* CXV1-14059 - Fix for Side Panel not being resizable in IE11 when the name is too large
+
 ## [1.6.6]
 * CXV1-12854 - Branding for quality management
 
