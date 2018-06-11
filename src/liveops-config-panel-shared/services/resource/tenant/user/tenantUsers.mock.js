@@ -1,12 +1,11 @@
 'use strict';
 
-angular.module('liveopsConfigPanel.tenant.user.mock', 
+angular.module('liveopsConfigPanel.tenant.user.mock',
   ['liveopsConfigPanel.mock', 'liveopsConfigPanel.tenant.role.mock'])
   .service('mockTenantUsers', function (TenantUser) {
     return [new TenantUser({
       'id': 'userId1',
-      'status': 'pending',
-      'externalId': 73795,
+      'status': 'accepted',
       'lastName': 'Lowe',
       'firstName': 'Munoz',
       'email': 'munoz.lowe@hivedom.org',
@@ -14,11 +13,10 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
       'roleName': 'roleName1',
       'roleId': 'roleId1',
       'skills': [],
-      'groups': []
+      'groups': [],
     }), new TenantUser({
       'id': 'userId2',
-      'status': 'accepted',
-      'externalId': 80232,
+      'status': 'disabled',
       'lastName': 'Oliver',
       'firstName': 'Michael',
       'email': 'michael.oliver@ezent.io',
@@ -26,19 +24,18 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
       'roleName': 'roleName1',
       'roleId': 'roleId1',
       'skills': [],
-      'groups': []
+      'groups': [],
     }), new TenantUser({
       'email': 'test1@bluespurs.com',
       'createdBy': 'userId1',
       'personalTelephone': null,
-      'platformStatus': 'pending',
+      'platformStatus': 'accepted',
       'firstName': 'test',
       'created': '2015-08-19T13:25:13Z',
       'state': 'offline',
       'extension': 'ca027450_4673_11e5_bded_621c6d9e2761',
       '$skills': [],
-      'externalId': '56789',
-      'status': 'invited',
+      'status': 'accepted',
       'id': 'userId100',
       'lastName': '1',
       'groups': [{
@@ -49,9 +46,10 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
         'memberType': 'user',
         'name': 'everyone',
         'ower': 'userId1',
-        'description': 'everyone group'
+        'description': 'everyone group',
       }],
-      'roleId': 'roleId1'
+      'invitationStatus': 'pending',
+      'roleId': 'roleId1',
     }), new TenantUser({
       'tenantId': 'tenantId',
       'email': 'test1@bluespurs.com',
@@ -63,9 +61,32 @@ angular.module('liveopsConfigPanel.tenant.user.mock',
       'state': 'offline',
       'extension': '41903310_4677_11e5_bded_621c6d9e2761',
       'updatedBy': null,
-      'status': 'invited',
+      'status': 'accepted',
       'userId': 'userId100',
       'sessionStarted': '2015-08-19T13:36:11Z',
+      'roleId': 'roleId1',
+    }), new TenantUser({
+      'email': 'test2@bluespurs.com',
+      'createdBy': 'userId3',
+      'personalTelephone': null,
+      'firstName': 'test',
+      'created': '2015-08-19T13:25:13Z',
+      'state': 'offline',
+      'extension': 'ca027450_4673_11e5_bded_621c6d9e2761',
+      '$skills': [],
+      'status': 'accepted',
+      'id': 'userId300',
+      'lastName': '1',
+      'groups': [{
+        'tenantId': 'tenant-id',
+        'memberId': 'userId3',
+        'groupId': 'groupId1',
+        'added': '2015-08-19T13:25:13Z',
+        'memberType': 'user',
+        'name': 'everyone',
+        'ower': 'userId3',
+        'description': 'everyone group'
+      }],
       'roleId': 'roleId1'
     })];
   })

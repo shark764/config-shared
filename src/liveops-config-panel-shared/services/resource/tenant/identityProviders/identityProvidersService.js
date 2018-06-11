@@ -157,6 +157,20 @@ angular.module('liveopsConfigPanel.shared.services')
         });
       };
 
+      IdentityProviders.prototype.getActiveFilteredIdps = function () {
+        var identityProviders = IdentityProviders.cachedQuery({
+          tenantId: Session.tenant.tenantId
+        }, 'IdentityProviders', true);
+
+        return identityProviders.$promise.then(function (identityProvidersResponse) {
+          return _.map(_.filter(identityProvidersResponse, function (idp) {
+            return idp.active
+          }), function (filteredIdp) {
+            return _.pick(filteredIdp, ['id', 'name']);
+          });
+        });
+      }
+
       return IdentityProviders;
     }
   ]);
