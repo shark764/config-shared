@@ -9,6 +9,7 @@
   <div class="dropdown-container">
     <div class="dropdown" ng-hide="! showDrop">
       <ul ng-if="!groupBy">
+        <li ng-if="dropdownTitle"><span>{{dropdownTitle}}</span></li>
         <li id="{{item.id}}"
           ng-repeat="item in items | orderBy:orderBy"
           ng-click="optionClick(item.onClick)"
