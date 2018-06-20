@@ -15,6 +15,7 @@ angular.module('liveopsConfigPanel.shared.directives')
       scope : {
         items : '=', // (array) The list of configs for items to be shown in the menu.
         label : '@', // (string) The text of the menu's label/title
+        dropdownTitle : '@', // (string) The text before the items
         displayPath: '@', // (string) The item property to be used as the label in the menu. Defaults to 'label'
         collapseIcon: '@', // (string) The class(es) applied to the icon shown when the menu is open. Defaults to 'fa fa-caret-up'
         expandIcon: '@', // (string) The class(es) applied to the icon shown when the menu is closed. Defaults to 'fa fa-caret-down'
