@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.10]
+* Fixed help links - Custom Domain is now being used again
+
 ## [1.6.9]
 * CXV1-14249 - Allow menu dropdowns to have title before dropdown options
 
