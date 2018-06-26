@@ -11,7 +11,8 @@ angular.module('liveopsConfigPanel.shared.directives')
       templateUrl : 'liveops-config-panel-shared/directives/loTimePicker/loTimePicker.html',
       require: 'ngModel',
       scope : {
-        ngModel : '='
+        ngModel : '=',
+        ngTimeSectionPick : '@'
       },
       restrict: 'E',
       link: function($scope){
@@ -55,6 +56,12 @@ angular.module('liveopsConfigPanel.shared.directives')
 
           if ($scope.selectedHour.val === 12){
             minutesValue -= 720;
+            // Updating minutes from 0 to 1440 when it's endTime
+            if ($scope.ngTimeSectionPick === 'EndTimeMinutes'
+                && $scope.selectedHalf === 'am'
+                && minutesValue === 0){
+              minutesValue = 1440;
+            }
           }
 
           if ($scope.selectedHour.val === -1){
@@ -74,7 +81,8 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
 
           //Select whether it's morning or afternoon
-          if (modelVal >= 720){
+          //Midnight is 0 as startTime and 1440 as endTime
+          if (modelVal >= 720 && modelVal < 1440){
             $scope.selectedHalf = 'pm';
           } else {
             $scope.selectedHalf = 'am';
