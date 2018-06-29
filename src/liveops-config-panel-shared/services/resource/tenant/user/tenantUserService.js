@@ -37,8 +37,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'noPassword'
         }, {
-          name: 'workStationId',
-          optional: true
+          name: 'workStationId'
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,
@@ -67,6 +66,14 @@ angular.module('liveopsConfigPanel.shared.services')
       };
 
       TenantUser.prototype.removePropsBeforeSave = function (tenantUserObj) {
+        // force an empty workStationId string to be null
+        if (
+          !tenantUserObj.workStationId ||
+          tenantUserObj.workStationId === ''
+        ) {
+          tenantUserObj.workStationId = null;
+        }
+
         return _.omit(tenantUserObj, [
           'activeExtension',
           'disableCxEngageStatusSelect',

@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.7.1]
+* CXV1-14372 - Replaced empty strings saved for Workstation ID with null
+
 ## [1.7.0]
 * CXV1-14372 - Added Workstation ID field to TenantUser service for TelStrat QM & Recording Integration
 
