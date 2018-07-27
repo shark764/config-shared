@@ -38,6 +38,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'noPassword'
         }, {
           name: 'workStationId'
+        }, {
+          name: 'platformStatus'
         }],
         putRequestTransformer: tenantUserStatusUpdateTransformer,
         postRequestTransformer: tenantUserStatusUpdateTransformer,

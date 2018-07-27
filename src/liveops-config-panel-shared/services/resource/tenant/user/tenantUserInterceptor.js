@@ -32,7 +32,6 @@ angular.module('liveopsConfigPanel.shared.services')
       moveToUser(tenantUser, 'externalId');
       moveToUser(tenantUser, 'defaultTenant');
       moveToUser(tenantUser, 'personalTelephone');
-      moveToUser(tenantUser, 'platformStatus', 'status');
 
       copyToUser(tenantUser, 'id');
       copyToUser(tenantUser, 'email');
