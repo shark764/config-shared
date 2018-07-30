@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.7.4]
+* CXV1-14496 - Update the user detail panel (View/Edit) to show the platform account status as it is defined for the list view.
+
 ## [1.7.3]
 * CXV1-14495 - Update the user listing page so there are two columns available for user status instead of one.
 

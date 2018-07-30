@@ -85,7 +85,8 @@ angular.module('liveopsConfigPanel.shared.services')
           'resourceName',
           'displayStatus',
           'tenantCxLoginStatus',
-          'invitationStatus'
+          'invitationStatus',
+          'platformStatus'
         ]);
       };
 
