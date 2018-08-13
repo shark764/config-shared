@@ -44,6 +44,14 @@ angular.module('liveopsConfigPanel.shared.services')
       awsId: null,
       twilioId: 'us2-tnx',
       display: $translate.instant('twilioRegion.oregonInterconnect')
+    }, {
+      awsId: 'eu-central-1',
+      twilioId: 'de1',
+      display: $translate.instant('twilioRegion.germanyInterconnect')
+    }, {
+      awsId: 'eu-west-1',
+      twilioId: 'ie1-tnx',
+      display: $translate.instant('twilioRegion.irelandInterconnect')
     }];
 
     return regions;
