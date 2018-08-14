@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.8.0]
+* CXV1-14881 - Add Twilio regions to the dropdown.
+
 ## [1.7.4]
 * CXV1-14496 - Update the user detail panel (View/Edit) to show the platform account status as it is defined for the list view.
 
