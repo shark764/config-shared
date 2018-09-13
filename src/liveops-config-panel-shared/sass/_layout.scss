@@ -65,6 +65,19 @@ header {
     text-align: center;
   }
 
+  .resize-pane-updated {
+    display: table-cell;
+    height:34px;
+    width: 13px;
+    border-left: 2px solid rgba(128, 128, 128, 0.48);
+    border-right: 2px solid rgba(128, 128, 128, 0.48);
+    vertical-align: middle;
+    text-align: center;
+    position: relative;
+    top: 40vh;
+    right: 7px;
+  }
+
   .right-panel {
     display: table-cell;
     width: $right-pane-default-width;

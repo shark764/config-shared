@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.9.0]
+* CXV1-14794 - Changed CSS for new Side Panel drag icon for Custom Dashboards in RTD.
+
 ## [1.8.0]
 * CXV1-14881 - Add Twilio regions to the dropdown.
 
