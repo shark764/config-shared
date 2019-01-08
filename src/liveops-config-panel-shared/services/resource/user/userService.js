@@ -17,8 +17,7 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'currentPassword'
         }, {
-          name: 'externalId',
-          optional: true
+          name: 'externalId'
         }, {
           name: 'personalTelephone',
           optional: true
