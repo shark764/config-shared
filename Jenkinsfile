@@ -3,13 +3,11 @@
 
 import common
 import git
-import hipchat
 import node
 
 def service = 'Config-Shared'
 def c = new common()
 def g = new git()
-def h = new hipchat()
 def n = new node()
 
 node() {
@@ -34,14 +32,10 @@ if (pwd ==~ /.*PR.*/ ) {
             sh 'bower install && npm install'
             sh 'gulp build'
           }
-          stage ('Notify Success') {
-            h.hipchatPullRequestSuccess("${service}", "${pr_version}")
-          }
         }
       }
     }
     catch (err) {
-      h.hipchatPullRequestFailure("${service}", "${pr_version}")
       echo "Failed: ${err}"
       error "Failed: ${err}"
     }
@@ -77,17 +71,10 @@ else if (pwd ==~ /.*master.*/ ) {
             sh "git tag -a ${build_version} -m 'release ${build_version}, Jenkins tagged ${BUILD_TAG}'"
             sh "git push origin ${build_version}"
           }
-          stage ('Publish') {
-            sh 'npm publish'
-          }
-          stage ('Notify Success') {
-            h.hipchatBuildSuccess("${service}", "${build_version}")
-          }
         }
       }
     }
     catch (err) {
-      h.hipchatBuildFailure("${service}", "${build_version}")
       echo "Failed: ${err}"
       error "Failed: ${err}"
     }
