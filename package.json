@@ -1,6 +1,6 @@
 {
   "name": "liveops-config-panel-shared",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "~2.1.4",
@@ -64,5 +64,8 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "publishConfig": {
+    "registry": "http://nexus.cxengagelabs.net/content/repositories/npm-internal/"
   }
 }
