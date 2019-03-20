@@ -19,6 +19,8 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'flowId',
           optional: true
         }, {
+          name: 'version'
+        }, {
           name: 'channelType',
           optional: true
         }, {
