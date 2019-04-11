@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.5] - 2019-04-11
+### Changed
+- CXV1-16853 - Adding new attributes to Tenant and Queue entity to handle setting SLA.
+
 ## [1.9.4] - 2019-03-20
 ### Fixed
 - CXV1-17476 - Adding version to DispatchMapping object in order to send null values to API.
