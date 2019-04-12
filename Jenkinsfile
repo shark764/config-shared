@@ -62,6 +62,7 @@ else if (pwd ==~ /.*master.*/ ) {
             sh 'gulp build'
           }
           stage ('Push to Github') {
+            sh 'git push --delete origin ${build_version}'
             sh 'git checkout -b build-${BUILD_TAG}'
             sh 'git add -f dist/* '
             sh "git commit -m 'release ${build_version}'"
