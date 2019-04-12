@@ -62,10 +62,10 @@ else if (pwd ==~ /.*master.*/ ) {
             sh 'gulp build'
           }
           stage ('Push to Github') {
-            sh 'git push --delete origin ${build_version}'
             sh 'git checkout -b build-${BUILD_TAG}'
             sh 'git add -f dist/* '
             sh "git commit -m 'release ${build_version}'"
+            sh 'git push --delete origin ${build_version}'
             if (build_version.contains("SNAPSHOT")) {
               sh "if git tag --list | grep ${build_version}; then git tag -d ${build_version}; git push origin :refs/tags/${build_version}; fi"
             }
