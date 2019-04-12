@@ -65,9 +65,9 @@ else if (pwd ==~ /.*master.*/ ) {
             sh 'git checkout -b build-${BUILD_TAG}'
             sh 'git add -f dist/* '
             sh "git commit -m 'release ${build_version}'"
-            //if (build_version.contains("SNAPSHOT")) {
+            if (build_version.contains("SNAPSHOT")) {
               sh "if git tag --list | grep ${build_version}; then git tag -d ${build_version}; git push origin :refs/tags/${build_version}; fi"
-            //}
+            }
             sh "git tag -a ${build_version} -m 'release ${build_version}, Jenkins tagged ${BUILD_TAG}'"
             sh "git push origin ${build_version}"
           }
