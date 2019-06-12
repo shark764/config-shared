@@ -24,6 +24,9 @@ angular.module('liveopsConfigPanel.shared.services')
         }, {
           name: 'defaultTenant',
           optional: true
+        },{
+          name: 'platformRoleName',
+          optional: true,
         }],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
