@@ -57,7 +57,7 @@ angular.module('liveopsConfigPanel.shared.services')
       twilioId: 'us1-ix',
       display: $translate.instant('twilioRegion.usEastInterconnect')
     }, {
-      awsId: null,
+      awsId: null,  
       twilioId: 'us2-ix',
       display: $translate.instant('twilioRegion.usWestInterconnect')
     }];
