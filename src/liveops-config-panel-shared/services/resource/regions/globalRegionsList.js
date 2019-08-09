@@ -21,9 +21,13 @@ angular.module('liveopsConfigPanel.shared.services')
       twilioId: 'br1',
       display: $translate.instant('twilioRegion.brazil')
     }, {
-      awsId: 'us-west-1',
+      awsId: 'eu-west-1',
       twilioId: 'ie1',
       display: $translate.instant('twilioRegion.ireland')
+    }, {
+      awsId: 'eu-central-1',
+      twilioId: 'de1',
+      display: $translate.instant('twilioRegion.germanyInterconnect')
     }, {
       awsId: 'ap-northeast-1',
       twilioId: 'jp1',
@@ -37,22 +41,25 @@ angular.module('liveopsConfigPanel.shared.services')
       twilioId: 'us1',
       display: $translate.instant('twilioRegion.usEastCoast')
     }, {
-      awsId: null,
-      twilioId: 'us1-tnx',
-      display: $translate.instant('twilioRegion.virginiaInterconnect')
+      awsId: 'us-west-2',
+      twilioId: 'us2',
+      display: $translate.instant('twilioRegion.usWestCoast')
     }, {
       awsId: null,
-      twilioId: 'us2-tnx',
-      display: $translate.instant('twilioRegion.oregonInterconnect')
-    }, {
-      awsId: 'eu-central-1',
-      twilioId: 'de1',
-      display: $translate.instant('twilioRegion.germanyInterconnect')
-    }, {
-      awsId: 'eu-west-1',
-      twilioId: 'ie1-tnx',
+      twilioId: 'ie1-ix',
       display: $translate.instant('twilioRegion.irelandInterconnect')
+    }, {
+      awsId: null,
+      twilioId: 'sg1-ix',
+      display: $translate.instant('twilioRegion.singaporeInterconnect')
+    }, {
+      awsId: null,
+      twilioId: 'us1-ix',
+      display: $translate.instant('twilioRegion.usEastInterconnect')
+    }, {
+      awsId: null,  
+      twilioId: 'us2-ix',
+      display: $translate.instant('twilioRegion.usWestInterconnect')
     }];
-
     return regions;
   }]);
