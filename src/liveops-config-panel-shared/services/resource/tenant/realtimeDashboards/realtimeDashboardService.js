@@ -15,7 +15,7 @@ angular.module('liveopsConfigPanel.shared.services')
           name: 'activeVersion',
           optional: true
         },{
-          name: 'without-active-dashboard',
+          name: 'withoutActiveDashboard',
           optional: true}],
         getInterceptor: emitErrorInterceptor,
         queryInterceptor: emitErrorInterceptor,
