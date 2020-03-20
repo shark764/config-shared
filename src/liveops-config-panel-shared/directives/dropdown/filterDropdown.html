@@ -8,17 +8,63 @@
 </div>
 
 <div class="dropdown-container">
-  <div class="dropdown filter-dropdown" ng-hide="! showDrop || options.length === 0">
+  <div class="dropdown filter-dropdown" ng-hide="!showDrop || options.length === 0 || showSubMenu !== false">
     <div class="all lo-accent-hover-box-border lo-hover-highlight" ng-if="showAll" ng-click="toggleAll()">
       <input type="checkbox" ng-checked="all.checked"/>
       <label>All</label>
     </div>
-    <div ng-repeat="option in options | orderBy:orderBy"
-      class="dropdown-option lo-accent-hover-box-border lo-hover-highlight" ng-click="checkItem(option)" >
-      <input name="{{option | parse:valuePath | invoke:option}}" type="checkbox" ng-checked="option.checked"/>
+
+    <div ng-if="!!hasCustomAttributesPermission && !!option.subMenu" ng-repeat="option in options" ng-click="openSubMenu(option)" class="all sub-menu-container">
+      <input name="{{option | parse:valuePath | invoke:option}}" type="checkbox" ng-checked="option.checked" ng-click="checkItem(option)"/>
+      <label for="{{option | parse:valuePath | invoke:option}}">
+        {{option | parse:displayPath | invoke:option}} ({{activeSubMenuItemsCount(option)}})
+      </label>
+      <a><i class="fa fa-caret-right"></i></a>
+    </div>
+
+    <div ng-repeat="option in options | orderBy:orderBy"  ng-show="!option.subMenu"
+      class="dropdown-option lo-accent-hover-box-border lo-hover-highlight" ng-click="checkItem(option)">
+      <input name="{{option | parse:valuePath | invoke:option}}" type="checkbox" ng-checked="option.checked" />
       <label for="{{option | parse:valuePath | invoke:option}}">
         {{option | parse:displayPath | invoke:option}}
       </label>
     </div>
+
+  </div>
+
+  <div class="dropdown filter-dropdown lo-multi-box-container" ng-show="showSubMenu">
+
+    <div class="all lo-accent-hover-box-border lo-hover-highlight" ng-click="showSubMenu = !showSubMenu">
+      <span><i class="fa fa-caret-left"></i></span>
+      <span class="sub-menu-title">{{currentOpenedSubMenu}}</span>
+    </div>
+
+    <div class="divider-header add-item-container">
+      <h4> {{ 'realtimeDashboards.dashboards.subMenu.addItems.heading' | translate:{item:currentOpenedSubMenu} }} </h4>
+      <button class="btn pull-right" ng-click="addNewItem()" ng-disabled="!plusBtnEnabled">
+        <a ng-class="{'disabled-button': !plusBtnEnabled}"><i class="fa fa-plus"></i></a>
+      </button>
+      <h6>{{ 'realtimeDashboards.dashboards.subMenu.addItems.helpText' | translate:{item:currentOpenedSubMenu} }}</h6>
+    </div>
+
+    <div class="no-results-found" ng-show="subMenuItems && subMenuItems.length <= 0">{{'table.results.none' | translate}}</div>
+        
+    <div class="lo-multi-box" ng-repeat="item in listItems track by $index">
+      <lo-multibox
+        name="listItem{{$index}}"
+        ng-init = "onSelectCallback = initSubMenuItems()"
+        items="subMenuItems"
+        resource-name="CustomAttributes"
+        hide-new-button="true"
+        selected-item="item"
+        on-item-select="onSelect"
+        idx="$index"
+        name-field="item.name">
+      </lo-multibox>
+      <a class="remove-item-btn" ng-click="removeItem(item, $index)"><i class="fa fa-times remove"></i></a>
+    </div>
+    <button class="btn add-btn" ng-disabled="!isAddBtnEnabled" ng-click="addFiltersToMainMenu(listItems)">
+      <span ng-class="{'add-btn-disabled': !isAddBtnEnabled}" >Add</span>
+    </button>
   </div>
 </div>

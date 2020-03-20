@@ -1,4 +1,4 @@
-<div ng-class="{'edit': showDrop === true}">
+<div ng-class="{'edit': showDrop === true, 'no-edit': !!disabledItem}">
   <div class="label-container" ng-click="labelClick()" ng-hide="showDrop && !display">
     <input type="text" name="{{name + '-display'}}"
       placeholder="{{'multibox.add.placeholder' | translate}}"

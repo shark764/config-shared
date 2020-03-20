@@ -35,6 +35,13 @@ lo-multibox {
     }
   }
 
+  .no-edit {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+    color: $light-grey;
+  }
+
   .btn{
     @include border-radius(0);
     border:0;

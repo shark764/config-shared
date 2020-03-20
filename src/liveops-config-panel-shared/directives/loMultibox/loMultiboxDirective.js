@@ -79,6 +79,10 @@ angular.module('liveopsConfigPanel.shared.directives')
             return;
           } else if(item && angular.isFunction(item.getDisplay)) {
             $scope.display = item.getDisplay();
+            // In realtimedashbaord's CustomAttributes selection, we are disabling already submitted items to make UI look better, that is what this check is for:
+            if($scope.resourceName === 'CustomAttributes') {
+              $scope.disabledItem = item.checked !== false;
+            }
           }
         }, true);
 
@@ -91,6 +95,10 @@ angular.module('liveopsConfigPanel.shared.directives')
             if ($scope.createMode){
               $scope.onSelect(resource);
             }
+        });
+
+        $scope.$on('disable:saved:items', function(event, value) {
+          $scope.disabledItem = value;
         });
       }
     };
