@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2020-03-20
+### Added
+* CXV1-21080 - Add Custom Interaction Attributes to Realtime Dashboards.
+
 ## [1.9.9] - 2019-08-29
 ### Fixed
 - CXV1-19123 - Fixed, add a new parameter to the '/v1/tenants/:tenantId/dashboards/:id' call.

@@ -57,7 +57,9 @@ angular.module('liveopsConfigPanel.shared.filters')
 
           if (checkedOptions.length === 0) {
             matchesColumnFilter = false; // Nothing can possibly match
-          } else if (checkedOptions.length !== options.length) { // User has chosen a subset of options
+          }
+
+          if(!field.subMenu && checkedOptions.length !== options.length) { // User has chosen a subset of options
             for (var i = 0; i < checkedOptions.length; i++) {
               var option = checkedOptions[i];
 
@@ -71,6 +73,12 @@ angular.module('liveopsConfigPanel.shared.filters')
                 matchesColumnFilter = false;
               }
             }
+          }
+
+          // if the field has subMenu property, no need to do the filter check on this item skip it; 
+          if(field.subMenu) {
+            matchesColumnFilter = true;
+            break;
           }
 
           showItemInTable = showItemInTable && matchesColumnFilter;

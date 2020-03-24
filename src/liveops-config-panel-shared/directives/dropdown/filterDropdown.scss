@@ -29,6 +29,104 @@
   div:hover {
     cursor: pointer;
   }
+
+  .lo-multi-box {
+    display: flex;
+    margin-top: 4px;
+  }
+
+  .sub-menu-container {
+    color: $main-color;
+
+    &:hover {
+      background-color: $accent-light !important;
+
+      .sub-menu-check-box {
+        background-color: white;
+      }
+    }
+
+    & > div {
+      display: inline-block;
+    }
+
+    & > label {
+      cursor: pointer;
+    }
+
+    & > a {
+      color: inherit !important;
+    }
+
+  }
+}
+
+.lo-multi-box-container {
+  min-width: 300px !important;
+  min-height: 350px !important;
+
+  .sub-menu-title{
+    color: $main-color;
+    padding-left: 10px;
+  }
+
+  .divider-header {
+    margin: 0px !important;
+  }
+
+  .add-item-container {
+    & > h4 {
+      display: inline;
+      position: relative;
+      bottom: 4px;
+    }
+    & > h6 {
+      width: 170px;
+      color: #333;
+      position: relative;
+      bottom: 5px;
+    }
+    .btn {
+      padding: 4px 8px !important;
+      position: relative;
+      bottom: 5px !important;
+      & > a {
+        color: $main-color;
+      }
+    }
+    .disabled-button {
+      color: $light-grey !important;
+      pointer-events: none;
+    }
+  }
+
+  .no-results-found {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    vertical-align: middle;
+    color: $dark-grey;
+    font-style: italic;
+  }
+
+  .remove-item-btn {
+    position: relative;
+    top: 8px;
+    left: 5px;
+    height: 20px;
+  }
+
+  .add-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 100px !important;
+    font-weight: 600;
+  }
+  .add-btn-disabled {
+    color: $light-grey !important;
+    pointer-events: none;
+  }
 }
 
 .filter-dropdown > .all {
