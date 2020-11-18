@@ -41,13 +41,13 @@
 
     <div class="divider-header add-item-container">
       <h4> {{ 'realtimeDashboards.dashboards.subMenu.addItems.heading' | translate:{item:currentOpenedSubMenu} }} </h4>
-      <button class="btn pull-right" ng-click="addNewItem()" ng-disabled="!plusBtnEnabled">
-        <a ng-class="{'disabled-button': !plusBtnEnabled}"><i class="fa fa-plus"></i></a>
+      <button class="btn pull-right" ng-click="listItems.length < 3 ? addNewItem() : angular.noop()">
+        <a><i class="fa fa-plus"></i></a>
       </button>
       <h6>{{ 'realtimeDashboards.dashboards.subMenu.addItems.helpText' | translate:{item:currentOpenedSubMenu} }}</h6>
     </div>
 
-    <div class="no-results-found" ng-show="subMenuItems && subMenuItems.length <= 0">{{'table.results.none' | translate}}</div>
+    <div class="no-results-found" ng-show="!optionsIsNotEmpty">{{'table.results.none' | translate}}</div>
         
     <div class="lo-multi-box" ng-repeat="item in listItems track by $index">
       <lo-multibox
@@ -63,8 +63,8 @@
       </lo-multibox>
       <a class="remove-item-btn" ng-click="removeItem(item, $index)"><i class="fa fa-times remove"></i></a>
     </div>
-    <button class="btn add-btn" ng-disabled="!isAddBtnEnabled" ng-click="addFiltersToMainMenu(listItems)">
-      <span ng-class="{'add-btn-disabled': !isAddBtnEnabled}" >Add</span>
+    <button class="btn add-btn" ng-click="addFiltersToMainMenu(listItems)">
+      <span>Add</span>
     </button>
   </div>
 </div>

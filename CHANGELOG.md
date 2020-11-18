@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.2] - 2020-11-17
+### Changed
+- CXV1-23334 - Fix Custom Attributes issues in Custom Realtime Dashboards.
+
 ## [1.10.1] - 2020-09-21
 ### Changed
 - CXV1-23062 - Twilio Regions Update (Add Sydney, Frankfurt & Tokyo Interconnect Regions; Remove US West Coast region)

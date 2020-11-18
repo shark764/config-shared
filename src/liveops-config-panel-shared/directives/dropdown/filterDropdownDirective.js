@@ -64,14 +64,13 @@ angular.module('liveopsConfigPanel.shared.directives')
           $scope.currentOpenedSubMenu = option.header && option.header.display;
           _.forEach($scope.options, function (val) {
             if (val.subMenu && val.header && val.header.options) {
+              $scope.optionsIsNotEmpty = val.header.options.length !== 0;
               $scope.listItems = val.header.options.filter(function (val) {
                 return val.checked === true;
               });
             }
           });
           $scope.initSubMenuItems();
-          $scope.plusBtnEnabled = ($scope.listItems.length === 3 || $scope.subMenuItems.length <= 0) ? false : true;
-          $scope.isAddBtnEnabled = false;
         };
 
         $scope.initSubMenuItems = function () {
@@ -91,7 +90,6 @@ angular.module('liveopsConfigPanel.shared.directives')
           if ($scope.listItems && $scope.listItems.length < 3) {
             $scope.listItems.push(null);
           }
-          $scope.plusBtnEnabled = $scope.listItems.length === 3 ? false : true;
         };
 
         $scope.removeItem = function (list, idx) {
@@ -100,20 +98,18 @@ angular.module('liveopsConfigPanel.shared.directives')
           }
           $scope.listItems.splice(idx, 1);
           $scope.$emit('dropdown:item:checked');
-          $scope.plusBtnEnabled = true;
-          setAddBtn();
         };
 
         $scope.addFiltersToMainMenu = function (listItems) {
           if(listItems.length > 0) {
-            _.forEach(listItems, function (item) {
-              if(item) {
+            $scope.listItems = _.filter(listItems, function (item) {
+              return item !== null;
+            });
+            _.forEach($scope.listItems, function (item) {
                 item.checked = true;
-              }
             });
             $scope.$emit('dropdown:item:checked');
             $scope.$broadcast('disable:saved:items', true);
-            $scope.isAddBtnEnabled = false;
           }
         };
 
@@ -125,19 +121,7 @@ angular.module('liveopsConfigPanel.shared.directives')
               $scope.initSubMenuItems();
             }
           };
-          setAddBtn();
         };
-
-        function setAddBtn() {
-          var listHasNoNullItems = $scope.listItems.every(function(listItem) {
-            return (listItem && (listItem.checked === false || listItem.checked === true));
-          });
-          var listHasUncheckedItems = $scope.listItems.some(function(listItem) {
-            return (listItem && listItem.checked === false);
-          });
-          // enable addBtn when there are no null items in the list & when there is atleast one uncheckec item
-          $scope.isAddBtnEnabled = (listHasNoNullItems && listHasUncheckedItems) ? true : false;
-        }
 
         if ($scope.showAll) {
           var checkAll = function(){
